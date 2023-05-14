@@ -25,7 +25,7 @@ git submodule init
 git submodule update
 ```
 ### Check it works
-- After opening the cloned project, create any scene and add the collider attached ground and ```Assets/TLab/TLabVIhiclePhysics/Resource/TLabCarRoot.prefab```. You can check the operation of WheelCollider by executing
+- After opening the cloned project, create any scene and add the collider attached ground and ```Assets/TLab/TLabVihiclePhysics/Resource/TLabCarRoot.prefab```. You can check the operation of WheelCollider by executing
 ### How to play
 #### Car Operation
 - Left / Right Arrow: Handle
@@ -44,9 +44,9 @@ git submodule update
 ### Mod
 AssetBundles can be used to import your own mods built as scenes. Since we are developing with the goal of modding with WebGL, the only way to download AssetBundle is from a web server
 #### CreateMod
-Add ```TLabMapManager.cs``` to any scene you have created, and execute ```Assets/Build AssetBundle {target platform}``` from the menu item to build the AssetBundle. The built AssetBundle is placed in ```AssetBundle/{target platform}.
+Add ```TLabGCCMapManager.cs``` to any scene you have created, and execute ```Assets/Build AssetBundle {target platform}``` from the menu item to build the AssetBundle. The built AssetBundle is placed in ```AssetBundle/{target platform}.
 #### CreateServer
 Place any AssetBundle in ```AssetBundle/Server``` and start WebServer with ```npm start```
 #### PlayMod
-After starting the server, play ```Assets/GCC/Builtin/Scenes/Title.unity``` and go to ```https://localhost:5000/{Your own pass}/{asset bundle name}.assetbundl``` to get the mod
+After starting the server, play ```Assets/GCC/BuiltIn/Scenes/Title.unity``` and go to ```https://localhost:5000/{Your own pass}/{asset bundle name}.assetbundl``` to get the mod
 
