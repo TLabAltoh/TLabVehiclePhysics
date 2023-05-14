@@ -47,6 +47,6 @@ AssetBundles can be used to import your own mods built as scenes. Since we are d
 Add ```TLabMapManager.cs``` to any scene you have created, and execute ```Assets/Build AssetBundle {target platform}``` from the menu item to build the AssetBundle. The built AssetBundle is placed in ```AssetBundle/{target platform}.
 #### CreateServer
 Place any AssetBundle in ```AssetBundle/Server``` and start WebServer with ```npm start```
-#### GetMod
+#### PlayMod
 After starting the server, play ```Assets/GCC/Builtin/Scenes/Title.unity``` and go to ```https://localhost:5000/{Your own pass}/{asset bundle name}.assetbundl``` to get the mod
 
