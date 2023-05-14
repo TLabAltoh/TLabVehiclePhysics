@@ -39,7 +39,7 @@ git submodule update
 - Z: Switch Camera (FPS / TPS)
 
 ### Build
-- Uncheck "Strip Engine Code" from Project Settings when building.Since this is a mechanism to remove unnecessary code at build time, it may cause unintended behavior in downloaded AssetBundles
+- Uncheck ```Strip Engine Code``` from Project Settings when building.Since this is a mechanism to remove unnecessary code at build time, it may cause unintended behavior in downloaded AssetBundles
 
 ### Mod
 AssetBundles can be used to import your own mods built as scenes. Since we are developing with the goal of modding with WebGL, the only way to download AssetBundle is from a web server
