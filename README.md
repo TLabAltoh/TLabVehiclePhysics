@@ -1,9 +1,10 @@
 
 # TLabVihiclePhysics
-An open source wheel collider sample project
+An open source wheel collider sample project  
 Support for course mods using AssetBundles  
 Supports URP only
 
+[You can play the demo here](https://tlab.itch.io/tlabvihiclephysics-mod)
 ## Screenshot
 ![output](https://github.com/TLabAltoh/TLabVihiclePhysics/assets/121733943/becb209b-2490-4381-990a-07c332500eaa)  
 ## Getting Started
