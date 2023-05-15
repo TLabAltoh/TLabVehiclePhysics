@@ -68,7 +68,7 @@
     <Compile Include="Assets\EasyRoad3D\Script\EasyRoad3D.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TLab\TLabComponent\TLabComponent.cs" />
-    <Compile Include="Assets\GCC\BuiltIn\System\TLabGCCMapManager.cs" />
+    <Compile Include="Assets\GCC\SampleMap\Script\MapManager.cs" />
     <Compile Include="Assets\TLab\TLabVKeyborad\TLabKeyOperator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\TLab\TLabVihiclePhysics\VirtualInput\VirtualInput.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Assets\TLab\TLabLUT\TLabLUTEditor.cs" />
     <Compile Include="Assets\TLab\TLabVKeyborad\TLabInputField.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
-    <Compile Include="Assets\TLab\TLabVihiclePhysics\UI\BlurEffect\BlurEffectPipeline(URP)\BlurRendererFeature.cs" />
+    <Compile Include="Assets\GCC\SampleMap\BlurEffect\BlurEffectPipeline(URP)\BlurRendererFeature.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\TLab\TLabVKeyborad\TLabKey.cs" />
     <Compile Include="Assets\TLab\TLabVihiclePhysics\Script\TLabVihicleCameraInputManager.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\GCC\BuiltIn\System\TLabGCCSystemManager.cs" />
     <Compile Include="Assets\EasyRoad3D\Script\pathPlacer.cs" />
-    <Compile Include="Assets\TLab\TLabVihiclePhysics\UI\BlurEffect\BlurEffectPipeline(URP)\GrabBluredTextureRendererPass.cs" />
+    <Compile Include="Assets\GCC\SampleMap\BlurEffect\BlurEffectPipeline(URP)\GrabBluredTextureRendererPass.cs" />
     <Compile Include="Assets\TLab\TLabVihiclePhysics\Script\G29Plugin\Logitech SDK\Script Sample\LogitechLCD.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
@@ -155,7 +155,7 @@
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
-    <None Include="Assets\TLab\TLabVihiclePhysics\UI\BlurEffect\Material\BlurEffect.shader" />
+    <None Include="Assets\GCC\SampleMap\BlurEffect\Material\BlurEffect.shader" />
     <None Include="Assets\TLab\TLabVihiclePhysics\Script\G29Plugin\Logitech SDK\LogitechSteeringWheelEnginesWrapper.dll" />
     <None Include="Assets\TLab\TLabVihiclePhysics\Script\G29Plugin\Logitech SDK\LogitechGkeyEnginesWrapper.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
@@ -179,7 +179,7 @@
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\TLab\TLabVihiclePhysics\Script\G29Plugin\Logitech SDK\LogitechLedEnginesWrapper.dll" />
-    <None Include="Assets\TLab\TLabVihiclePhysics\UI\BlurEffect\Material\Blur.shader" />
+    <None Include="Assets\GCC\SampleMap\BlurEffect\Material\Blur.shader" />
     <None Include="Assets\PracticeShader\Fresnel.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\PracticeShader\MappingToScreen.shader" />

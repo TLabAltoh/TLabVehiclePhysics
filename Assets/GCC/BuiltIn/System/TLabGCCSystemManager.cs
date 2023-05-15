@@ -7,10 +7,6 @@ using UnityEngine.SceneManagement;
 public class TLabGCCSystemManager : MonoBehaviour
 {
     public static TLabGCCSystemManager Instance;
-
-    [System.NonSerialized] public float m_arbRear;
-    [System.NonSerialized] public float m_arbFront;
-
     private AssetBundle m_assetBundle;
 
     private void Awake()

@@ -134,6 +134,11 @@ public class UIManager : MonoBehaviour
         m_menuWindow.SetActive(!m_menuWindow.activeSelf);
     }
 
+    public void OnRankingButtonPress()
+    {
+        Application.OpenURL(m_rankingUrl);
+    }
+
     //
     // MenuWindow
     //
@@ -142,7 +147,7 @@ public class UIManager : MonoBehaviour
     {
         clickAudio.Play();
         DestroyTimeAttackTask();
-        TLabGCCMapManager.Instance.BackToTitle();
+        MapManager.Instance.BackToTitle();
     }
 
     public void OnResetRotationButtoPress()
@@ -166,7 +171,7 @@ public class UIManager : MonoBehaviour
         yield return null;
 
         WWWForm form = new WWWForm();
-        form.AddField("table", "drift_park_ranking");
+        form.AddField("table", "test_mod_ranking");
         form.AddField("name", m_nameInputField.text);
         form.AddField("time", m_elapsedTime.text);
         form.AddField("is_regist", "true");
