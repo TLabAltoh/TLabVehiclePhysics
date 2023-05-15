@@ -1,6 +1,7 @@
 
 # TLabVihiclePhysics
 An open source wheel collider sample project  
+More controllable and more natural cornering drift than Unity built-in WheelCollider  
 Support for course mods using AssetBundles  
 Supports URP only
 
