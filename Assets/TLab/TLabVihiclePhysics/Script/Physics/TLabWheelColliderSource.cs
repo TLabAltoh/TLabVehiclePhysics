@@ -26,6 +26,7 @@ public class TLabWheelColliderSource : MonoBehaviour
     private float rawWheelRPM = 0f;
     private float currentWheelRPM = 0f;
     private float slipAngle = 0f;
+    private float gripFactor = 1f;
     private float totalGrip = 1f;
     private float engineRpm = 0f;
     private float feedbackRpm = 0f;
@@ -114,6 +115,14 @@ public class TLabWheelColliderSource : MonoBehaviour
         get
         {
             return totalGrip;
+        }
+    }
+
+    public float GripFactor
+    {
+        set
+        {
+            gripFactor = value;
         }
     }
 
@@ -296,7 +305,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         var rollGrip = wheelPhysics.RollGripCurve.Evaluate(Mathf.Abs(arbRatio));
 
         // 摩擦係数(最終決定)
-        totalGrip = baseGrip * slipRatioGrip * rollGrip * TLabVihiclePhysics.instance.DownForce;
+        totalGrip = baseGrip * slipRatioGrip * rollGrip * gripFactor * TLabVihiclePhysics.instance.DownForce;
 
         // 重力 * 摩擦係数 = タイヤが持つ摩擦パワーの最大値
         var frictionForce = velZDir * gravity * totalGrip;

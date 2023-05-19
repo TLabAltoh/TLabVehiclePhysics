@@ -1111,7 +1111,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downForceCurve: {fileID: 11400000, guid: 66b23a7c2031e914385ac1cef6cae784, type: 2}
-  center: {x: 0, y: 0.15, z: 0}
+  centerZ: -0.15
+  m_wheelbase: 3
+  m_wheelsFront:
+  - {fileID: 4868004424742606035}
+  - {fileID: 6402682022256991398}
+  m_wheelsRear:
+  - {fileID: 5902336353477284409}
+  - {fileID: 8367604793501537810}
 --- !u!1 &301863818295526093
 GameObject:
   m_ObjectHideFlags: 0
