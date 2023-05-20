@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BaseGripCurve: {fileID: 11400000, guid: fb5fd67b2a1638a4c8fd479b81c5e569, type: 2}
   SlipRatioGripCurve: {fileID: 11400000, guid: eed1aa235e5074c448389bf575ec3cb4, type: 2}
-  RollGripCurve: {fileID: 11400000, guid: 02787f9a8b74d90498aceab6c9799a85, type: 2}
   AngleRatioCurve: {fileID: 11400000, guid: 5f2719ad906e6bb409d4a08d0f37c5f3, type: 2}
   TorqueRatioCruve: {fileID: 11400000, guid: f2b0fbbd2a5135a40b396d6a7ff6354b, type: 2}
   spring: 55000
@@ -23,4 +22,4 @@ MonoBehaviour:
   susDst: 0.3
   targetPos: 0
   wheelRadius: 0.35
-  arbFactor: 0.8
+  arbFactor: 1

@@ -26,20 +26,6 @@ public class TLabGCCModLauncher : MonoBehaviour
     {
         TLabGCCSystemManager.Instance.LoadMod(m_builtinMods[index].url);
     }
-
-    public void SetARBRear()
-    {
-        float value = (int)(m_arbRearSlider.value * 100) / 100f;
-        m_rearPhysics.arbFactor = value;
-        m_arbRear.text = value.ToString();
-    }
-
-    public void SetARBFront()
-    {
-        float value = (int)(m_arbFrontSlider.value * 100) / 100f;
-        m_frontPhysics.arbFactor = value;
-        m_arbFront.text = value.ToString();
-    }
 }
 
 [System.Serializable]

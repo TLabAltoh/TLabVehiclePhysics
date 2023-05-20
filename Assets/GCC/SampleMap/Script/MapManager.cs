@@ -19,20 +19,6 @@ public class MapManager : MonoBehaviour
         SceneManager.LoadScene("Title", LoadSceneMode.Single);
     }
 
-    public void SetRearARB()
-    {
-        float value = (int)(m_arbRear.value * 100f) / 100f;
-        m_arbRearText.text = value.ToString();
-        m_wheelRear.arbFactor = value;
-    }
-
-    public void SetFrontARB()
-    {
-        float value = (int)(m_arbFront.value * 100f) / 100f;
-        m_arbFrontText.text = value.ToString();
-        m_wheelFront.arbFactor = value;
-    }
-
     private void Awake()
     {
         Instance = this;

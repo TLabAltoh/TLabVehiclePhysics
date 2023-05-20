@@ -166,8 +166,6 @@ public class TLabWheelColliderSource : MonoBehaviour
 
         // ProjectSettings->Physicsで Carと Waterの衝突判定を解除する
 
-        // ARBペアの圧縮率分 * ARB係数分だけサスペンション距離を短くする
-
         var raycastDistance = wheelPhysics.wheelRadius + wheelPhysics.susDst;
 
         var ignoreLayer = ~(1 << waterLayer.value);
@@ -183,8 +181,7 @@ public class TLabWheelColliderSource : MonoBehaviour
             // 前フレームのサスペンションをキャッシュ
             susCpsPrev = susCps;
 
-            // これに ARBペアの圧縮分だけ圧縮を短くする．サスペンションの伸縮の実測値
-            var stretchedOut = wheelPhysics.susDst + wheelPhysics.wheelRadius;
+            var stretchedOut = wheelPhysics.wheelRadius + wheelPhysics.susDst;
             var suspentionOrigin = dummyWheel.position;
 
             susCps = stretchedOut - (raycastHit.point - suspentionOrigin).magnitude;
@@ -202,7 +199,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         else
         {
             // Wheelが地面と接していないとき
-            susCps = 0;
+            susCps = 0f;
             gizmoColor = Color.blue;
             isGrounded = false;
         }
@@ -297,15 +294,12 @@ public class TLabWheelColliderSource : MonoBehaviour
         // 転がり抵抗(0.015は，転がり抵抗を推測するマジックナンバー)
         var rollingResistance = velZDir * gravity * 0.015f;
 
-        var arbRatio = compressRate < arbPear.compressRate ? compressRate * (1 - wheelPhysics.arbFactor) + arbPear.compressRate * wheelPhysics.arbFactor : compressRate;
-
         // 摩擦モデルによる摩擦力の推測
         var baseGrip = wheelPhysics.BaseGripCurve.Evaluate(slipAmount);
         var slipRatioGrip = wheelPhysics.SlipRatioGripCurve.Evaluate(Mathf.Abs(slipRatio));
-        var rollGrip = wheelPhysics.RollGripCurve.Evaluate(Mathf.Abs(arbRatio));
 
         // 摩擦係数(最終決定)
-        totalGrip = baseGrip * slipRatioGrip * rollGrip * gripFactor * TLabVihiclePhysics.instance.DownForce;
+        totalGrip = baseGrip * slipRatioGrip * gripFactor * TLabVihiclePhysics.instance.DownForce;
 
         // 重力 * 摩擦係数 = タイヤが持つ摩擦パワーの最大値
         var frictionForce = velZDir * gravity * totalGrip;
@@ -378,6 +372,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         var dst = Mathf.Abs(rawWheelRPM * totalGearRatio);
 
         const float rpmForGripMax = 2000f * fixedTime;
+        // 車が進行方向に対して傾斜しているときはタイヤがスリップしやすくする
         var angleRatio = wheelPhysics.AngleRatioCurve.Evaluate(Mathf.Abs(slipAngle / Mathf.PI * 180));
         var torqueRatio = wheelPhysics.TorqueRatioCruve.Evaluate(Mathf.Abs(torque));
 
