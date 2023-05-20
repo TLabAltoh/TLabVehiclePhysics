@@ -8,6 +8,8 @@ Supports URP only
 [You can play the demo here](https://tlab.itch.io/tlabvihiclephysics-mod)
 ## Screenshot
 ![output](https://github.com/TLabAltoh/TLabVihiclePhysics/assets/121733943/27fbf2d4-aa59-4005-a771-081d57d9f71d)
+![output_1](https://github.com/TLabAltoh/TLabVihiclePhysics/assets/121733943/45939db4-7e75-4e38-a9ed-1a1602e8113d)
+
 ## Getting Started
 ### Prerequisites
 - Unity 2021.3.23f1
