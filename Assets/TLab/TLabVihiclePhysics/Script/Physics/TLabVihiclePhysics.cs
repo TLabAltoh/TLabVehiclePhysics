@@ -2,7 +2,13 @@ using UnityEngine;
 
 public class TLabVihiclePhysics : MonoBehaviour
 {
-    [SerializeField] TLabLUT downForceCurve;
+    [Header("Down Force Curve")]
+    [SerializeField] TLabLUT m_frontDownForceCurve;
+    [SerializeField] TLabLUT m_rearDownForceCurve;
+
+    [Header("Wheight Ratio")]
+    [SerializeField] float m_frontRatio = 0.5f;
+    [SerializeField] float m_rearRatio = 0.5f;
 
     [Header("Wheels Source")]
     [SerializeField] TLabWheelColliderSource[] m_wheelsFront;
@@ -11,16 +17,7 @@ public class TLabVihiclePhysics : MonoBehaviour
     public static TLabVihiclePhysics instance;
 
     private Rigidbody rb;
-    private float downForce = 1f;
     private float localVelZ = 0f;
-
-    public float DownForce
-    {
-        get
-        {
-            return downForce;
-        }
-    }
 
     public float MeterPerSecondInLocal
     {
@@ -52,22 +49,25 @@ public class TLabVihiclePhysics : MonoBehaviour
         rb.inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
         rb.inertiaTensorRotation = Quaternion.identity;
 
-        // 本来，前輪と後輪で重心が寄っている方がタイヤに強い重力がかかり前輪に重心が寄っているときはオーバーステア特性が出現する．
-        // しかしこのスクリプトではRigidbodyの重心をどこに設定してもタイヤの重力は一定で変化しないので，再生時にここであらかじめ重力比を雑に計算しておく．
-
-        float ratioFront = 1f;
-        float ratioRear = 1f;
-
         foreach (TLabWheelColliderSource frontWheel in m_wheelsFront)
-            frontWheel.GripFactor = ratioFront;
+            frontWheel.GripFactor = m_frontRatio * 2f;
 
         foreach (TLabWheelColliderSource rearWheel in m_wheelsRear)
-            rearWheel.GripFactor = ratioRear;
+            rearWheel.GripFactor = m_rearRatio * 2f;
     }
 
     void Update()
     {
         localVelZ = transform.InverseTransformDirection(rb.velocity).z;
-        downForce = downForceCurve.Evaluate(Mathf.Abs(localVelZ) * 3.6f);
+
+        float velKmPh = Mathf.Abs(localVelZ) * 3.6f;
+        float frontDownForce = m_frontDownForceCurve.Evaluate(velKmPh);
+        float rearDownForce = m_rearDownForceCurve.Evaluate(velKmPh);
+
+        foreach (TLabWheelColliderSource frontWheel in m_wheelsFront)
+            frontWheel.GripFactor = m_frontRatio * 2f * frontDownForce;
+
+        foreach (TLabWheelColliderSource rearWheel in m_wheelsRear)
+            rearWheel.GripFactor = m_rearRatio * 2f * rearDownForce;
     }
 }

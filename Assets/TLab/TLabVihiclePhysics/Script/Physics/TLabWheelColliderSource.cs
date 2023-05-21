@@ -299,7 +299,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         var slipRatioGrip = wheelPhysics.SlipRatioGripCurve.Evaluate(Mathf.Abs(slipRatio));
 
         // 摩擦係数(最終決定)
-        totalGrip = baseGrip * slipRatioGrip * gripFactor * TLabVihiclePhysics.instance.DownForce;
+        totalGrip = baseGrip * slipRatioGrip * gripFactor;
 
         // 重力 * 摩擦係数 = タイヤが持つ摩擦パワーの最大値
         var frictionForce = velZDir * gravity * totalGrip;

@@ -1110,9 +1110,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d894938a6df45fb47b6402e026ff55e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  downForceCurve: {fileID: 11400000, guid: 66b23a7c2031e914385ac1cef6cae784, type: 2}
-  centerZ: -0.15
-  m_wheelbase: 3
+  m_frontDownForceCurve: {fileID: 11400000, guid: 0206d39aa192ad8448607fd7b46ba69e,
+    type: 2}
+  m_rearDownForceCurve: {fileID: 11400000, guid: 66b23a7c2031e914385ac1cef6cae784,
+    type: 2}
+  m_frontRatio: 0.5
+  m_rearRatio: 0.5
   m_wheelsFront:
   - {fileID: 4868004424742606035}
   - {fileID: 6402682022256991398}
