@@ -15,24 +15,24 @@ public class GrabBluredTextureRendererPass : ScriptableRenderPass
 
     private float[] _weights = new float[10];
 
-    private int _blurredTempID1 = 0;
-    private int _blurredTempID2 = 0;
-    private int _screenCopyID = 0;
-    private int _weightsID = 0;
-    private int _offsetsID = 0;
-    private int _grabBlurTextureID = 0;
+    private int _blurredTempID1     = 0;
+    private int _blurredTempID2     = 0;
+    private int _screenCopyID       = 0;
+    private int _weightsID          = 0;
+    private int _offsetsID          = 0;
+    private int _grabBlurTextureID  = 0;
 
     public GrabBluredTextureRendererPass(Shader shader, RenderPassEvent passEvent)
     {
         renderPassEvent = passEvent;
-        _material = new Material(shader);
+        _material       = new Material(shader);
 
-        _blurredTempID1 = Shader.PropertyToID("_BlurTemp1");
-        _blurredTempID2 = Shader.PropertyToID("_BlurTemp2");
-        _screenCopyID = Shader.PropertyToID("_ScreenCopyTexture");
-        _weightsID = Shader.PropertyToID("_Weights");
-        _offsetsID = Shader.PropertyToID("_Offsets");
-        _grabBlurTextureID = Shader.PropertyToID("_GrabBlurTexture");
+        _blurredTempID1     = Shader.PropertyToID("_BlurTemp1");
+        _blurredTempID2     = Shader.PropertyToID("_BlurTemp2");
+        _screenCopyID       = Shader.PropertyToID("_ScreenCopyTexture");
+        _weightsID          = Shader.PropertyToID("_Weights");
+        _offsetsID          = Shader.PropertyToID("_Offsets");
+        _grabBlurTextureID  = Shader.PropertyToID("_GrabBlurTexture");
     }
 
     public void UpdateWeights()
@@ -101,7 +101,6 @@ public class GrabBluredTextureRendererPass : ScriptableRenderPass
         buf.SetGlobalFloatArray(_weightsID, _weights);
 
         buf.Blit(_currentTarget, _screenCopyID);
-        // buf.Blit(BuiltinRenderTextureType.CameraTarget, _screenCopyID);
 
         Blit(buf, _screenCopyID, _blurredTempID1);
         buf.ReleaseTemporaryRT(_screenCopyID);
