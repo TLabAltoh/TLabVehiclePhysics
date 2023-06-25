@@ -12,7 +12,7 @@ Supports URP only
 
 ## Getting Started
 ### Prerequisites
-- Unity 2021.3.23f1
+- Unity 2022.3.3f1
 - UniversalRenderingPipeline
 - ProBuilder
 - [TLabVKeyborad](https://github.com/TLabAltoh/TLabVKeyborad)
