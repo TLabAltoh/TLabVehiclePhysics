@@ -1,4 +1,5 @@
 using UnityEngine;
+using TLab;
 
 public class TLabVihiclePhysics : MonoBehaviour
 {
@@ -7,8 +8,7 @@ public class TLabVihiclePhysics : MonoBehaviour
     [SerializeField] TLabLUT m_rearDownForceCurve;
 
     [Header("Wheight Ratio")]
-    [SerializeField] float m_frontRatio = 0.5f;
-    [SerializeField] float m_rearRatio = 0.5f;
+    [SerializeField][Range(0.2f, 0.8f)] float m_frontRatio = 0.5f;
 
     [Header("Wheels Source")]
     [SerializeField] TLabWheelColliderSource[] m_wheelsFront;
@@ -41,6 +41,12 @@ public class TLabVihiclePhysics : MonoBehaviour
         instance = this;
     }
 
+    private void SetGripFactor(TLabWheelColliderSource[] wheels, float ratio)
+    {
+        foreach (TLabWheelColliderSource wheel in wheels)
+            wheel.GripFactor = ratio * 2f;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -49,11 +55,8 @@ public class TLabVihiclePhysics : MonoBehaviour
         rb.inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
         rb.inertiaTensorRotation = Quaternion.identity;
 
-        foreach (TLabWheelColliderSource frontWheel in m_wheelsFront)
-            frontWheel.GripFactor = m_frontRatio * 2f;
-
-        foreach (TLabWheelColliderSource rearWheel in m_wheelsRear)
-            rearWheel.GripFactor = m_rearRatio * 2f;
+        SetGripFactor(m_wheelsFront, m_frontRatio);
+        SetGripFactor(m_wheelsRear, 1 - m_frontRatio);
     }
 
     void Update()
@@ -64,10 +67,7 @@ public class TLabVihiclePhysics : MonoBehaviour
         float frontDownForce = m_frontDownForceCurve.Evaluate(velKmPh);
         float rearDownForce = m_rearDownForceCurve.Evaluate(velKmPh);
 
-        foreach (TLabWheelColliderSource frontWheel in m_wheelsFront)
-            frontWheel.GripFactor = m_frontRatio * 2f * frontDownForce;
-
-        foreach (TLabWheelColliderSource rearWheel in m_wheelsRear)
-            rearWheel.GripFactor = m_rearRatio * 2f * rearDownForce;
+        SetGripFactor(m_wheelsFront, m_frontRatio * frontDownForce);
+        SetGripFactor(m_wheelsRear, (1 - m_frontRatio) * rearDownForce);
     }
 }

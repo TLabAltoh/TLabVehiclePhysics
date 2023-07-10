@@ -32,14 +32,14 @@ public class BlurRendererFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
+#if UNITY_EDITOR
+        Debug.Log("Add Grab Blured Texture Renderer Pass.");
+#endif
         renderer.EnqueuePass(_grabBluredTexturePass);
     }
 
     public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
     {
-#if UNITY_EDITOR
-        Debug.Log("Add Grab Blured Texture Renderer Pass.");
-#endif
         _grabBluredTexturePass.SetRenderTarget(renderer.cameraColorTargetHandle);
         _grabBluredTexturePass.SetParams(_offset, _blur);
     }

@@ -6150,6 +6150,11 @@ PrefabInstance:
       propertyPath: centerZ
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 301863818280675708, guid: a20cc6f7e766ddf498834e05f54d1d1b,
+        type: 3}
+      propertyPath: m_frontRatio
+      value: 0.526
+      objectReference: {fileID: 0}
     - target: {fileID: 301863819080490938, guid: a20cc6f7e766ddf498834e05f54d1d1b,
         type: 3}
       propertyPath: m_IsActive
@@ -7044,7 +7049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1459344889
 Transform:
   m_ObjectHideFlags: 0

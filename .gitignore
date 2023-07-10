@@ -9,15 +9,16 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/PracticeShader
-/[Aa]ssets/PracticeShader.meta
-/[Aa]ssets/EasyRoad3D
-/[Aa]ssets/EasyRoad3D.meta
-/[Aa]ssets/TLabPeint
-/[Aa]ssets/TLabPeint.meta
+/[Aa]ssets/GCC/DoNotStop
+/[Aa]ssets/[Pp]racticeShader
+/[Aa]ssets/[Pp]racticeShader.meta
+/[Aa]ssets/[Ee]asyRoad3D
+/[Aa]ssets/[Ee]asyRoad3D.meta
+/[Aa]ssets/[Tt]LabPeint
+/[Aa]ssets/[Tt]LabPeint.meta
 /[Rr]ecordings
-/UI
-/Capture
+/[Uu]I
+/[Cc]apture
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data

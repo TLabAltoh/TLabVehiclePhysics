@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using static TLab.Math;
 
 public class TLabVihicleEngine : MonoBehaviour
 {
@@ -87,7 +88,7 @@ public class TLabVihicleEngine : MonoBehaviour
         // アクセルによる回転の上昇
         //
 
-        engineRpm = TLabMath.LinerApproach(feedbackRPM, rpmIncrement * Time.fixedDeltaTime * fixedTime * TLabVihicleInputManager.instance.ActualInput, maxRpm);
+        engineRpm = LinerApproach(feedbackRPM, rpmIncrement * Time.fixedDeltaTime * fixedTime * TLabVihicleInputManager.instance.ActualInput, maxRpm);
 
         //
         // エンジン軸での消耗
@@ -95,7 +96,7 @@ public class TLabVihicleEngine : MonoBehaviour
 
         if (engineRpm >= idling - 1)
         {
-            engineRpm = TLabMath.LinerApproach(engineRpm, rpmAttenuation * Time.fixedDeltaTime * fixedTime, idling - 1);
+            engineRpm = LinerApproach(engineRpm, rpmAttenuation * Time.fixedDeltaTime * fixedTime, idling - 1);
         }
         else
         {

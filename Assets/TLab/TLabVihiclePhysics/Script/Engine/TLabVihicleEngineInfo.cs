@@ -1,4 +1,5 @@
 using UnityEngine;
+using TLab;
 
 [CreateAssetMenu()]
 public class TLabVihicleEngineInfo : ScriptableObject

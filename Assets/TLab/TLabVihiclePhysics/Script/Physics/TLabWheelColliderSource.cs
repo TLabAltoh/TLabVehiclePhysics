@@ -1,12 +1,18 @@
 using UnityEngine;
+using static TLab.ComponentUtility;
+using static TLab.Math;
 
 public class TLabWheelColliderSource : MonoBehaviour
 {
     #region Note
 
-    // rigid body は必ず dummy wheel よりも高い位置に配置しなければならない．そうしないとヨーモーメントが発生したとき、rigid body が地面に押し付けられる可笑しなサスペンションになってしまう．また，それにヨーモーメントの制御も効かない．
+    // rigid body は必ず dummy wheel よりも高い位置に配置しなければならない．
+    // そうしないとヨーモーメントが発生したとき、rigid body が地面に押し付け
+    // られる可笑しなサスペンションになってしまう．また，それにヨーモーメントの制御も効かない．
 
-    // 強い横力によって，車体の速度ベクトルを車体の z軸に早く向けることが出来れば，過度なヨー運動を減衰するトルクはその分早い段階でかかることになり，結果としてグリップ走行を実現出来る(のかもしれない)．
+    // 強い横力によって，車体の速度ベクトルを車体の z軸に早く向けることが出来れば，
+    // 過度なヨー運動を減衰するトルクはその分早い段階でかかることになり，結果とし
+    // てグリップ走行を実現出来る(のかもしれない)．
 
     #endregion Note
 
@@ -261,9 +267,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         var slipAmount = Mathf.Sqrt(slipSqr_x + slipSqr_z);
 
         // スリップ率
-        var slipRatio = 2f;
-
-        if (Mathf.Abs(wheelLocalVelocity.z) > 0.1f) slipRatio = slip_z / wheelLocalVelocity.z;
+        var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slip_z / wheelLocalVelocity.z : 2f;
 
         // スリップアングルを逆タンジェントで計算
         slipAngle = 0f;
@@ -350,7 +354,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         if (enableAddTorque)
         {
             // トランスミッションがつながっているので，ブレーキングによる回転数の減衰はアイドリングを基準に終了させる．
-            var lerpToBrake = TLabMath.LinerApproach(tmpRPM, rpmDecrement, 0);
+            var lerpToBrake = LinerApproach(tmpRPM, rpmDecrement, 0);
             var currentTotalGear = Mathf.Abs(gearRatio) * diffGearRatio;
             currentWheelRPM = lerpToBrake / currentTotalGear;
             return lerpToBrake > idling ? lerpToBrake : idling - 1;
@@ -358,7 +362,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         else
         {
             // トランスミッションが外れているので，タイヤの回転スケールで計算
-            currentWheelRPM = TLabMath.LinerApproach(currentWheelRPM, rpmDecrement, 0);
+            currentWheelRPM = LinerApproach(currentWheelRPM, rpmDecrement, 0);
             return tmpRPM;
         }
     }
@@ -378,11 +382,11 @@ public class TLabWheelColliderSource : MonoBehaviour
 
         var rpmForGrip = rpmForGripMax * angleRatio * torqueRatio * Time.fixedDeltaTime;
         var driftRPM = engineRpm;
-        var toRawEngineRpm = TLabMath.LinerApproach(driftRPM, rpmForGrip, dst);
+        var toRawEngineRpm = LinerApproach(driftRPM, rpmForGrip, dst);
 
         // エンジンの動力をギアに伝えたことによる回転数の減衰
         const float rpmAttenuation = 25f * fixedTime;
-        var lerpToAttenuation = TLabMath.LinerApproach(toRawEngineRpm, rpmAttenuation * Time.fixedDeltaTime, idling - 1);
+        var lerpToAttenuation = LinerApproach(toRawEngineRpm, rpmAttenuation * Time.fixedDeltaTime, idling - 1);
         feedbackRpm = lerpToAttenuation;
 
         //
@@ -413,12 +417,12 @@ public class TLabWheelColliderSource : MonoBehaviour
                 else
                 {
                     feedbackRpm = engineRpm;
-                    currentWheelRPM = TLabMath.LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
+                    currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
                 }
             }
             else
             {
-                currentWheelRPM = TLabMath.LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
+                currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
             }
         }
         else
@@ -426,7 +430,7 @@ public class TLabWheelColliderSource : MonoBehaviour
             // タイヤが地面を掴んでいない
 
             const float rpmAttenuation = 15f;
-            rawWheelRPM = TLabMath.LinerApproach(currentWheelRPM, rpmAttenuation * Time.fixedDeltaTime, 0);
+            rawWheelRPM = LinerApproach(currentWheelRPM, rpmAttenuation * Time.fixedDeltaTime, 0);
             if (driveEnabled)
             {
                 if (enableAddTorque || rawWheelRPM * totalGearRatio >= idling && TLabVihicleInputManager.instance.ClutchInput <= 0.5f)
@@ -436,12 +440,12 @@ public class TLabWheelColliderSource : MonoBehaviour
                 else
                 {
                     feedbackRpm = engineRpm;
-                    currentWheelRPM = TLabMath.LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
+                    currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
                 }
             }
             else
             {
-                currentWheelRPM = TLabMath.LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
+                currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
             }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         }
     }
@@ -452,7 +456,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         dummyWheel.transform.position = this.transform.position;
         dummyWheel.transform.parent = this.transform.parent;
 
-        rb = TLabComponent.GetComponentFromParent<Rigidbody>(this.transform,this.GetType().FullName.ToString());
+        rb = GetComponentFromParent<Rigidbody>(this.transform,this.GetType().FullName.ToString());
 
         // Add appropriate Collider to enable RaycastHit
         m_collider = gameObject.AddComponent<SphereCollider>();

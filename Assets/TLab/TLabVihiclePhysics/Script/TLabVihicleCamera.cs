@@ -40,10 +40,6 @@ public class TLabVihicleCamera : MonoBehaviour
 
     private void FPSCamera()
     {
-        //
-        // Update first person camera
-        //
-
         // Update camera position
         Camera.main.transform.position = transform.TransformPoint(fpsPos);
 
@@ -55,11 +51,7 @@ public class TLabVihicleCamera : MonoBehaviour
     }
 
     public void TPSCamera()
-    {
-        //
-        // Update third person camera
-        //
-        
+    {   
         lookDir = Vector3.Slerp(lookDir, (xInput == 0 && yInput == 0 ? Vector3.forward : new Vector3(xInput, 0, yInput).normalized), 0.1f);
         smoothYRot = Mathf.Lerp(smoothYRot, m_rb.angularVelocity.y, 0.02f);
         
