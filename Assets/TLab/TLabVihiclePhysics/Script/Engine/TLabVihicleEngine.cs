@@ -16,21 +16,25 @@ public class TLabVihicleEngine : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioSource m_engineAudio;
 
+    public static TLabVihicleEngine Instance;
+
     private int currentGearIndex = 2;
     private int currentGear;
     private float currentGearRatio;
 
+    private bool engineActive = false;
+
     private float maxRpm;
-    private float engineRpm = idling;
-    private const float idling = 1400f;
+    private float engineRpm = IDLING;
+    private const float IDLING = 1400f;
 
-    private const float m_startPosition = 125f;
-    private const float m_needleDst = 250f;
+    private const float NEEDLE_START = 125f;
+    private const float NEEDLE_DST = 250f;
 
-    private const float rpmIncrement = 250f;
-    private const float rpmAttenuation = 50f;
+    private const float RPMINCREMENT = 250f;
+    private const float RPMATTENUATION = 50f;
 
-    private const float fixedTime = 30f;
+    private const float FIXEDTIME = 30f;
 
     public int CurrentGear
     {
@@ -48,6 +52,80 @@ public class TLabVihicleEngine : MonoBehaviour
         }
     }
 
+    private float GetTimeError
+    {
+        get
+        {
+            return Time.fixedDeltaTime * FIXEDTIME;
+        }
+    }
+
+    private float GetActualInput
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.ActualInput;
+        }
+    }
+
+    private float GetClutchInput
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.ClutchInput;
+        }
+    }
+
+    private bool IsNeutralOrClutch
+    {
+        get
+        {
+            return currentGearRatio == 0 || GetClutchInput > 0.5f || (engineRpm < IDLING && GetActualInput < 0.1f);
+        }
+    }
+
+    private bool GearUpPressed
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.GearUpPressed;
+        }
+
+        set
+        {
+            TLabVihicleInputManager.instance.GearUpPressed = value;
+        }
+    }
+
+    private bool GearDownPressed
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.GearDownPressed;
+        }
+
+        set
+        {
+            TLabVihicleInputManager.instance.GearDownPressed = value;
+        }
+    }
+
+    private int CurrentKPH
+    {
+        get
+        {
+            return Mathf.CeilToInt(TLabVihiclePhysics.instance.KilometerPerHourInLocal);
+        }
+    }
+
+    public bool EngineActive
+    {
+        get
+        {
+            return engineActive;
+        }
+    }
+
     private void Shift(int dir)
     {
         currentGearIndex += dir;
@@ -60,22 +138,18 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         if (m_needle.gameObject.activeInHierarchy == true)
         {
-            m_needle.eulerAngles = new Vector3(0f, 0f, m_startPosition - engineRpm / 10000 * m_needleDst);
-            m_speed_Gear.text = "km/h : " + Mathf.CeilToInt(TLabVihiclePhysics.instance.KilometerPerHourInLocal).ToString() + "\n" + "gear : " + currentGear.ToString();
+            m_needle.eulerAngles = new Vector3(0f, 0f, NEEDLE_START - engineRpm / 10000 * NEEDLE_DST);
+            m_speed_Gear.text = "km/h : " + CurrentKPH.ToString() + "\n" + "gear : " + currentGear.ToString();
         }
     }
 
     private void UpdateEngineSound()
     {
-        m_engineAudio.pitch = 1f + ((engineRpm - idling) / (maxRpm - idling)) * 2f;
+        m_engineAudio.pitch = 1f + ((engineRpm - IDLING) / (maxRpm - IDLING)) * 2f;
     }
 
-    public void UpdateEngine()
+    private float GetFeedbackRPM()
     {
-        //
-        // feedback rpm の取得
-        //
-
         float rpmSum = 0f;
         foreach (TLabWheelColliderSource wheelOutput in driveWheels)
         {
@@ -84,36 +158,53 @@ public class TLabVihicleEngine : MonoBehaviour
 
         float feedbackRPM = rpmSum / driveWheels.Length;
 
-        //
-        // アクセルによる回転の上昇
-        //
+        return feedbackRPM;
+    }
 
-        engineRpm = LinerApproach(feedbackRPM, rpmIncrement * Time.fixedDeltaTime * fixedTime * TLabVihicleInputManager.instance.ActualInput, maxRpm);
+    private float Accelerator(float feedbackRPM)
+    {
+        return LinerApproach(feedbackRPM, RPMINCREMENT * GetTimeError * GetActualInput, maxRpm);
+    }
 
-        //
-        // エンジン軸での消耗
-        //
-
-        if (engineRpm >= idling - 1)
+    #region Damping
+    private void DampingAtEngineShaft()
+    {
+        if (engineActive)
         {
-            engineRpm = LinerApproach(engineRpm, rpmAttenuation * Time.fixedDeltaTime * fixedTime, idling - 1);
+            if (engineRpm >= IDLING - 1)
+                engineRpm = LinerApproach(engineRpm, RPMATTENUATION * GetTimeError, IDLING - 1);
+            else
+                engineRpm = IDLING - 1;
         }
         else
         {
-            engineRpm = idling - 1;
+            engineRpm = LinerApproach(engineRpm, RPMATTENUATION * GetTimeError * 1.5f, 0);
         }
+    }
 
-        //
-        // ブレーキによる回転の減衰
-        //
-
-        rpmSum = 0f;
+    private void DampingAtEngineBrake()
+    {
+        float rpmSum = 0f;
         foreach (TLabWheelColliderSource brakeWheel in brakeWheels)
-        {
             rpmSum += brakeWheel.UpdateEngineRPMWithBreak(engineRpm);
-        }
 
         engineRpm = rpmSum / brakeWheels.Length;
+    }
+    #endregion Damping
+
+    private float GetNextTorque()
+    {
+        return engineInfo.rpmTorqueCurve.Evaluate(engineRpm) * GetActualInput;
+    }
+
+    public void UpdateEngine()
+    {
+        float feedbackRPM = GetFeedbackRPM();
+
+        engineRpm = Accelerator(feedbackRPM);
+
+        DampingAtEngineShaft();
+        DampingAtEngineBrake();
 
         UpdateEngineSound();
         UpdateTachometer();
@@ -121,15 +212,14 @@ public class TLabVihicleEngine : MonoBehaviour
         float torque;
         bool enableAddTorque;
 
-        if (currentGearRatio == 0 || TLabVihicleInputManager.instance.ClutchInput > 0.5f || (engineRpm < idling && TLabVihicleInputManager.instance.ActualInput < 0.1f))
+        if (IsNeutralOrClutch)
         {
-            // Neutral or Clutch
             torque = 0.0f;
             enableAddTorque = false;
         }
         else
         {
-            torque = engineInfo.rpmTorqueCurve.Evaluate(engineRpm) * TLabVihicleInputManager.instance.ActualInput;
+            torque = GetNextTorque();
             enableAddTorque = true;
         }
 
@@ -142,29 +232,53 @@ public class TLabVihicleEngine : MonoBehaviour
         }
     }
 
-    public void TLabStart()
+    private void SetMapRPM()
     {
-        currentGear = engineInfo.gears[currentGearIndex].gear;
-        currentGearRatio = engineInfo.gears[currentGearIndex].ratio;
-
         float[] indexs = engineInfo.rpmTorqueCurve.indexs;
         maxRpm = indexs[indexs.Length - 1];
+    }
 
-        m_engineAudio.Play();
+    private void SwitchEngineAudio(bool active)
+    {
+        if (active)
+            m_engineAudio.Play();
+        else
+            m_engineAudio.Stop();
+    }
+
+    public void SwitchEngine(bool active)
+    {
+        currentGearIndex = active ? 2 : 1;
+        currentGear = currentGearIndex;
+        currentGearRatio = engineInfo.gears[currentGearIndex].ratio;
+
+        engineActive = active;
+    }
+
+    public void TLabStart()
+    {
+        SwitchEngine(true);
+        SetMapRPM();
+        SwitchEngineAudio(true);
     }
 
     public void TLabUpdate()
     {
-        if (TLabVihicleInputManager.instance.GearUpPressed && currentGearIndex < engineInfo.gears.Length - 1)
+        if (GearUpPressed && currentGearIndex < engineInfo.gears.Length - 1)
         {
             Shift(1);
-            TLabVihicleInputManager.instance.GearUpPressed = false;
+            GearUpPressed = false;
         }
 
-        if (TLabVihicleInputManager.instance.GearDownPressed && currentGearIndex > 0)
+        if (GearDownPressed && currentGearIndex > 0)
         {
             Shift(-1);
-            TLabVihicleInputManager.instance.GearDownPressed = false;
+            GearDownPressed = false;
         }
+    }
+
+    private void Awake()
+    {
+        Instance = this;
     }
 }

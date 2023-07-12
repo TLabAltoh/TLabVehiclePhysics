@@ -1,20 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class TLabGCCModLauncher : MonoBehaviour
 {
+    [Header("Custom Mod URL")]
     [SerializeField] TLabInputField m_modURL;
-    [SerializeField] Slider m_arbRearSlider;
-    [SerializeField] Slider m_arbFrontSlider;
-    [SerializeField] TextMeshProUGUI m_arbRear;
-    [SerializeField] TextMeshProUGUI m_arbFront;
+
+    [Header("Wheel Physics")]
     [SerializeField] TLabWheelPhysics m_rearPhysics;
     [SerializeField] TLabWheelPhysics m_frontPhysics;
 
+    [Header("Buildin Mod URL")]
     [SerializeField] BuiltInMod[] m_builtinMods;
-
-    // "modtestmap.assetbundl"
 
     public void StartMod()
     {

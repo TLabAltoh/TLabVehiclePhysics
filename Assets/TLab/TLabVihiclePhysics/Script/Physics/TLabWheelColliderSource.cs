@@ -5,15 +5,13 @@ using static TLab.Math;
 public class TLabWheelColliderSource : MonoBehaviour
 {
     #region Note
-
     // rigid body は必ず dummy wheel よりも高い位置に配置しなければならない．
     // そうしないとヨーモーメントが発生したとき、rigid body が地面に押し付け
     // られる可笑しなサスペンションになってしまう．また，それにヨーモーメントの制御も効かない．
 
     // 強い横力によって，車体の速度ベクトルを車体の z軸に早く向けることが出来れば，
     // 過度なヨー運動を減衰するトルクはその分早い段階でかかることになり，結果とし
-    // てグリップ走行を実現出来る(のかもしれない)．
-
+    // てグリップ走行を実現できそう．
     #endregion Note
 
     [SerializeField] bool steerEnabled = true;

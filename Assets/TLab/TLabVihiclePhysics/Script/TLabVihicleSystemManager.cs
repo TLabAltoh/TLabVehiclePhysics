@@ -6,17 +6,16 @@ public class TLabVihicleSystemManager : MonoBehaviour
     [SerializeField] Transform handleTransform;
     [SerializeField] float rotAngleOfHandle = 100f;
 
-    [Header("Vihicle")]
-    [SerializeField] TLabVihicleEngine m_engine;
+    [Header("Wheels")]
     [SerializeField] TLabWheelColliderSource[] m_wheelColliderSources;
 
     public static TLabVihicleSystemManager Instance;
 
     private void UpdateHandleRotation()
     {
-        Vector3 HandleTransformlocalEuler = handleTransform.localEulerAngles;
-        HandleTransformlocalEuler.z = TLabVihicleInputManager.instance.SteerInput * rotAngleOfHandle;
-        handleTransform.localEulerAngles = HandleTransformlocalEuler;
+        Vector3 handleLocalEuler = handleTransform.localEulerAngles;
+        handleLocalEuler.z = TLabVihicleInputManager.instance.SteerInput * rotAngleOfHandle;
+        handleTransform.localEulerAngles = handleLocalEuler;
     }
 
     private void Awake()
@@ -29,17 +28,17 @@ public class TLabVihicleSystemManager : MonoBehaviour
         foreach (TLabWheelColliderSource wheelColliderSource in m_wheelColliderSources)
             wheelColliderSource.TLabStart();
 
-        m_engine.TLabStart();
+        TLabVihicleEngine.Instance.TLabStart();
     }
 
     public void Update()
     {
-        m_engine.TLabUpdate();
+        TLabVihicleEngine.Instance.TLabUpdate();
     }
 
     public void FixedUpdate()
     {
-        m_engine.UpdateEngine();
+        TLabVihicleEngine.Instance.UpdateEngine();
 
         for (int i = 0; i < m_wheelColliderSources.Length; i++)
         {

@@ -4208,7 +4208,7 @@ GameObject:
   - component: {fileID: 1059846529}
   - component: {fileID: 1059846533}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: ExtCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6120,45 +6120,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675688, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675688, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_Interpolate
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675688, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 301863818280675690, guid: a20cc6f7e766ddf498834e05f54d1d1b,
         type: 3}
       propertyPath: m_Name
       value: TLabCarRoot
       objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675690, guid: a20cc6f7e766ddf498834e05f54d1d1b,
+    - target: {fileID: 301863818702552394, guid: a20cc6f7e766ddf498834e05f54d1d1b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675708, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: centerZ
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 301863818280675708, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_frontRatio
-      value: 0.526
-      objectReference: {fileID: 0}
-    - target: {fileID: 301863819080490938, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
