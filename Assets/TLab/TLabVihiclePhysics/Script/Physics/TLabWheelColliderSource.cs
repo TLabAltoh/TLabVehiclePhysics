@@ -43,11 +43,12 @@ public class TLabWheelColliderSource : MonoBehaviour
     private float compressRate = 0f;
     private bool enableAddTorque = false;
     private bool isGrounded = false;
-    private const float weightRatio = 0.25f;
-    private const float diffGearRatio = 3.42f;
-    private const float idling = 1400f;
-    private const float fixedTime = 30f;
+    private const float WEIGHT_RATIO = 0.25f;
+    private const float DIFFGEAR_RATIO = 3.42f;
+    private const float IDLING = 1400f;
+    private const float FIXED_TIME = 30f;
 
+    #region Passing data to and from the engine
     public float EngineRpm
     {
         get
@@ -110,7 +111,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         set
         {
             gearRatio = value;
-            totalGearRatio = value * diffGearRatio;
+            totalGearRatio = value * DIFFGEAR_RATIO;
         }
     }
 
@@ -128,6 +129,54 @@ public class TLabWheelColliderSource : MonoBehaviour
         {
             gripFactor = value;
         }
+    }
+    #endregion Passing data to and from the engine
+
+    #region Input
+    private float ActualInput
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.ActualInput;
+        }
+    }
+
+    private float BrakeInput
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.BrakeInput;
+        }
+    }
+
+    private float AckermanAngle
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.AckermanAngle;
+        }
+    }
+
+    private float ClutchInput
+    {
+        get
+        {
+            return TLabVihicleInputManager.instance.ClutchInput;
+        }
+    }
+    #endregion Input
+
+    private bool GearConnected
+    {
+        get
+        {
+            return enableAddTorque || rawWheelRPM * totalGearRatio >= IDLING && ClutchInput <= 0.5f;
+        }
+    }
+
+    private float GetFrameLerp(float value)
+    {
+        return value * FIXED_TIME * Time.fixedDeltaTime;
     }
 
     //public void OndrawGizmosSelected()
@@ -166,28 +215,22 @@ public class TLabWheelColliderSource : MonoBehaviour
 
     public void UpdateSuspension()
     {
-        // layer4(Water)だけを無視する
-
+        // Layer (Water)を無視
         // ProjectSettings->Physicsで Carと Waterの衝突判定を解除する
 
-        var raycastDistance = wheelPhysics.wheelRadius + wheelPhysics.susDst;
+        var dir = new Ray(dummyWheel.position, -dummyWheel.up);
+        var ignore = ~(1 << waterLayer.value);
+        var distance = wheelPhysics.wheelRadius + wheelPhysics.susDst;
 
-        var ignoreLayer = ~(1 << waterLayer.value);
-
-        var raycastDir = new Ray(dummyWheel.position, -dummyWheel.up);
-
-        if (Physics.Raycast(raycastDir, out raycastHit, raycastDistance, ignoreLayer))
+        if (Physics.Raycast(dir, out raycastHit, distance, ignore))
         {
             // Wheelが地面と接している
             isGrounded = true;
-            gizmoColor = Color.green;
-
-            // 前フレームのサスペンションをキャッシュ
             susCpsPrev = susCps;
+            gizmoColor = Color.green;
 
             var stretchedOut = wheelPhysics.wheelRadius + wheelPhysics.susDst;
             var suspentionOrigin = dummyWheel.position;
-
             susCps = stretchedOut - (raycastHit.point - suspentionOrigin).magnitude;
 
             // サスペンションの圧縮率(圧縮しているほど値が1に近づく)
@@ -203,31 +246,24 @@ public class TLabWheelColliderSource : MonoBehaviour
         else
         {
             // Wheelが地面と接していないとき
+            isGrounded = false;
             susCps = 0f;
             gizmoColor = Color.blue;
-            isGrounded = false;
         }
     }
 
     public void UpdateWheel()
     {
-        // steerEnabled が有効のとき、ステアリングを適応する．
-        var ackermanAngle = steerEnabled ? TLabVihicleInputManager.instance.AckermanAngle : 0;
+        var ackermanAngle = steerEnabled ? AckermanAngle : 0;
 
-        //
         // dummy wheel
-        //
-
         Vector3 dummyRot = dummyWheel.localEulerAngles;
         dummyRot.x = 0f;
         dummyRot.y = ackermanAngle;
         dummyRot.z = 0f;
         dummyWheel.localEulerAngles = dummyRot;
 
-        //
         // visual wheel
-        //
-
         wheelRot += currentWheelRPM / 60 * 360 * Time.fixedDeltaTime;
         Vector3 visualRot = transform.localEulerAngles;
         visualRot.x = wheelRot;
@@ -242,10 +278,6 @@ public class TLabWheelColliderSource : MonoBehaviour
 
     public void WheelAddForce()
     {
-        //
-        // 摩擦を計算
-        //
-
         if (isGrounded == false) return;
 
         // タイヤの移動速度(タイヤの軸にローカル(m/s))
@@ -268,7 +300,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slip_z / wheelLocalVelocity.z : 2f;
 
         // スリップアングルを逆タンジェントで計算
-        slipAngle = 0f;
+        slipAngle = 0.0f;
 
         // 速度の向き
         var velZDir = -System.Math.Sign(wheelLocalVelocity.z);
@@ -291,7 +323,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         //
 
         // タイヤ 1つ当たりの重力
-        var gravity = (rb.mass * weightRatio + wheelPhysics.wheelMass) * 9.8f;
+        var gravity = (rb.mass * WEIGHT_RATIO + wheelPhysics.wheelMass) * 9.8f;
 
         // 転がり抵抗(0.015は，転がり抵抗を推測するマジックナンバー)
         var rollingResistance = velZDir * gravity * 0.015f;
@@ -315,7 +347,7 @@ public class TLabWheelColliderSource : MonoBehaviour
 
         var targetZ = rollingResistance;
 
-        if (TLabVihicleInputManager.instance.BrakeInput > 0.1f)
+        if (BrakeInput > 0.1f)
             targetZ = targetZ + Mathf.Cos(slipAngle) * frictionForce;
         else if (enableAddTorque)
             targetZ = targetZ + torque;
@@ -341,111 +373,64 @@ public class TLabWheelColliderSource : MonoBehaviour
         rb.AddForceAtPosition(suspentionForce, transform.position, ForceMode.Force);
     }
 
-    public float UpdateEngineRPMWithBreak(float tmpRPM)
+    public float UpdateEngineRPMWithBreak(float currentRPM)
     {
         //
         // アクセルで上昇した回転数をトルクの計算前にブレーキで打ち消す．
         //
 
-        const float maxRPMDecrement = 100f;
-        var rpmDecrement = TLabVihicleInputManager.instance.BrakeInput * maxRPMDecrement * Time.fixedDeltaTime;
         if (enableAddTorque)
         {
-            // トランスミッションがつながっているので，ブレーキングによる回転数の減衰はアイドリングを基準に終了させる．
-            var lerpToBrake = LinerApproach(tmpRPM, rpmDecrement, 0);
-            var currentTotalGear = Mathf.Abs(gearRatio) * diffGearRatio;
-            currentWheelRPM = lerpToBrake / currentTotalGear;
-            return lerpToBrake > idling ? lerpToBrake : idling - 1;
+            // トランスミッションがつながっている
+            var lerp = LinerApproach(currentRPM, GetFrameLerp(BrakeInput * 3f), 0);
+            currentWheelRPM = lerp / Mathf.Abs(totalGearRatio);
+            return lerp > IDLING ? lerp : IDLING - 1;
         }
         else
         {
             // トランスミッションが外れているので，タイヤの回転スケールで計算
-            currentWheelRPM = LinerApproach(currentWheelRPM, rpmDecrement, 0);
-            return tmpRPM;
+            currentWheelRPM = LinerApproach(currentWheelRPM, GetFrameLerp(BrakeInput * 3f), 0);
+            return currentRPM;
         }
     }
 
     private void UpdateEngineRPMWithEngineAxis()
     {
-        //
-        // タイヤの回転数の更新.1 (エンジンスケール)
-        //
-
         var dst = Mathf.Abs(rawWheelRPM * totalGearRatio);
 
-        const float rpmForGripMax = 2000f * fixedTime;
+        // 現在のタイヤの状態からRPMをどれだけ減衰させるか決定
         // 車が進行方向に対して傾斜しているときはタイヤがスリップしやすくする
         var angleRatio = wheelPhysics.AngleRatioCurve.Evaluate(Mathf.Abs(slipAngle / Mathf.PI * 180));
         var torqueRatio = wheelPhysics.TorqueRatioCruve.Evaluate(Mathf.Abs(torque));
-
-        var rpmForGrip = rpmForGripMax * angleRatio * torqueRatio * Time.fixedDeltaTime;
-        var driftRPM = engineRpm;
-        var toRawEngineRpm = LinerApproach(driftRPM, rpmForGrip, dst);
+        var toRawEngineRpm = LinerApproach(engineRpm, GetFrameLerp(2000f) * angleRatio * torqueRatio, dst);
 
         // エンジンの動力をギアに伝えたことによる回転数の減衰
-        const float rpmAttenuation = 25f * fixedTime;
-        var lerpToAttenuation = LinerApproach(toRawEngineRpm, rpmAttenuation * Time.fixedDeltaTime, idling - 1);
-        feedbackRpm = lerpToAttenuation;
+        var attenuated = LinerApproach(toRawEngineRpm, GetFrameLerp(25f), IDLING - 1);
+        feedbackRpm = attenuated;
 
-        //
-        // タイヤの回転数の更新.2
-        //
-
-        var wheelRpm = Mathf.Sign(rawWheelRPM) * lerpToAttenuation / Mathf.Abs(totalGearRatio);
+        var wheelRpm = Mathf.Sign(rawWheelRPM) * attenuated / Mathf.Abs(totalGearRatio);
         currentWheelRPM = wheelRpm;
     }
 
     public void UpdateEngineRpm()
     {
-        const float decrement = 15f;
+        if(!isGrounded) rawWheelRPM = LinerApproach(currentWheelRPM, GetFrameLerp(0.5f), 0);
 
-        if (isGrounded)
+        if (driveEnabled)
         {
-            // タイヤが地面を掴んでいる
-
-            if (driveEnabled)
+            if (GearConnected)
             {
-                // 駆動輪
-
-                if (enableAddTorque || rawWheelRPM * totalGearRatio >= idling && TLabVihicleInputManager.instance.ClutchInput <= 0.5f)
-                {
-                    // ギアがつながっている
-                    UpdateEngineRPMWithEngineAxis();
-                }
-                else
-                {
-                    feedbackRpm = engineRpm;
-                    currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
-                }
+                // ギアがつながっている
+                UpdateEngineRPMWithEngineAxis();
             }
             else
             {
-                currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
+                feedbackRpm = engineRpm;
+                currentWheelRPM = LinerApproach(rawWheelRPM, GetFrameLerp(0.5f), 0);
             }
         }
         else
-        {
-            // タイヤが地面を掴んでいない
-
-            const float rpmAttenuation = 15f;
-            rawWheelRPM = LinerApproach(currentWheelRPM, rpmAttenuation * Time.fixedDeltaTime, 0);
-            if (driveEnabled)
-            {
-                if (enableAddTorque || rawWheelRPM * totalGearRatio >= idling && TLabVihicleInputManager.instance.ClutchInput <= 0.5f)
-                {
-                    UpdateEngineRPMWithEngineAxis();
-                }
-                else
-                {
-                    feedbackRpm = engineRpm;
-                    currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
-                }
-            }
-            else
-            {
-                currentWheelRPM = LinerApproach(rawWheelRPM, decrement * Time.fixedDeltaTime, 0);
-            }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-        }
+            currentWheelRPM = LinerApproach(rawWheelRPM, GetFrameLerp(0.5f), 0);
     }
 
     public void TLabStart()

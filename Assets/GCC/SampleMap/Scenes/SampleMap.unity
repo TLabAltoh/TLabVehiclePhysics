@@ -689,7 +689,7 @@ MonoBehaviour:
   m_menuWindow: {fileID: 745507544}
   m_rankingUrl: https://tlab-games.com/tlab/vihiclephysics/webgl/ranking.php?table_name=test_mod_ranking&img=webgl.test_mod.baner.png
   m_resultWindow: {fileID: 1953520779}
-  m_nameInputField: {fileID: 1584568423}
+  m_nameInputField: {fileID: 0}
   m_resultWindowRankingText: {fileID: 259840322}
   m_registerUrl: https://tlab-games.com/tlab/vihiclephysics/webgl/register_ranking.php
   clickAudio: {fileID: 60136655}
@@ -6125,11 +6125,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: TLabCarRoot
       objectReference: {fileID: 0}
-    - target: {fileID: 301863818702552394, guid: a20cc6f7e766ddf498834e05f54d1d1b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7033,7 +7028,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1459344890
 MonoBehaviour:
@@ -7570,6 +7565,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1953520780}
     m_Modifications:
+    - target: {fileID: 18712571303950289, guid: 38285747716ff59419a495b709b12c5c,
+        type: 3}
+      propertyPath: m_text
+      value: Enter player name ...
+      objectReference: {fileID: 0}
     - target: {fileID: 3063154159034142251, guid: 38285747716ff59419a495b709b12c5c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -7711,18 +7711,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1584568421}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1584568423 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7669631758126696800, guid: 38285747716ff59419a495b709b12c5c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1584568421}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0825f131e3736642b2141c54382e39e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &1649105156
 Mesh:
   m_ObjectHideFlags: 0
@@ -8037,7 +8025,7 @@ GameObject:
   - component: {fileID: 1763674975}
   - component: {fileID: 1763674979}
   m_Layer: 0
-  m_Name: CaptureCamera
+  m_Name: Camera (For Create Play Image etc ...)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8159,7 +8147,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: -18.168, y: -36.349, z: 0}
 --- !u!114 &1763674979
 MonoBehaviour:
