@@ -72,6 +72,8 @@ public class GrabBluredTextureRendererPass : ScriptableRenderPass
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
+        if (renderingData.cameraData.isPreviewCamera) return;
+
         // Method called when path processing is executed
 
         CommandBuffer buf = CommandBufferPool.Get(NAME);
@@ -102,14 +104,17 @@ public class GrabBluredTextureRendererPass : ScriptableRenderPass
 
         buf.Blit(_currentTarget, _screenCopyID);
 
-        Blit(buf, _screenCopyID, _blurredTempID1);
+        //Blit(buf, _screenCopyID, _blurredTempID1);
+        buf.Blit(_screenCopyID, _blurredTempID1);
         buf.ReleaseTemporaryRT(_screenCopyID);
 
         buf.SetGlobalVector(_offsetsID, new Vector4(x, 0, 0, 0));
-        Blit(buf, _blurredTempID1, _blurredTempID2, _material);
+        //Blit(buf, _blurredTempID1, _blurredTempID2, _material);
+        buf.Blit(_blurredTempID1, _blurredTempID2, _material);
 
         buf.SetGlobalVector(_offsetsID, new Vector4(0, y, 0, 0));
-        Blit(buf, _blurredTempID2, _blurredTempID1, _material);
+        //Blit(buf, _blurredTempID2, _blurredTempID1, _material);
+        buf.Blit(_blurredTempID2, _blurredTempID1, _material);
 
         buf.ReleaseTemporaryRT(_blurredTempID2);
 
