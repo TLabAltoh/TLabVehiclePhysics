@@ -3,7 +3,9 @@
 An open source wheel collider sample project  
 More controllable and more natural cornering drift than Unity built-in WheelCollider  
 Support for course mods using AssetBundles  
-Supports URP only
+This project uses URP, but TLabVihiclePhysics itself can also be used in the built-in render pipeline
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/tlabaltoh)
 
 [You can play the demo here](https://tlab.itch.io/tlabvihiclephysics-mod)
 ## Screenshot
@@ -43,6 +45,11 @@ git submodule update
 ##### Camera Operation
 - ASDW: Camera Rotation
 - Z: Switch Camera (FPS / TPS)
+
+#### When porting to other Unity projects
+The following files are the main components that control the operation of the wheel. Copy these to the desired Unity Project
+- Assets/TLab
+- ProjectSettings/InputManager.asset
 
 #### Build
 - Uncheck ```Strip Engine Code``` from Project Settings when building.Since this is a mechanism to remove unnecessary code at build time, it may cause unintended behavior in downloaded AssetBundles
