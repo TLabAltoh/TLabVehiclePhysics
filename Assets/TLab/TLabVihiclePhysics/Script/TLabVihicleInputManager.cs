@@ -271,6 +271,10 @@ public class TLabVihicleInputManager : MonoBehaviour
 
     void Update()
     {
+        // Disable vehicle control inputs when the player exits the vehicle
+        if (TLabVihicleSystemManager.Instance.GettingOff == true)
+            return;
+
         // Input processing should be described in Update
         // https://unity-yuji.xyz/input-fixedupdate/
         // https://qiita.com/yuji_yasuhara/items/6f50ecdd5d59e83aac99

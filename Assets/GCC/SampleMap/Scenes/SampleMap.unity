@@ -705,10 +705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc645eae301f58246ad192cdcd53630e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_arbRearText: {fileID: 0}
-  m_arbFrontText: {fileID: 0}
-  m_arbRear: {fileID: 0}
-  m_arbFront: {fileID: 0}
   m_wheelRear: {fileID: 11400000, guid: d8b4f6b62a8330c439dcde42e4d05649, type: 2}
   m_wheelFront: {fileID: 11400000, guid: d2e61fcc44c683b41b6b515007958693, type: 2}
 --- !u!1 &70375659

@@ -70,6 +70,10 @@ public class TLabVihicleCameraInputManager : MonoBehaviour
 
     private void Update()
     {
+        // Disable camera operation from the vehicle component when the player exits the vehicle.
+        if (TLabVihicleSystemManager.Instance.GettingOff == true)
+            return;
+
         if (m_isMobile) return;
 
         CameraInput();

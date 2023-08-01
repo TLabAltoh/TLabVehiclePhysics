@@ -9,7 +9,26 @@ public class TLabVihicleSystemManager : MonoBehaviour
     [Header("Wheels")]
     [SerializeField] TLabWheelColliderSource[] m_wheelColliderSources;
 
+    // Whether the player is getting out of the vehicle
+    private bool m_gettingOff = false;
+
     public static TLabVihicleSystemManager Instance;
+
+    /// <summary>
+    /// When enabled, the vehicle operation inputs (accelerator,brake, etc...) and CarCameraInputManager are disabled.
+    /// </summary>
+    public bool GettingOff
+    {
+        get
+        {
+            return m_gettingOff;
+        }
+
+        set
+        {
+            m_gettingOff = value;
+        }
+    }
 
     private void UpdateHandleRotation()
     {

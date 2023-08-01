@@ -86,6 +86,10 @@ public class TLabVihicleCamera : MonoBehaviour
     {
         while (true)
         {
+            // Disable camera operation from the vehicle component when the player exits the vehicle.
+            if (TLabVihicleSystemManager.Instance.GettingOff == true)
+                continue;
+
             yield return new WaitForFixedUpdate();
 
             if(Camera.main != null)

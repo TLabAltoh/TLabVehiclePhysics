@@ -58,7 +58,7 @@ The following files are the main components that control the operation of the wh
 AssetBundles can be used to import your own mods built as scenes. Since we are developing with the goal of modding with WebGL, the only way to download AssetBundle is from a web server
 #### Build Asset Bundle
 1. Name the scene you want to build as an AssetBundle from the inspector as AssetBundle (Create only one named AssetBundle per project)
-2. execute Assets/Build AssetBundle {target platform} from the menu item to build the AssetBundle. The built AssetBundle is placed in ```AssetBundle/{target platform}
+2. execute Tools/Build AssetBundle from the menu item to build the AssetBundle. The built AssetBundle is placed in ```AssetBundle/{target platform}```
 #### CreateServer
 1. Place any AssetBundle in ```AssetBundle/Server/```
 2. Start WebServer with ```npm start```
