@@ -12,9 +12,9 @@
 /[Rr]ecordings
 /[Uu]I
 /[Cc]apture
+/[Aa]ssets/[Ss]amples/
 /[As]ssets/[Gg]itIgnore
 /[Aa]ssets/[Tt]lab/TLabCurveTool
-/[Aa]ssets/Samples/Universal RP
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
