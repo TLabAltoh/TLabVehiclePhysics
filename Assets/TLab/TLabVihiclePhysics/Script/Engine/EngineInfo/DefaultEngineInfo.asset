@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9adeaf7a8e7ba144798ecdd107ac7ff6, type: 3}
+  m_Name: DefaultEngineInfo
+  m_EditorClassIdentifier: 
+  gears:
+  - gear: -1
+    ratio: -3
+  - gear: 0
+    ratio: 0
+  - gear: 1
+    ratio: 4.5
+  - gear: 2
+    ratio: 2.6
+  - gear: 3
+    ratio: 1.7
+  - gear: 4
+    ratio: 1.3
+  - gear: 5
+    ratio: 1
+  - gear: 6
+    ratio: 0.8
+  rpmTorqueCurve: {fileID: 11400000, guid: d7416b42fb3d84d4bbfb6d6666b2e819, type: 2}
