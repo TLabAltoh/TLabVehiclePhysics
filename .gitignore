@@ -12,7 +12,9 @@
 /[Uu]I/
 /[Cc]apture/
 /[Aa]ssets/[Gg]it[Ii]gnore/
+/[Aa]ssets/[Gg]it[Ii]gnore.meta
 /[Aa]ssets/[Ss]amples/
+/[Aa]ssets/[Ss]amples.meta
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
