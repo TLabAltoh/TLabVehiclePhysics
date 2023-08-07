@@ -249,7 +249,7 @@ public class TLabVihicleEngine : MonoBehaviour
     public void SwitchEngine(bool active)
     {
         currentGearIndex = active ? 2 : 1;
-        currentGear = currentGearIndex;
+        currentGear = engineInfo.gears[currentGearIndex].gear;
         currentGearRatio = engineInfo.gears[currentGearIndex].ratio;
 
         engineActive = active;
@@ -266,12 +266,14 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         if (GearUpPressed && currentGearIndex < engineInfo.gears.Length - 1)
         {
+            Debug.Log("GearUp");
             Shift(1);
             GearUpPressed = false;
         }
 
         if (GearDownPressed && currentGearIndex > 0)
         {
+            Debug.Log("GearDown");
             Shift(-1);
             GearDownPressed = false;
         }
