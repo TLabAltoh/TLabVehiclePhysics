@@ -9,17 +9,12 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-/[Aa]ssets/[Pp]racticeShader
-/[Aa]ssets/[Pp]racticeShader.meta
-/[Aa]ssets/TLab/TLabCurveTool
-/[Aa]ssets/TLab/TLabCurveTool.meta
-/[Aa]ssets/[Tt]LabPeint
-/[Aa]ssets/[Tt]LabPeint.meta
-/[Aa]ssets/GCC1/
-/[Aa]ssets/Samples/Universal RP
 /[Rr]ecordings
 /[Uu]I
 /[Cc]apture
+/[As]ssets/[Gg]itIgnore
+/[Aa]ssets/[Tt]lab/TLabCurveTool
+/[Aa]ssets/Samples/Universal RP
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
