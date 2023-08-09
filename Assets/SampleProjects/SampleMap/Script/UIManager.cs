@@ -5,26 +5,33 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Vihicle System Manager")]
+    [SerializeField] TLabVihicleSystemManager systemManager;
+
+    [Header("Check Points")]
+    [SerializeField] CheckPoint[] m_checkPoints;
+
+    [Header("Base Window")]
     [SerializeField] GameObject m_epsTimePanel;
     [SerializeField] GameObject m_statePanel;
     [SerializeField] TextMeshProUGUI m_elapsedTime;
     [SerializeField] TextMeshProUGUI m_state;
-    [SerializeField] CheckPoint[] m_checkPoints;
-    private IEnumerator m_startTimeAttack = null;
 
-    [Header("MenuWindow")]
+    [Header("Menu Window")]
     [SerializeField] GameObject m_menuWindow;
     [SerializeField] string m_rankingUrl;
 
-    [Header("ResultWindow")]
+    [Header("Result Window")]
     [SerializeField] GameObject m_resultWindow;
     [SerializeField] TLabInputField m_nameInputField;
     [SerializeField] TextMeshProUGUI m_resultWindowRankingText;
     [SerializeField] string m_registerUrl;
-    private bool m_alreadyRegistered;
 
     [Header("Audio")]
     [SerializeField] AudioSource clickAudio;
+
+    private IEnumerator m_startTimeAttack = null;
+    private bool m_alreadyRegistered;
 
     public static UIManager Instance;
 
@@ -154,7 +161,7 @@ public class UIManager : MonoBehaviour
     {
         clickAudio.Play();
 
-        var rb = TLabVihicleSystemManager.Instance.transform.parent.GetComponent<Rigidbody>();
+        var rb = systemManager.transform.parent.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
         rb.velocity = Vector3.zero;

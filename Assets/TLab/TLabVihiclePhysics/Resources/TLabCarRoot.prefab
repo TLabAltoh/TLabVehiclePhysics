@@ -804,7 +804,7 @@ Transform:
   - {fileID: 301863818151842908}
   - {fileID: 5912095757370533588}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &301863818280675688
 Rigidbody:
@@ -990,6 +990,7 @@ MonoBehaviour:
   m_maxHorizontal: 60
   m_cameraDistance: 3.2
   m_cameraHeight: 0.7
+  systemManager: {fileID: 301863819526358899}
 --- !u!114 &301863818280675686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,10 +1006,11 @@ MonoBehaviour:
   m_xInputAxis: Horizontal L
   m_yInputAxis: Vertical L
   m_switchCameraKey: z
-  m_uiManager: {fileID: 301863819080490933}
-  m_playerCamera: {fileID: 301863818280675684}
   m_isMobile: 0
   m_switchCameraAudio: {fileID: 3535374917999696207}
+  m_systemManager: {fileID: 301863819526358899}
+  m_uiManager: {fileID: 301863819080490933}
+  m_playerCamera: {fileID: 301863818280675684}
 --- !u!114 &301863818280675683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1021,6 +1023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f29f6b1f58378134a8f7da91b30e7bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  systemManager: {fileID: 301863819526358899}
   clucth: CarInput Clucth
   upGear: CarInput Up Shift
   downGear: CarInput Down Shift
@@ -2742,6 +2745,8 @@ MonoBehaviour:
   - {fileID: 5902336353477284409}
   - {fileID: 8367604793501537810}
   engineInfo: {fileID: 11400000, guid: 7a3add85d626acc49921c308a7379948, type: 2}
+  vihiclePhysics: {fileID: 301863818280675708}
+  inputManager: {fileID: 301863818280675683}
   m_needle: {fileID: 301863819195955969}
   m_speed_Gear: {fileID: 301863819216359449}
   m_engineAudio: {fileID: 301863819273784809}
@@ -2940,6 +2945,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handleTransform: {fileID: 2940664379556251176}
   rotAngleOfHandle: 100
+  engine: {fileID: 301863819273784810}
+  inputManager: {fileID: 301863818280675683}
   m_wheelColliderSources:
   - {fileID: 4868004424742606035}
   - {fileID: 6402682022256991398}
@@ -3707,6 +3714,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   steerEnabled: 0
   driveEnabled: 1
+  engine: {fileID: 301863819273784810}
+  inputManager: {fileID: 301863818280675683}
   wheelPhysics: {fileID: 11400000, guid: d8b4f6b62a8330c439dcde42e4d05649, type: 2}
   arbPear: {fileID: 5902336353477284409}
 --- !u!1 &4868004424742606036
@@ -3808,6 +3817,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   steerEnabled: 1
   driveEnabled: 0
+  engine: {fileID: 301863819273784810}
+  inputManager: {fileID: 301863818280675683}
   wheelPhysics: {fileID: 11400000, guid: d2e61fcc44c683b41b6b515007958693, type: 2}
   arbPear: {fileID: 6402682022256991398}
 --- !u!1 &4872740735055811385
@@ -3909,6 +3920,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   steerEnabled: 1
   driveEnabled: 0
+  engine: {fileID: 301863819273784810}
+  inputManager: {fileID: 301863818280675683}
   wheelPhysics: {fileID: 11400000, guid: d2e61fcc44c683b41b6b515007958693, type: 2}
   arbPear: {fileID: 4868004424742606035}
 --- !u!1 &5144744746228319373
@@ -4093,6 +4106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   steerEnabled: 0
   driveEnabled: 1
+  engine: {fileID: 301863819273784810}
+  inputManager: {fileID: 301863818280675683}
   wheelPhysics: {fileID: 11400000, guid: d8b4f6b62a8330c439dcde42e4d05649, type: 2}
   arbPear: {fileID: 8367604793501537810}
 --- !u!1 &6431187993873775726

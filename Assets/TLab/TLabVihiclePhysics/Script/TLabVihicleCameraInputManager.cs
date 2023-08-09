@@ -3,24 +3,31 @@ using UnityEngine;
 
 public class TLabVihicleCameraInputManager : MonoBehaviour
 {
-    [Header("Handle Input")]
+    [Header("Input Config")]
+
+    [Tooltip("Handle Input")]
     [SerializeField] string m_xInputAxis = "Horizontal_L";
 
-    [Header("Accelerator Input")]
+    [Tooltip("Accelerator Input")]
     [SerializeField] string m_yInputAxis = "Vertical_L";
 
-    [Header("Switch Camera")]
+    [Tooltip("Switch Camera")]
     [SerializeField] string m_switchCameraKey = "z";
-
-    [Space(20)]
-    [SerializeField] TLabVihicleUIManager m_uiManager;
-    [SerializeField] TLabVihicleCamera m_playerCamera;
 
     [Header("IsMobile")]
     [SerializeField] bool m_isMobile = false;
 
     [Header("Audio")]
     [SerializeField] AudioSource m_switchCameraAudio;
+
+    [Header("Vihicle System Manager")]
+    [SerializeField] TLabVihicleSystemManager m_systemManager;
+
+    [Header("UI Manager")]
+    [SerializeField] TLabVihicleUIManager m_uiManager;
+
+    [Header("Player Camera")]
+    [SerializeField] TLabVihicleCamera m_playerCamera;
 
     private Action CameraInput;
 
@@ -71,7 +78,7 @@ public class TLabVihicleCameraInputManager : MonoBehaviour
     private void Update()
     {
         // Disable camera operation from the vehicle component when the player exits the vehicle.
-        if (TLabVihicleSystemManager.Instance.GettingOff == true)
+        if (m_systemManager.GettingOff == true)
             return;
 
         if (m_isMobile) return;

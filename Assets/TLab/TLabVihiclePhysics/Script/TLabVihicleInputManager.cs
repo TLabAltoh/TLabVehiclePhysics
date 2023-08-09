@@ -13,6 +13,9 @@ public class TLabVihicleInputManager : MonoBehaviour
 {
     // G29 takes 0 for all items only in the first frame, so it accelerates (this can't be helped)
 
+    [Header("Vihicle Physics Manager")]
+    [SerializeField] TLabVihicleSystemManager systemManager;
+
     [Header("Keyborad")]
     [SerializeField] string clucth = "CarInput Clucth";
     [SerializeField] string upGear = "CarInput Up Shift";
@@ -26,8 +29,6 @@ public class TLabVihicleInputManager : MonoBehaviour
 
     [Header("HowInput")]
     [SerializeField] InputMode howInput;
-
-    public static TLabVihicleInputManager instance;
 
     private Action axisInput;
     private Action shiftInput; 
@@ -237,8 +238,6 @@ public class TLabVihicleInputManager : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
         howInput = IsMobile() == true ? InputMode.InputFromVirtualUI : howInput;
 #endif
-
-        instance = this;
     }
 
     void Start()
@@ -272,7 +271,7 @@ public class TLabVihicleInputManager : MonoBehaviour
     void Update()
     {
         // Disable vehicle control inputs when the player exits the vehicle
-        if (TLabVihicleSystemManager.Instance.GettingOff == true)
+        if (systemManager.GettingOff == true)
             return;
 
         // Input processing should be described in Update

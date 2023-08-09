@@ -14,8 +14,6 @@ public class TLabVihiclePhysics : MonoBehaviour
     [SerializeField] TLabWheelColliderSource[] m_wheelsFront;
     [SerializeField] TLabWheelColliderSource[] m_wheelsRear;
 
-    public static TLabVihiclePhysics instance;
-
     private Rigidbody rb;
     private float localVelZ = 0f;
 
@@ -34,11 +32,6 @@ public class TLabVihiclePhysics : MonoBehaviour
             const float msToKmh = 3.6f;
             return localVelZ * msToKmh;
         }
-    }
-
-    private void Awake()
-    {
-        instance = this;
     }
 
     private void SetGripFactor(TLabWheelColliderSource[] wheels, float ratio)

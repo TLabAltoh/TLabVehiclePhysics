@@ -4,10 +4,18 @@ using static TLab.Math;
 
 public class TLabVihicleEngine : MonoBehaviour
 {
-    [Header("Vihicle")]
+    [Header("Wheel Collider Source")]
     [SerializeField] TLabWheelColliderSource[] driveWheels;
     [SerializeField] TLabWheelColliderSource[] brakeWheels;
+
+    [Header("Engine Info")]
     [SerializeField] TLabVihicleEngineInfo engineInfo;
+
+    [Header("Vihicle Physics")]
+    [SerializeField] TLabVihiclePhysics vihiclePhysics;
+
+    [Header("Input")]
+    [SerializeField] TLabVihicleInputManager inputManager;
 
     [Header("UI")]
     [SerializeField] RectTransform m_needle;
@@ -15,8 +23,6 @@ public class TLabVihicleEngine : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] AudioSource m_engineAudio;
-
-    public static TLabVihicleEngine Instance;
 
     private int currentGearIndex = 2;
     private int currentGear;
@@ -52,6 +58,14 @@ public class TLabVihicleEngine : MonoBehaviour
         }
     }
 
+    public float EngineMaxRpm
+    {
+        get
+        {
+            return maxRpm;
+        }
+    }
+
     private float GetTimeError
     {
         get
@@ -64,7 +78,7 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.ActualInput;
+            return inputManager.ActualInput;
         }
     }
 
@@ -72,7 +86,7 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.ClutchInput;
+            return inputManager.ClutchInput;
         }
     }
 
@@ -88,12 +102,12 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.GearUpPressed;
+            return inputManager.GearUpPressed;
         }
 
         set
         {
-            TLabVihicleInputManager.instance.GearUpPressed = value;
+            inputManager.GearUpPressed = value;
         }
     }
 
@@ -101,12 +115,12 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.GearDownPressed;
+            return inputManager.GearDownPressed;
         }
 
         set
         {
-            TLabVihicleInputManager.instance.GearDownPressed = value;
+            inputManager.GearDownPressed = value;
         }
     }
 
@@ -114,7 +128,7 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         get
         {
-            return Mathf.CeilToInt(TLabVihiclePhysics.instance.KilometerPerHourInLocal);
+            return Mathf.CeilToInt(vihiclePhysics.KilometerPerHourInLocal);
         }
     }
 
@@ -277,10 +291,5 @@ public class TLabVihicleEngine : MonoBehaviour
             Shift(-1);
             GearDownPressed = false;
         }
-    }
-
-    private void Awake()
-    {
-        Instance = this;
     }
 }

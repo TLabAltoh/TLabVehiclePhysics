@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class TLabVihicleUIManager : MonoBehaviour
 {
+    [Header("Car Root Transform")]
     [SerializeField] Transform m_car;
+
+    [Header("Back Mirror UI")]
     [SerializeField] GameObject m_backMirror;
 
     [Header("Audio")]

@@ -20,6 +20,9 @@ public class TLabVihicleCamera : MonoBehaviour
     [SerializeField] float m_cameraDistance = 3.2f;
     [SerializeField] float m_cameraHeight = 0.8f;
 
+    [Header("Vihicle System Manager")]
+    [SerializeField] TLabVihicleSystemManager systemManager;
+
     private Transform lookObj;
     private Rigidbody m_rb;
     private Vector3 lookDir;
@@ -87,7 +90,7 @@ public class TLabVihicleCamera : MonoBehaviour
         while (true)
         {
             // Disable camera operation from the vehicle component when the player exits the vehicle.
-            if (TLabVihicleSystemManager.Instance.GettingOff == true)
+            if (systemManager.GettingOff == true)
                 continue;
 
             yield return new WaitForFixedUpdate();

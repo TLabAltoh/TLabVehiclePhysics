@@ -6,13 +6,17 @@ public class TLabVihicleSystemManager : MonoBehaviour
     [SerializeField] Transform handleTransform;
     [SerializeField] float rotAngleOfHandle = 100f;
 
+    [Header("Engine")]
+    [SerializeField] TLabVihicleEngine engine;
+
+    [Header("InputManager")]
+    [SerializeField] TLabVihicleInputManager inputManager;
+
     [Header("Wheels")]
     [SerializeField] TLabWheelColliderSource[] m_wheelColliderSources;
 
     // Whether the player is getting out of the vehicle
     private bool m_gettingOff = false;
-
-    public static TLabVihicleSystemManager Instance;
 
     /// <summary>
     /// When enabled, the vehicle operation inputs (accelerator,brake, etc...) and CarCameraInputManager are disabled.
@@ -33,13 +37,8 @@ public class TLabVihicleSystemManager : MonoBehaviour
     private void UpdateHandleRotation()
     {
         Vector3 handleLocalEuler = handleTransform.localEulerAngles;
-        handleLocalEuler.z = TLabVihicleInputManager.instance.SteerInput * rotAngleOfHandle;
+        handleLocalEuler.z = inputManager.SteerInput * rotAngleOfHandle;
         handleTransform.localEulerAngles = handleLocalEuler;
-    }
-
-    private void Awake()
-    {
-        Instance = this;
     }
 
     public void Start()
@@ -47,17 +46,17 @@ public class TLabVihicleSystemManager : MonoBehaviour
         foreach (TLabWheelColliderSource wheelColliderSource in m_wheelColliderSources)
             wheelColliderSource.TLabStart();
 
-        TLabVihicleEngine.Instance.TLabStart();
+        engine.TLabStart();
     }
 
     public void Update()
     {
-        TLabVihicleEngine.Instance.TLabUpdate();
+        engine.TLabUpdate();
     }
 
     public void FixedUpdate()
     {
-        TLabVihicleEngine.Instance.UpdateEngine();
+        engine.UpdateEngine();
 
         for (int i = 0; i < m_wheelColliderSources.Length; i++)
         {

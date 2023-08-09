@@ -17,6 +17,8 @@ public class TLabWheelColliderSource : MonoBehaviour
     [SerializeField] bool steerEnabled = true;
     [SerializeField] bool driveEnabled = false;
 
+    [SerializeField] TLabVihicleEngine engine;
+    [SerializeField] TLabVihicleInputManager inputManager;
     [SerializeField] TLabWheelPhysics wheelPhysics;
     [SerializeField] TLabWheelColliderSource arbPear;
 
@@ -137,7 +139,7 @@ public class TLabWheelColliderSource : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.ActualInput;
+            return inputManager.ActualInput;
         }
     }
 
@@ -145,7 +147,7 @@ public class TLabWheelColliderSource : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.BrakeInput;
+            return inputManager.BrakeInput;
         }
     }
 
@@ -153,7 +155,7 @@ public class TLabWheelColliderSource : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.AckermanAngle;
+            return inputManager.AckermanAngle;
         }
     }
 
@@ -161,7 +163,7 @@ public class TLabWheelColliderSource : MonoBehaviour
     {
         get
         {
-            return TLabVihicleInputManager.instance.ClutchInput;
+            return inputManager.ClutchInput;
         }
     }
     #endregion Input
@@ -288,7 +290,8 @@ public class TLabWheelColliderSource : MonoBehaviour
         var wheelAngularVelocity = currentWheelRPM / 60 * circleLength;
 
         // タイヤの速度の回転数換算 (rpm)．
-        rawWheelRPM = wheelLocalVelocity.z / circleLength * 60;
+        var tmp = wheelLocalVelocity.z / circleLength * 60;
+        rawWheelRPM = tmp < engine.EngineMaxRpm ? tmp : engine.EngineMaxRpm;
 
         // スリップの実測値 (m/s)
         var slip_z = wheelAngularVelocity - wheelLocalVelocity.z;
@@ -414,7 +417,7 @@ public class TLabWheelColliderSource : MonoBehaviour
 
     public void UpdateEngineRpm()
     {
-        if(!isGrounded) rawWheelRPM = LinerApproach(currentWheelRPM, GetFrameLerp(0.5f), 0);
+        if(!isGrounded) rawWheelRPM = currentWheelRPM;
 
         if (driveEnabled)
         {
