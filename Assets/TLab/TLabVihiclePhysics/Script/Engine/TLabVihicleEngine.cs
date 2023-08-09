@@ -246,7 +246,7 @@ public class TLabVihicleEngine : MonoBehaviour
         }
     }
 
-    private void SetMapRPM()
+    private void SetMaxRPM()
     {
         float[] indexs = engineInfo.rpmTorqueCurve.indexs;
         maxRpm = indexs[indexs.Length - 1];
@@ -272,7 +272,7 @@ public class TLabVihicleEngine : MonoBehaviour
     public void TLabStart()
     {
         SwitchEngine(true);
-        SetMapRPM();
+        SetMaxRPM();
         SwitchEngineAudio(true);
     }
 
@@ -280,14 +280,12 @@ public class TLabVihicleEngine : MonoBehaviour
     {
         if (GearUpPressed && currentGearIndex < engineInfo.gears.Length - 1)
         {
-            Debug.Log("GearUp");
             Shift(1);
             GearUpPressed = false;
         }
 
         if (GearDownPressed && currentGearIndex > 0)
         {
-            Debug.Log("GearDown");
             Shift(-1);
             GearDownPressed = false;
         }

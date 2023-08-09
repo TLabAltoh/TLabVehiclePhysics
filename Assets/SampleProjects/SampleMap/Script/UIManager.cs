@@ -8,6 +8,9 @@ public class UIManager : MonoBehaviour
     [Header("Vihicle System Manager")]
     [SerializeField] TLabVihicleSystemManager systemManager;
 
+    [Header("Vihicle Engine")]
+    [SerializeField] TLabVihicleEngine engine;
+
     [Header("Check Points")]
     [SerializeField] CheckPoint[] m_checkPoints;
 
@@ -37,6 +40,8 @@ public class UIManager : MonoBehaviour
 
     public void ExitFromResultWindow()
     {
+        engine.SwitchEngine(true);
+        systemManager.GettingOff = false;
         m_resultWindow.gameObject.SetActive(false);
     }
 
@@ -120,6 +125,9 @@ public class UIManager : MonoBehaviour
         remain = 3.0f;
         while ((remain -= Time.deltaTime) > 0)
             yield return null;
+
+        engine.SwitchEngine(false);
+        systemManager.GettingOff = true;
 
         m_state.text = "";
         m_statePanel.gameObject.SetActive(false);

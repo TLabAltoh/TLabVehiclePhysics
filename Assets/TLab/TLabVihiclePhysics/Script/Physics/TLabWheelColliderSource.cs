@@ -176,6 +176,33 @@ public class TLabWheelColliderSource : MonoBehaviour
         }
     }
 
+    private float MaxWheelRPM
+    {
+        get
+        {
+            if (totalGearRatio != 0)
+                return engine.EngineMaxRpm / Mathf.Abs(totalGearRatio);
+            else
+                return Mathf.Infinity;
+        }
+    }
+
+    private float WheelRPM2Vel
+    {
+        get
+        {
+            return circleLength / 60;
+        }
+    }
+
+    private float Vel2WheelRPM
+    {
+        get
+        {
+            return 60 / circleLength;
+        }
+    }
+
     private float GetFrameLerp(float value)
     {
         return value * FIXED_TIME * Time.fixedDeltaTime;
@@ -287,20 +314,24 @@ public class TLabWheelColliderSource : MonoBehaviour
         var wheelLocalVelocity = dummyWheel.transform.InverseTransformDirection(wheelVelocity);
 
         // タイヤの回転の速度換算 (m/s)
-        var wheelAngularVelocity = currentWheelRPM / 60 * circleLength;
+        var wheelAngularVelocity = currentWheelRPM * WheelRPM2Vel;
 
         // タイヤの速度の回転数換算 (rpm)．
-        var tmp = wheelLocalVelocity.z / circleLength * 60;
-        rawWheelRPM = tmp < engine.EngineMaxRpm ? tmp : engine.EngineMaxRpm;
+        // vel2WheelRPMが MaxWheelRPMを上回る時は rawWheelRPMをMaxWheelRPMに制限してエンジンブレーキを発生させる．
+        var vel2WheelRPM = wheelLocalVelocity.z * Vel2WheelRPM;
+        var achieveMaxRPM = Mathf.Abs(vel2WheelRPM) >= MaxWheelRPM;
+        rawWheelRPM = achieveMaxRPM ? Mathf.Sign(vel2WheelRPM) * MaxWheelRPM : vel2WheelRPM;
+        //Debug.Log(achieveMaxRPM + " " + Mathf.Abs(vel2WheelRPM) + " " + MaxWheelRPM);
 
         // スリップの実測値 (m/s)
-        var slip_z = wheelAngularVelocity - wheelLocalVelocity.z;
-        var slipSqr_z = slip_z * slip_z;
-        var slipSqr_x = wheelLocalVelocity.x * wheelLocalVelocity.x;
-        var slipAmount = Mathf.Sqrt(slipSqr_x + slipSqr_z);
+        var slipZ = wheelAngularVelocity - (rawWheelRPM * WheelRPM2Vel);
+        var slipSqrZ = slipZ * slipZ;
+        var slipSqrX = wheelLocalVelocity.x * wheelLocalVelocity.x;
+        var slipAmount = Mathf.Sqrt(slipSqrX + slipSqrZ);
+        //Debug.Log(slipZ + " " + wheelAngularVelocity + " " + (rawWheelRPM * WheelRPM2Vel) + " " + this.gameObject.name);
 
         // スリップ率
-        var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slip_z / wheelLocalVelocity.z : 2f;
+        var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slipZ / wheelLocalVelocity.z : 2f;
 
         // スリップアングルを逆タンジェントで計算
         slipAngle = 0.0f;
@@ -350,7 +381,7 @@ public class TLabWheelColliderSource : MonoBehaviour
 
         var targetZ = rollingResistance;
 
-        if (BrakeInput > 0.1f)
+        if (BrakeInput > 0.1f || achieveMaxRPM)
             targetZ = targetZ + Mathf.Cos(slipAngle) * frictionForce;
         else if (enableAddTorque)
             targetZ = targetZ + torque;
@@ -376,7 +407,7 @@ public class TLabWheelColliderSource : MonoBehaviour
         rb.AddForceAtPosition(suspentionForce, transform.position, ForceMode.Force);
     }
 
-    public float UpdateEngineRPMWithBreak(float currentRPM)
+    public float UpdateEngineRPMWithBreak(float engineRPM)
     {
         //
         // アクセルで上昇した回転数をトルクの計算前にブレーキで打ち消す．
@@ -385,15 +416,15 @@ public class TLabWheelColliderSource : MonoBehaviour
         if (enableAddTorque)
         {
             // トランスミッションがつながっている
-            var lerp = LinerApproach(currentRPM, GetFrameLerp(BrakeInput * 3f), 0);
-            currentWheelRPM = lerp / Mathf.Abs(totalGearRatio);
+            var lerp = LinerApproach(engineRPM, GetFrameLerp(BrakeInput * 50f), 0);
+            currentWheelRPM = Mathf.Sign(rawWheelRPM) * lerp / Mathf.Abs(totalGearRatio);
             return lerp > IDLING ? lerp : IDLING - 1;
         }
         else
         {
             // トランスミッションが外れているので，タイヤの回転スケールで計算
-            currentWheelRPM = LinerApproach(currentWheelRPM, GetFrameLerp(BrakeInput * 3f), 0);
-            return currentRPM;
+            currentWheelRPM = LinerApproach(currentWheelRPM, GetFrameLerp(BrakeInput * 50f), 0);
+            return engineRPM;
         }
     }
 
