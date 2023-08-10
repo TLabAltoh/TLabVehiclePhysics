@@ -1,4 +1,6 @@
 using UnityEngine;
+using TLab.VihiclePhysics;
+using TLab.InputField;
 
 public class TLabGCCModLauncher : MonoBehaviour
 {
@@ -6,8 +8,8 @@ public class TLabGCCModLauncher : MonoBehaviour
     [SerializeField] TLabInputField m_modURL;
 
     [Header("Wheel Physics")]
-    [SerializeField] TLabWheelPhysics m_rearPhysics;
-    [SerializeField] TLabWheelPhysics m_frontPhysics;
+    [SerializeField] WheelPhysics m_rearPhysics;
+    [SerializeField] WheelPhysics m_frontPhysics;
 
     [Header("Buildin Mod URL")]
     [SerializeField] BuiltInMod[] m_builtinMods;

@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TLab.VihiclePhysics;
 
 public class MapManager : MonoBehaviour
 {
-    [SerializeField] TLabWheelPhysics m_wheelRear;
-    [SerializeField] TLabWheelPhysics m_wheelFront;
+    [SerializeField] WheelPhysics m_wheelRear;
+    [SerializeField] WheelPhysics m_wheelFront;
 
     public static MapManager Instance;
 

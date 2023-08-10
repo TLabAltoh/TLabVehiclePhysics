@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace TLab
+namespace TLab.EditorTool
 {
 #if UNITY_EDITOR
-    public class TLabScreenCapture : MonoBehaviour
+    public class ScreenCapture : MonoBehaviour
     {
         [SerializeField] int width;
         [SerializeField] int height;
@@ -48,7 +48,7 @@ namespace TLab
         }
     }
 
-    [CustomEditor(typeof(TLabScreenCapture))]
+    [CustomEditor(typeof(ScreenCapture))]
     public class TLabScreenCaptureEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -57,7 +57,7 @@ namespace TLab
 
             if (GUILayout.Button("Capture"))
             {
-                TLabScreenCapture capture = target as TLabScreenCapture;
+                ScreenCapture capture = target as ScreenCapture;
                 capture.Capture();
             }
         }
