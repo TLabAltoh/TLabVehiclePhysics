@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleWayPoint : MonoBehaviour
+    public class VehicleWayPoint : MonoBehaviour
     {
-        public VihicleWayPoint nextPoint;
+        public VehicleWayPoint nextPoint;
         public float radius = 10;
 
         [Tooltip("Percentage of a vehicle's max speed to drive at")]

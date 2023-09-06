@@ -2,22 +2,22 @@ using UnityEngine;
 using TMPro;
 using static TLab.Math;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleEngine : MonoBehaviour
+    public class VehicleEngine : MonoBehaviour
     {
         [Header("Wheel Collider Source")]
         [SerializeField] WheelColliderSource[] driveWheels;
         [SerializeField] WheelColliderSource[] brakeWheels;
 
         [Header("Engine Info")]
-        [SerializeField] VihicleEngineInfo engineInfo;
+        [SerializeField] VehicleEngineInfo engineInfo;
 
-        [Header("Vihicle Physics")]
-        [SerializeField] VihiclePhysics vihiclePhysics;
+        [Header("Vehicle Physics")]
+        [SerializeField] VehiclePhysics vihiclePhysics;
 
         [Header("Input")]
-        [SerializeField] VihicleInputManager inputManager;
+        [SerializeField] VehicleInputManager inputManager;
 
         [Header("UI")]
         [SerializeField] RectTransform m_needle;

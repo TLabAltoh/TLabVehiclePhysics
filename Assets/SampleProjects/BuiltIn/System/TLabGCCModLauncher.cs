@@ -1,5 +1,5 @@
 using UnityEngine;
-using TLab.VihiclePhysics;
+using TLab.VehiclePhysics;
 using TLab.InputField;
 
 public class TLabGCCModLauncher : MonoBehaviour

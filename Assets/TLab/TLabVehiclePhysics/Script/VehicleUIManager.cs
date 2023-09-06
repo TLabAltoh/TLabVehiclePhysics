@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleUIManager : MonoBehaviour
+    public class VehicleUIManager : MonoBehaviour
     {
         [Header("Car Root Transform")]
         [SerializeField] Transform m_car;

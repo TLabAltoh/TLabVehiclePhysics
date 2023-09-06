@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleCamera : MonoBehaviour
+    public class VehicleCamera : MonoBehaviour
     {
         public enum CameraMode
         {
@@ -22,8 +22,8 @@ namespace TLab.VihiclePhysics
         [SerializeField] float m_cameraDistance = 3.2f;
         [SerializeField] float m_cameraHeight = 0.8f;
 
-        [Header("Vihicle System Manager")]
-        [SerializeField] VihicleSystemManager systemManager;
+        [Header("Vehicle System Manager")]
+        [SerializeField] VehicleSystemManager systemManager;
 
         private Transform lookObj;
         private Rigidbody m_rb;

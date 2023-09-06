@@ -2,16 +2,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
-using TLab.VihiclePhysics;
+using TLab.VehiclePhysics;
 using TLab.InputField;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Vihicle System Manager")]
-    [SerializeField] VihicleSystemManager systemManager;
+    [Header("Vehicle System Manager")]
+    [SerializeField] VehicleSystemManager systemManager;
 
-    [Header("Vihicle Engine")]
-    [SerializeField] VihicleEngine engine;
+    [Header("Vehicle Engine")]
+    [SerializeField] VehicleEngine engine;
 
     [Header("Check Points")]
     [SerializeField] CheckPoint[] m_checkPoints;

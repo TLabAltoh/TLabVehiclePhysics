@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihiclePhysics : MonoBehaviour
+    public class VehiclePhysics : MonoBehaviour
     {
         [Header("Down Force Curve")]
         [SerializeField] TLabLUT m_frontDownForceCurve;

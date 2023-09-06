@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
     public class FollowAI : MonoBehaviour
     {
@@ -13,7 +13,7 @@ namespace TLab.VihiclePhysics
         Vector3 targetPoint;
         bool targetVisible;
         bool targetIsWaypoint;
-        VihicleWayPoint targetWaypoint;
+        VehicleWayPoint targetWaypoint;
 
         public float followDistance;
         bool close;
@@ -71,7 +71,7 @@ namespace TLab.VihiclePhysics
                 targetPrev = target;
 
                 // Is the target a waypoint?
-                targetIsWaypoint = target.GetComponent<VihicleWayPoint>();
+                targetIsWaypoint = target.GetComponent<VehicleWayPoint>();
                 // Can I see the target?
                 targetVisible = !Physics.Linecast(tr.position, target.position, viewBlockMask);
 
@@ -230,7 +230,7 @@ namespace TLab.VihiclePhysics
                 targetBody = target.GetComponent<Rigidbody>();
 
                 // if target is a waypoint
-                targetWaypoint = target.GetComponent<VihicleWayPoint>();
+                targetWaypoint = target.GetComponent<VehicleWayPoint>();
                 if (targetWaypoint)
                 {
                     prevSpeed = targetWaypoint.speed;

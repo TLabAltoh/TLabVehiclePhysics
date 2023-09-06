@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
     [CreateAssetMenu()]
     public class WheelPhysics : ScriptableObject

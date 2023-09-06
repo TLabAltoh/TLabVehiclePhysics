@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
     public enum InputMode
     {
@@ -11,12 +11,12 @@ namespace TLab.VihiclePhysics
         InputFromVirtualUI
     };
 
-    public class VihicleInputManager : MonoBehaviour
+    public class VehicleInputManager : MonoBehaviour
     {
         // G29 takes 0 for all items only in the first frame, so it accelerates (this can't be helped)
 
-        [Header("Vihicle Physics Manager")]
-        [SerializeField] VihicleSystemManager systemManager;
+        [Header("Vehicle Physics Manager")]
+        [SerializeField] VehicleSystemManager systemManager;
 
         [Header("Keyborad")]
         [SerializeField] string clucth = "CarInput Clucth";

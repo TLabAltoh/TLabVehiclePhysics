@@ -1,4 +1,4 @@
-# TLabVihiclePhysics
+# TLabVehiclePhysics
 An open source wheel collider sample project  
 More controllable and more natural cornering drift than Unity built-in WheelCollider  
 Support for course mods using AssetBundles  
@@ -24,7 +24,7 @@ This project uses URP, but TLabVihiclePhysics itself can also be used in the bui
 ### Installing
 Clone the repository to any directory with the following command  
 ```
-git clone https://github.com/TLabAltoh/TLabVihiclePhysics.git
+git clone https://github.com/TLabAltoh/TLabVehiclePhysics.git
 ```
 
 ### WheelColiderSource

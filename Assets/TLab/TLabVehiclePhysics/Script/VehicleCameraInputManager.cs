@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleCameraInputManager : MonoBehaviour
+    public class VehicleCameraInputManager : MonoBehaviour
     {
         [Header("Input Config")]
 
@@ -22,14 +22,14 @@ namespace TLab.VihiclePhysics
         [Header("Audio")]
         [SerializeField] AudioSource m_switchCameraAudio;
 
-        [Header("Vihicle System Manager")]
-        [SerializeField] VihicleSystemManager m_systemManager;
+        [Header("Vehicle System Manager")]
+        [SerializeField] VehicleSystemManager m_systemManager;
 
         [Header("UI Manager")]
-        [SerializeField] VihicleUIManager m_uiManager;
+        [SerializeField] VehicleUIManager m_uiManager;
 
         [Header("Player Camera")]
-        [SerializeField] VihicleCamera m_playerCamera;
+        [SerializeField] VehicleCamera m_playerCamera;
 
         private Action CameraInput;
 
@@ -61,7 +61,7 @@ namespace TLab.VihiclePhysics
 
         void Start()
         {
-            switch (GetComponent<VihicleInputManager>().HowInput)
+            switch (GetComponent<VehicleInputManager>().HowInput)
             {
                 case (InputMode.InputFromG29):
                     m_isMobile = false;

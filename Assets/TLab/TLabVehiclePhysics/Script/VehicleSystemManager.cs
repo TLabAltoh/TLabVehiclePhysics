@@ -1,18 +1,18 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
-    public class VihicleSystemManager : MonoBehaviour
+    public class VehicleSystemManager : MonoBehaviour
     {
         [Header("Handle Animation")]
         [SerializeField] Transform handleTransform;
         [SerializeField] float rotAngleOfHandle = 100f;
 
         [Header("Engine")]
-        [SerializeField] VihicleEngine engine;
+        [SerializeField] VehicleEngine engine;
 
         [Header("InputManager")]
-        [SerializeField] VihicleInputManager inputManager;
+        [SerializeField] VehicleInputManager inputManager;
 
         [Header("Wheels")]
         [SerializeField] WheelColliderSource[] m_wheelColliderSources;

@@ -2,7 +2,7 @@ using UnityEngine;
 using static TLab.ComponentUtility;
 using static TLab.Math;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
     public class WheelColliderSource : MonoBehaviour
     {
@@ -19,8 +19,8 @@ namespace TLab.VihiclePhysics
         [SerializeField] bool steerEnabled = true;
         [SerializeField] bool driveEnabled = false;
 
-        [SerializeField] VihicleEngine engine;
-        [SerializeField] VihicleInputManager inputManager;
+        [SerializeField] VehicleEngine engine;
+        [SerializeField] VehicleInputManager inputManager;
         [SerializeField] WheelPhysics wheelPhysics;
         [SerializeField] WheelColliderSource arbPear;
 

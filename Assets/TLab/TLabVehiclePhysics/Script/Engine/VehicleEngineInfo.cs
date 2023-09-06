@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace TLab.VihiclePhysics
+namespace TLab.VehiclePhysics
 {
     [CreateAssetMenu()]
-    public class VihicleEngineInfo : ScriptableObject
+    public class VehicleEngineInfo : ScriptableObject
     {
         [Header("Gear info")]
         public Gear[] gears;

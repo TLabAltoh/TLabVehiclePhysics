@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TLab.VihiclePhysics;
+using TLab.VehiclePhysics;
 
 public class MapManager : MonoBehaviour
 {
