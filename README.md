@@ -11,15 +11,13 @@ This project uses URP, but TLabVihiclePhysics itself can also be used in the bui
 ![output](https://github.com/TLabAltoh/TLabVihiclePhysics/assets/121733943/27fbf2d4-aa59-4005-a771-081d57d9f71d)
 ![output_1](https://github.com/TLabAltoh/TLabVihiclePhysics/assets/121733943/45939db4-7e75-4e38-a9ed-1a1602e8113d)
 
-## Link to TLab package used
-- [TLabVKeyborad](https://github.com/TLabAltoh/TLabVKeyborad)
-
 ## Getting Started
 ### Prerequisites
 - Unity 2022.3.3f1
 - UniversalRenderingPipeline
 - ProBuilder
 - node (v16.15.0)
+- [TLabVKeyborad](https://github.com/TLabAltoh/TLabVKeyborad)
 
 ### Installing
 Clone the repository to any directory with the following command  
