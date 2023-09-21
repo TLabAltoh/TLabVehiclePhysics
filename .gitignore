@@ -11,8 +11,7 @@
 /[Uu]ser[Ss]ettings/
 /[Uu]I/
 /[Cc]apture/
-/[Aa]ssets/[Gg]it[Ii]gnore/
-/[Aa]ssets/[Gg]it[Ii]gnore.meta
+/[Aa]ssets/.assetignore/
 /[Aa]ssets/[Ss]amples/
 /[Aa]ssets/[Ss]amples.meta
 

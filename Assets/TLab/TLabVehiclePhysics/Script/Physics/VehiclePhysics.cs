@@ -4,60 +4,45 @@ namespace TLab.VehiclePhysics
 {
     public class VehiclePhysics : MonoBehaviour
     {
-        [Header("Down Force Curve")]
-        [SerializeField] TLabLUT m_frontDownForceCurve;
-        [SerializeField] TLabLUT m_rearDownForceCurve;
+        [SerializeField] private TLabLUT m_frontDownForceCurve;
+        [SerializeField] private TLabLUT m_rearDownForceCurve;
 
-        [Header("Wheight Ratio")]
-        [SerializeField] [Range(0.2f, 0.8f)] float m_frontRatio = 0.5f;
+        [SerializeField] [Range(0.2f, 0.8f)] private float m_frontRatio = 0.5f;
 
-        [Header("Wheels Source")]
-        [SerializeField] WheelColliderSource[] m_wheelsFront;
-        [SerializeField] WheelColliderSource[] m_wheelsRear;
+        [SerializeField] private WheelColliderSource[] m_wheelsFront;
+        [SerializeField] private WheelColliderSource[] m_wheelsRear;
 
-        private Rigidbody rb;
-        private float localVelZ = 0f;
+        [SerializeField] private Rigidbody m_rigidbody;
 
-        public float MeterPerSecondInLocal
-        {
-            get
-            {
-                return localVelZ;
-            }
-        }
+        private float m_localVelZ = 0f;
 
-        public float KilometerPerHourInLocal
-        {
-            get
-            {
-                const float msToKmh = 3.6f;
-                return localVelZ * msToKmh;
-            }
-        }
+        private const float MS2KMH = 3.6f;
+
+        public float MeterPerSecondInLocal => m_localVelZ;
+
+        public float KilometerPerHourInLocal => m_localVelZ * MS2KMH;
 
         private void SetGripFactor(WheelColliderSource[] wheels, float ratio)
         {
             foreach (WheelColliderSource wheel in wheels)
-                wheel.GripFactor = ratio * 2f;
+                wheel.SetGripFactor(ratio);
         }
 
         void Start()
         {
-            rb = GetComponent<Rigidbody>();
+            m_rigidbody.maxAngularVelocity = Mathf.Infinity;
+            m_rigidbody.inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
+            m_rigidbody.inertiaTensorRotation = Quaternion.identity;
 
-            rb.maxAngularVelocity = Mathf.Infinity;
-            rb.inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
-            rb.inertiaTensorRotation = Quaternion.identity;
-
-            SetGripFactor(m_wheelsFront, m_frontRatio);
-            SetGripFactor(m_wheelsRear, 1 - m_frontRatio);
+            SetGripFactor(m_wheelsFront, m_frontRatio * 2.0f);
+            SetGripFactor(m_wheelsRear, (1 - m_frontRatio) * 2.0f);
         }
 
         void Update()
         {
-            localVelZ = transform.InverseTransformDirection(rb.velocity).z;
+            m_localVelZ = transform.InverseTransformDirection(m_rigidbody.velocity).z;
 
-            float velKmPh = Mathf.Abs(localVelZ) * 3.6f;
+            float velKmPh = Mathf.Abs(m_localVelZ) * 3.6f;
             float frontDownForce = m_frontDownForceCurve.Evaluate(velKmPh);
             float rearDownForce = m_rearDownForceCurve.Evaluate(velKmPh);
 
