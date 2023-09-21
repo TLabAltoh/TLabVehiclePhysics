@@ -5189,6 +5189,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CarRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 8728165046099144073, guid: a20cc6f7e766ddf498834e05f54d1d1b,
+        type: 3}
+      propertyPath: m_frontRatio
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 9043026111920317153, guid: a20cc6f7e766ddf498834e05f54d1d1b,
         type: 3}
       propertyPath: m_uiDocument
