@@ -16,11 +16,29 @@ commit 61e21c8df167bc6b5320b4f8f5b2b4efc7cc58c2
 ## Screenshot
 [You can play the demo here](https://tlab.itch.io/tlabvihiclephysics-mod)  
 
-<img src="Media/drift.gif" width="500" />  
+<table>
+<tr>
+   <td> 
+      <img src="Media/drift.gif" width="500" />
+   </td>
+</tr>
+</table>
 
-<img src="Media/overview.gif" width="500" />  
+<table>
+<tr>
+   <td> 
+      <img src="Media/overview.gif" width="500" />
+   </td>
+</tr>
+</table>
 
-<img src="Media/suspention.gif" width="500" />
+<table>
+<tr>
+   <td> 
+      <img src="Media/suspention.gif" width="500" />
+   </td>
+</tr>
+</table>
 
 ## Getting Started
 ### Prerequisites
