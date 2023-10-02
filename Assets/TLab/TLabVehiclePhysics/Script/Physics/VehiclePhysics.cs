@@ -7,14 +7,14 @@ namespace TLab.VehiclePhysics
         [SerializeField] private TLabLUT m_frontDownForceCurve;
         [SerializeField] private TLabLUT m_rearDownForceCurve;
 
-        [SerializeField] [Range(0.2f, 0.8f)] private float m_frontRatio = 0.5f;
+        [SerializeField, Range(0.2f, 0.8f)] private float m_frontRatio = 0.5f;
 
         [SerializeField] private WheelColliderSource[] m_wheelsFront;
         [SerializeField] private WheelColliderSource[] m_wheelsRear;
 
         [SerializeField] private Rigidbody m_rigidbody;
 
-        private float m_localVelZ = 0f;
+        private float m_localVelZ = 0.0f;
 
         private const float MS2KMH = 3.6f;
 
@@ -25,7 +25,9 @@ namespace TLab.VehiclePhysics
         private void SetGripFactor(WheelColliderSource[] wheels, float ratio)
         {
             foreach (WheelColliderSource wheel in wheels)
+            {
                 wheel.SetGripFactor(ratio);
+            }
         }
 
         void Start()

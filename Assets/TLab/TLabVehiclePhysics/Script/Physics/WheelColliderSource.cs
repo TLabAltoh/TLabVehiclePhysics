@@ -74,9 +74,13 @@ namespace TLab.VehiclePhysics
             get
             {
                 if (m_totalGearRatio != 0)
+                {
                     return m_engine.EngineMaxRpm / Mathf.Abs(m_totalGearRatio);
+                }
                 else
+                {
                     return Mathf.Infinity;
+                }
             }
         }
 
@@ -122,14 +126,54 @@ namespace TLab.VehiclePhysics
 
                 GL.Begin(GL.LINES);
                 {
+                    float tempsin = Mathf.Sin(0 / 20f * Mathf.PI * 2);
+                    float tempcos = Mathf.Cos(0 / 20f * Mathf.PI * 2);
+
+                    Vector3 susVec = new Vector3(0, tempsin, tempcos);
+
+                    Vector3 offset = transform.TransformVector(Vector3.right * 0.1f);
+                    Vector3 point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+
+                    // Connect Left and Right
+                    GL.Vertex(point + offset);
+                    GL.Vertex(point - offset);
+
+                    Vector3 prevPoint = point;
+
                     for (int i = 0; i < 20; ++i)
                     {
-                        float tempsin = Mathf.Sin(i / 20f * Mathf.PI * 2);
-                        float tempcos = Mathf.Cos(i / 20f * Mathf.PI * 2);
-                        Vector3 susvec = new Vector3(0, tempsin, tempcos);
-                        Vector3 point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susvec);
-                        GL.Vertex(point);
+                        tempsin = Mathf.Sin(i / 20f * Mathf.PI * 2);
+                        tempcos = Mathf.Cos(i / 20f * Mathf.PI * 2);
+                        susVec = new Vector3(0, tempsin, tempcos);
+                        point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+
+                        // Right Side
+                        GL.Vertex(prevPoint + offset);
+                        GL.Vertex(point + offset);
+
+                        // Left Side
+                        GL.Vertex(prevPoint - offset);
+                        GL.Vertex(point - offset);
+
+                        // Connect Left and Right
+                        GL.Vertex(point + offset);
+                        GL.Vertex(point - offset);
+
+                        prevPoint = point;
                     }
+
+                    tempsin = Mathf.Sin(Mathf.PI * 2);
+                    tempcos = Mathf.Cos(Mathf.PI * 2);
+                    susVec = new Vector3(0, tempsin, tempcos);
+                    point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+
+                    // Right Side
+                    GL.Vertex(prevPoint + offset);
+                    GL.Vertex(point + offset);
+
+                    // Left Side
+                    GL.Vertex(prevPoint - offset);
+                    GL.Vertex(point - offset);
                 }
                 GL.End();
             }
@@ -182,7 +226,10 @@ namespace TLab.VehiclePhysics
 
         private void WheelAddForce()
         {
-            if (m_grounded == false) return;
+            if (m_grounded == false)
+            {
+                return;
+            }
 
             // タイヤのタイヤ軸にローカルな移動速度 (m/s)
             var wheelVelocity = m_rigidbody.GetPointVelocity(m_dummyWheel.transform.position);
@@ -252,9 +299,13 @@ namespace TLab.VehiclePhysics
             var targetZ = rollingResistance;
 
             if (BrakeInput > 0.1f || achieveMaxRPM)
+            {
                 targetZ = targetZ + Mathf.Cos(m_slipAngle) * frictionForce;
+            }
             else if (m_transmissionConnected)
+            {
                 targetZ = targetZ + m_torque;
+            }
 
             // 各力の合計をベクトルに変換
             var totalTireForce = m_dummyWheel.transform.TransformDirection(targetX, 0f, targetZ);
@@ -277,7 +328,10 @@ namespace TLab.VehiclePhysics
         {
             // 現在のタイヤの状態からRPMをどれだけ減衰させるか決定
 
-            if (!m_grounded) m_rawWheelRPM = m_currentWheelRpm;
+            if (!m_grounded)
+            {
+                m_rawWheelRPM = m_currentWheelRpm;
+            }
 
             if (m_driveEnabled)
             {

@@ -119,14 +119,22 @@ namespace TLab.VehiclePhysics
 
                     // Provides the same behavior as GetButtonDown()
                     if (m_shiftUpPressed == 128 && m_gearUpPressed == false)
+                    {
                         m_gearUpPressed = true;
+                    }
                     else if (m_shiftUpPressed == 0)
+                    {
                         m_gearUpPressed = false;
+                    }
 
                     if (m_shiftDownPressed == 128 && m_gearDownPressed == false)
+                    {
                         m_gearDownPressed = true;
+                    }
                     else if (m_shiftDownPressed == 0)
+                    {
                         m_gearDownPressed = false;
+                    }
 
                     break;
                 case InputMode.Keyborad:
@@ -152,7 +160,9 @@ namespace TLab.VehiclePhysics
         private void UIButtonSetActive(bool active)
         {
             foreach (GameObject uiButton in m_uiButtons)
+            {
                 uiButton.SetActive(active);
+            }
         }
 
         private void InitializeWithInputMode()

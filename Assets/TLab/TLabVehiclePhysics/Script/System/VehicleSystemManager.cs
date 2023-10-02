@@ -24,7 +24,9 @@ namespace TLab.VehiclePhysics
         void Start()
         {
             foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
+            {
                 wheelColliderSource.Initialize();
+            }
 
             m_engine.Initialize();
         }
@@ -39,7 +41,9 @@ namespace TLab.VehiclePhysics
             m_engine.UpdateEngine();
 
             foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
+            {
                 wheelColliderSource.UpdateWheel();
+            }
         }
     }
 }

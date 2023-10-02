@@ -1,25 +1,26 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using TLab;
-using TLab.VehiclePhysics;
 
-public class DrawWheel : MonoBehaviour
+namespace TLab.VehiclePhysics
 {
-    [SerializeField] private WheelColliderSource[] m_wheelColliderSources;
-
-    void Start()
+    public class DrawWheel : MonoBehaviour
     {
-        RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
-    }
+        [SerializeField] private WheelColliderSource[] m_wheelColliderSources;
 
-    void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
-    {
-        foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
-            wheelColliderSource.DrawWheel();
-    }
+        void Start()
+        {
+            RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+        }
 
-    void OnDestroy()
-    {
-        RenderPipelineManager.beginCameraRendering -= OnEndCameraRendering;
+        void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
+        {
+            foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
+                wheelColliderSource.DrawWheel();
+        }
+
+        void OnDestroy()
+        {
+            RenderPipelineManager.beginCameraRendering -= OnEndCameraRendering;
+        }
     }
 }

@@ -21,7 +21,10 @@ namespace TLab.EditorTool
         private void BuildAssetBundle(string assetBundleName, BuildTarget targetPlatform)
         {
             var outputPath = System.IO.Path.Combine(root_path, targetPlatform.ToString(), assetBundleName);
-            if (!Directory.Exists(outputPath)) Directory.CreateDirectory(outputPath);
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
 
             var builder = new AssetBundleBuild();
             builder.assetBundleName = assetBundleName;
@@ -60,7 +63,10 @@ namespace TLab.EditorTool
             m_rightPanel.Clear();
 
             var selectedAsset = selectedItems.First() as string;
-            if (selectedAsset == null) return;
+            if (selectedAsset == null)
+            {
+                return;
+            }
 
             var title = new Label(selectedAsset);
             title.style.fontSize = 20;

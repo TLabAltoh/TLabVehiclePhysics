@@ -69,7 +69,9 @@ namespace TLab.VehiclePhysics
         {
             float rpmSum = 0f;
             foreach (WheelColliderSource wheelOutput in m_driveWheels)
+            {
                 rpmSum += wheelOutput.FeedbackRpm;
+            }
 
             float feedbackRPM = rpmSum / m_driveWheels.Length;
 
@@ -98,9 +100,13 @@ namespace TLab.VehiclePhysics
             {
                 case State.On:
                     if (m_engineRpm >= IDLING - 1)
+                    {
                         m_engineRpm = TLab.Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * TimeError, IDLING - 1);
+                    }
                     else
+                    {
                         m_engineRpm = IDLING - 1;
+                    }
                     break;
                 case State.Off:
                     float weight = 1.5f;
@@ -114,7 +120,9 @@ namespace TLab.VehiclePhysics
         {
             float rpmSum = 0f;
             foreach (WheelColliderSource brakeWheel in m_brakeWheels)
+            {
                 rpmSum += brakeWheel.DampingWithEngineBrake(m_engineRpm);
+            }
 
             m_engineRpm = rpmSum / m_brakeWheels.Length;
         }
@@ -179,7 +187,9 @@ namespace TLab.VehiclePhysics
             float torque = transmissionConnected ? GetTorque() : 0.0f;
 
             foreach (WheelColliderSource outputDrive in m_driveWheels)
+            {
                 outputDrive.SetWheelState(m_engineRpm, m_currentGearRatio, torque, transmissionConnected);
+            }
         }
     }
 }
