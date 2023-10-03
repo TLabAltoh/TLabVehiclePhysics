@@ -385,7 +385,6 @@ MonoBehaviour:
   m_physics: {fileID: 8728165046099144073}
   m_engine: {fileID: 301863819273784810}
   m_uiDocument: {fileID: 0}
-  m_audioSource: {fileID: 0}
 --- !u!1 &301863819526358901
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,8 +484,8 @@ MonoBehaviour:
   m_inputMethod: 0
   m_positiveKey: 273
   m_negativeKey: 274
-  moveSpeed: 1
-  getBackSpeed: 1
+  moveSpeed: 10
+  getBackSpeed: 10
   positiveButton: {fileID: 0}
   negativeButton: {fileID: 0}
 --- !u!1 &938712959550850664
