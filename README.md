@@ -42,7 +42,7 @@ commit 61e21c8df167bc6b5320b4f8f5b2b4efc7cc58c2
 
 ## Getting Started
 ### Prerequisites
-- Unity 2022.3.3f1
+- Unity 2022.3.3f1 --> 2022.3.11f1
 - UniversalRenderingPipeline
 - ProBuilder
 
