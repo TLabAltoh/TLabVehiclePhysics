@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5bb45ea9073274e8aecf5d8b0047f1, type: 3}
   m_Name: RearWheelPhysics
   m_EditorClassIdentifier: 
-  BaseGripCurve: {fileID: 11400000, guid: fb5fd67b2a1638a4c8fd479b81c5e569, type: 2}
-  SlipRatioGripCurve: {fileID: 11400000, guid: eed1aa235e5074c448389bf575ec3cb4, type: 2}
-  AngleRatioCurve: {fileID: 11400000, guid: 5f2719ad906e6bb409d4a08d0f37c5f3, type: 2}
-  TorqueRatioCruve: {fileID: 11400000, guid: f2b0fbbd2a5135a40b396d6a7ff6354b, type: 2}
+  baseGrip: {fileID: 11400000, guid: c3d73cb54a8c5f44299b95c53ebc5c33, type: 2}
+  slipRatioVsGrip: {fileID: 11400000, guid: 3408b4e94b8baa84eb2a232663049e05, type: 2}
+  slipAngleVsLerpRatio: {fileID: 11400000, guid: 925512f924cab97479c9b420157f93e6,
+    type: 2}
+  torqueVsLerpRatio: {fileID: 11400000, guid: 25844915dfb025649999ea7f120279a5, type: 2}
   spring: 55000
   damper: 1000
   wheelMass: 1
   susDst: 0.3
   targetPos: 0
   wheelRadius: 0.35
-  arbFactor: 1
+  grounded: 1
+  susCps: 0.063102245
+  susCpsPrev: 0.06074822
+  gizmoColor: {r: 0, g: 1, b: 0, a: 1}

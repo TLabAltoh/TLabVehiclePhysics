@@ -20,85 +20,58 @@ namespace TLab.VehiclePhysics
         private Transform m_dummyWheel;
         private Rigidbody m_rigidbody;
         private RaycastHit m_raycastHit;
+
+        private DriveData m_driveData = new DriveData();    // not null allowed
+
         private float m_wheelRot = 0f;
         private float m_rawWheelRPM = 0f;
         private float m_currentWheelRpm = 0f;
         private float m_slipAngle = 0f;
         private float m_gripFactor = 1f;
         private float m_totalGrip = 1f;
-        private float m_engineRpm = 0f;
+        private float m_frictionForce = 0f;
         private float m_feedbackRpm = 0f;
-        private float m_torque = 0f;
-        private float m_gearRatio = 0f;
-        private float m_totalGearRatio = 0f;
-        private float m_circleLength;
-        private float m_susCps = 0f;
-        private float m_susCpsPrev = 0f;
-        private bool m_transmissionConnected = false;
-        private bool m_grounded = false;
-        private Color m_gizmoColor = Color.green;
+        private float m_finalTorque = 0f;
+        private float m_finalGearRatio = 0f;
 
         private const float WEIGHT_RATIO = 0.25f;
         private const float DIFFGEAR_RATIO = 3.42f;
         private const float IDLING = 1400f;
         private const float FIXED_TIME = 30f;
 
-        // feedback
+        public float feedbackRpm => m_feedbackRpm;
 
-        public float FeedbackRpm => m_feedbackRpm;
+        public float totalGrip => m_totalGrip;
 
-        public float TotalGrip => m_totalGrip;
+        public float finalTorque => m_finalTorque;
+
+        public float finalGearRatio => m_finalGearRatio;
 
         // input axis
 
-        private float ActualInput => m_inputManager.ActualInput;
+        private float actualInput => m_inputManager.actualInput;
 
-        private float BrakeInput => m_inputManager.BrakeInput;
+        private float brakeInput => m_inputManager.brakeInput;
 
-        private float AckermanAngle => m_inputManager.AckermanAngle;
+        private float clutchInput => m_inputManager.clutchInput;
 
-        private float ClutchInput => m_inputManager.ClutchInput;
+        private float ackermanAngle => m_steerEnabled ? m_inputManager.ackermanAngle : 0f;
 
-        //
-
-        private float WheelRPM2Vel => m_circleLength / 60;
-
-        private float Vel2WheelRPM => 60 / m_circleLength;
-
-        //
-
-        private float GuessedEngineRpm => m_rawWheelRPM * m_totalGearRatio;
-
-        private float MaxWheelRPM
-        {
-            get
-            {
-                if (m_totalGearRatio != 0)
-                {
-                    return m_engine.EngineMaxRpm / Mathf.Abs(m_totalGearRatio);
-                }
-                else
-                {
-                    return Mathf.Infinity;
-                }
-            }
-        }
-
-        //
-
-        private bool TransmissionConnected => m_transmissionConnected || GuessedEngineRpm >= IDLING && ClutchInput <= 0.5f;
+        /// <summary>
+        /// The maximum amount of rotation of the wheel, determined from the engine speed and gear ratio.
+        /// </summary>
+        public float maxWheelRpm => m_finalGearRatio != 0 ? m_engine.maxRpm / Mathf.Abs(m_finalGearRatio) : Mathf.Infinity;
 
         public void SetGripFactor(float factor) => m_gripFactor = factor;
 
         private float GetFrameLerp(float value) => value * FIXED_TIME * Time.fixedDeltaTime;
 
-        public void SetWheelState(float engineRpm, float gearRatio, float torque, bool transmissionConnected)
+        public void SetDriveData(DriveData driveData)
         {
-            m_engineRpm = engineRpm;
-            m_gearRatio = gearRatio;
-            m_totalGearRatio = m_gearRatio * DIFFGEAR_RATIO;
-            m_torque = torque * m_totalGearRatio / m_wheelPhysics.wheelRadius;
-            m_transmissionConnected = transmissionConnected;
+            m_driveData = driveData;
+
+            m_finalGearRatio = driveData.gearRatio * DIFFGEAR_RATIO;
+            m_finalTorque = driveData.torque * m_finalGearRatio / m_wheelPhysics.wheelRadius;
         }
 
         public void DrawWheel()
@@ -111,17 +84,17 @@ namespace TLab.VehiclePhysics
 
             GL.PushMatrix();
             {
-                m_lineMaterial.color = m_gizmoColor;
+                m_lineMaterial.color = m_wheelPhysics.gizmoColor;
                 m_lineMaterial.SetPass(0);
 
                 GL.Begin(GL.LINES);
                 {
                     GL.Vertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius);
-                    GL.Vertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_susCps)));
+                    GL.Vertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)));
                 }
                 GL.End();
 
-                m_lineMaterial.color = m_gizmoColor;
+                m_lineMaterial.color = m_wheelPhysics.gizmoColor;
                 m_lineMaterial.SetPass(0);
 
                 GL.Begin(GL.LINES);
@@ -182,205 +155,184 @@ namespace TLab.VehiclePhysics
 
         private void UpdateSuspension()
         {
-            m_grounded = Physics.Raycast(new Ray(m_dummyWheel.position, -m_dummyWheel.up), out m_raycastHit, m_wheelPhysics.wheelRadius + m_wheelPhysics.susDst, m_layer);
+            var grounded = Physics.Raycast(new Ray(m_dummyWheel.position, -m_dummyWheel.up), out m_raycastHit, m_wheelPhysics.wheelRadius + m_wheelPhysics.susDst, m_layer);
 
-            if (m_grounded)
-            {
-                m_gizmoColor = Color.green;
-                m_susCpsPrev = m_susCps;
-
-                var stretchedOut = m_wheelPhysics.wheelRadius + m_wheelPhysics.susDst;
-                var suspentionOrigin = m_dummyWheel.position;
-                m_susCps = stretchedOut - (m_raycastHit.point - suspentionOrigin).magnitude;
-            }
-            else
-            {
-                m_gizmoColor = Color.blue;
-                m_susCps = 0f;
-            }
-
-            var suspentionLocalOrigin = m_dummyWheel.localPosition;
-            var amountOfReduction = Vector3.up * (m_wheelPhysics.susDst - m_susCps);
-            transform.localPosition = suspentionLocalOrigin - amountOfReduction;
+            transform.localPosition = m_wheelPhysics.UpdateSuspention(m_raycastHit, m_dummyWheel, grounded);
         }
 
         private void UpdateWheelRot()
         {
-            var ackermanAngle = m_steerEnabled ? AckermanAngle : 0;
+            // Dummy wheel
+            m_dummyWheel.localEulerAngles = new Vector3(0f, ackermanAngle, 0f);
 
-            // dummy wheel
-            Vector3 dummyRot = m_dummyWheel.localEulerAngles;
-            dummyRot.x = 0f;
-            dummyRot.y = ackermanAngle;
-            dummyRot.z = 0f;
-            m_dummyWheel.localEulerAngles = dummyRot;
-
-            // visual wheel
+            // Visual wheel
             m_wheelRot += m_currentWheelRpm / 60 * 360 * Time.fixedDeltaTime;
-            Vector3 visualRot = transform.localEulerAngles;
-            visualRot.x = m_wheelRot;
-            visualRot.y = ackermanAngle;
-            visualRot.z = 0f;
-            transform.localEulerAngles = visualRot;
+            transform.localEulerAngles = new Vector3(m_wheelRot, ackermanAngle, 0f);
         }
+
+        /// <summary>
+        /// Vehicle velocity in world space (m/s)
+        /// </summary>
+        public Vector3 velocity => m_rigidbody.GetPointVelocity(m_dummyWheel.transform.position);
+
+        /// <summary>
+        /// Vehicle velocity in wheel local space (m/s)
+        /// </summary>
+        public Vector3 localVelocity => m_dummyWheel.transform.InverseTransformDirection(velocity);
+
+        /// <summary>
+        /// Wheel anguler velocity (m/s)
+        /// </summary>
+        public float angularVelocity => m_currentWheelRpm * m_wheelPhysics.wheelRpm2Vel;
 
         private void WheelAddForce()
         {
-            if (m_grounded == false)
+            if (!m_wheelPhysics.grounded)
             {
                 return;
             }
 
-            // タイヤのタイヤ軸にローカルな移動速度 (m/s)
-            var wheelVelocity = m_rigidbody.GetPointVelocity(m_dummyWheel.transform.position);
-            var wheelLocalVelocity = m_dummyWheel.transform.InverseTransformDirection(wheelVelocity);
+            var wheelLocalVelocity = localVelocity;
 
-            // タイヤの回転の速度換算 (m/s)
-            var wheelAngularVelocity = m_currentWheelRpm * WheelRPM2Vel;
-
-            // タイヤの速度の回転数換算 (rpm)
-            var vel2WheelRPM = wheelLocalVelocity.z * Vel2WheelRPM;
-            var achieveMaxRPM = Mathf.Abs(vel2WheelRPM) >= MaxWheelRPM;
-
-            // vel2WheelRPMが MaxWheelRPMを上回る時は m_rawWheelRPMをMaxWheelRPMに制限してエンジンブレーキを発生させる
-            m_rawWheelRPM = achieveMaxRPM ? Mathf.Sign(vel2WheelRPM) * MaxWheelRPM : vel2WheelRPM;
-
-            // スリップの実測値 (m/s)
-            var slipZ = wheelAngularVelocity - (m_rawWheelRPM * WheelRPM2Vel);
-            var slipSqrZ = slipZ * slipZ;
-            var slipSqrX = wheelLocalVelocity.x * wheelLocalVelocity.x;
-            var slipAmount = Mathf.Sqrt(slipSqrX + slipSqrZ);
-
-            // スリップ率
-            var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slipZ / wheelLocalVelocity.z : 2f;
-
-            // スリップアングルを逆タンジェントで計算
-            m_slipAngle = 0.0f;
-
-            // 速度の向き
             var velZDir = -System.Math.Sign(wheelLocalVelocity.z);
 
-            // 0除算エラーを防止
+            var vel2WheelRPM = wheelLocalVelocity.z * m_wheelPhysics.vel2WheelRpm;
+
+            var achieveMaxRPM = Mathf.Abs(vel2WheelRPM) >= maxWheelRpm;
+
+            // Limit not to exceed maxWheelRpm (engine brake).
+            m_rawWheelRPM = achieveMaxRPM ? Mathf.Sign(vel2WheelRPM) * maxWheelRpm : vel2WheelRPM;
+
+            var slipZ = angularVelocity - (m_rawWheelRPM * m_wheelPhysics.wheelRpm2Vel);
+            var slipAmount = Mathf.Sqrt(
+                slipZ * slipZ + /* Forward slip */
+                wheelLocalVelocity.x * wheelLocalVelocity.x /* Horizontal slip */);
+
+            var slipRatio = Mathf.Abs(wheelLocalVelocity.z) > 0.1f ? slipZ / wheelLocalVelocity.z : 2f;
+
+            m_slipAngle = 0f;
+
+            // Prevents division-by-zero errors
             if (velZDir == 0)
             {
-                // wheelLocalVelocity.z = 0 : すでに成立
-                // wheelLocalVelocity.x = 0 : これも成立したら --> m_slipAngle = 0
-                m_slipAngle = System.Math.Sign(wheelLocalVelocity.x) * 90 * Mathf.Deg2Rad;
+                // wheelLocalVelocity.z = 0 : already established
+                // if wheelLocalVelocity.x = 0 --> slipAngle = 0
+                m_slipAngle = System.Math.Sign(wheelLocalVelocity.x) * 90f * Mathf.Deg2Rad;
             }
             else
             {
-                // 逆タンジェントでスリップアングルを計算(返り値はラジアン)
+                // Calculate slip angle with inverse tangent (return value in radians)
                 m_slipAngle = Mathf.Atan(wheelLocalVelocity.x / wheelLocalVelocity.z);
             }
 
-            // 摩擦力を計算
+            // Calculate frictional force ---> ---->
 
-            // タイヤ 1つ当たりの重力
+            // Gravity on the tire
             var gravity = (m_rigidbody.mass * WEIGHT_RATIO + m_wheelPhysics.wheelMass) * 9.8f;
 
-            // 転がり抵抗(0.015は，転がり抵抗を推測するマジックナンバー)
+            // Rolling resistance (0.015 is the magic number to estimate rolling resistance)
             var rollingResistance = velZDir * gravity * 0.015f;
 
-            // 摩擦モデルによる摩擦力の推測
-            var baseGrip = m_wheelPhysics.BaseGripCurve.Evaluate(slipAmount);
-            var slipRatioGrip = m_wheelPhysics.SlipRatioGripCurve.Evaluate(Mathf.Abs(slipRatio));
+            // Estimation of frictional force
+            var baseGrip = m_wheelPhysics.baseGrip.Evaluate(slipAmount);
+            var slipRatioGrip = m_wheelPhysics.slipRatioVsGrip.Evaluate(Mathf.Abs(slipRatio));
 
-            // 摩擦係数(最終決定)
             m_totalGrip = baseGrip * slipRatioGrip * m_gripFactor;
 
-            // 重力 * 摩擦係数 = タイヤが持つ摩擦パワーの最大値
-            var frictionForce = velZDir * gravity * m_totalGrip;
+            m_frictionForce = velZDir * gravity * m_totalGrip;
 
-            // 摩擦力をベクトル化
+            //Debug.Log("baseGrip: " + baseGrip + "slipRatio: " + slipRatio + "slipRatioGrip: " + slipRatioGrip);
+            //Debug.Log("transmission connected: " + m_driveData.transmissionConnected);
+            //Debug.Log("friction force: " + m_frictionForce);
 
-            // 三角関数で摩擦力を分配．
-            var targetX = Mathf.Sin(m_slipAngle) * frictionForce;
+            // Vectoring frictional forces ---> --->
+
+            var targetX = Mathf.Sin(m_slipAngle) * m_frictionForce;
 
             var targetZ = rollingResistance;
 
-            if (BrakeInput > 0.1f || achieveMaxRPM)
+            if (brakeInput > 0.1f || achieveMaxRPM)
             {
-                targetZ = targetZ + Mathf.Cos(m_slipAngle) * frictionForce;
+                Debug.Log("achieveMaxRPM or brakeInput");
+                targetZ = targetZ + Mathf.Cos(m_slipAngle) * m_frictionForce;
             }
-            else if (m_transmissionConnected)
+            else if (m_driveData.transmissionConnected)
             {
-                targetZ = targetZ + m_torque;
+                //Debug.Log("transmission connected ! " + this.gameObject.name);
+                //Debug.Log("final torque: " + m_finalTorque);
+                targetZ = targetZ + m_finalTorque;
             }
 
-            // 各力の合計をベクトルに変換
+            var suspentionForce = m_raycastHit.normal * m_wheelPhysics.suspentionFource;
             var totalTireForce = m_dummyWheel.transform.TransformDirection(targetX, 0f, targetZ);
 
-            // サスペンションによる力を計算
-
-            // サスペンションの変化量から回転数の係数を操作する
-            var springForce = (m_susCps - m_wheelPhysics.susDst * m_wheelPhysics.targetPos) * m_wheelPhysics.spring;
-            var damperForce = (m_susCps - m_susCpsPrev) / Time.deltaTime * m_wheelPhysics.damper;
-            var suspentionForce = m_raycastHit.normal * (springForce + damperForce);
-
-            // タイヤに力を加える
-
-            // サスペンションとタイヤのパワーをそれぞれ車体の重心に加える
             m_rigidbody.AddForceAtPosition(totalTireForce, m_dummyWheel.position, ForceMode.Force);
             m_rigidbody.AddForceAtPosition(suspentionForce, transform.position, ForceMode.Force);
         }
 
         private void UpdateEngineRpm()
         {
-            // 現在のタイヤの状態からRPMをどれだけ減衰させるか決定
-
-            if (!m_grounded)
+            if (!m_wheelPhysics.grounded)
             {
                 m_rawWheelRPM = m_currentWheelRpm;
             }
 
             if (m_driveEnabled)
             {
-                if (TransmissionConnected)
+                if (m_driveData.transmissionConnected)
                 {
-                    float increment = 2000f;
-                    float decrement = 25f;
+                    const float increment = 2000f;
 
-                    // 車が進行方向に対して傾斜しているときはタイヤがスリップしやすくする
-                    var dst = Mathf.Abs(m_rawWheelRPM * m_totalGearRatio);
-                    var angleRatio = m_wheelPhysics.AngleRatioCurve.Evaluate(Mathf.Abs(m_slipAngle / Mathf.PI * 180));
-                    var m_torqueRatio = m_wheelPhysics.TorqueRatioCruve.Evaluate(Mathf.Abs(m_torque));
-                    var toRawEngineRpm = TLab.Math.LinerApproach(m_engineRpm, GetFrameLerp(increment) * angleRatio * m_torqueRatio, dst);
+                    // Tires are more likely to slip when the car is inclined with respect to the direction of travel
+                    var dst = Mathf.Abs(m_rawWheelRPM * m_finalGearRatio);
+                    var torqueRatio = m_wheelPhysics.torqueVsLerpRatio.Evaluate(Mathf.Abs(m_finalTorque));
+                    var angleRatio = m_wheelPhysics.slipAngleVsLerpRatio.Evaluate(Mathf.Abs(m_slipAngle / Mathf.PI * 180));
+                    var toRawEngineRpm = TLab.Math.LinerApproach(m_driveData.engineRpm, GetFrameLerp(increment) * angleRatio * torqueRatio, dst);
 
-                    // エンジンの動力をギアに伝えたことによる回転数の減衰
+                    //Debug.Log("torque: " + torqueRatio + " angle: " + angleRatio);
+                    //Debug.Log("slip angle: " + m_slipAngle);
+                    //Debug.Log("toraw: " + toRawEngineRpm);
+                    Debug.Log("engin: " + m_driveData.engineRpm);
+
+                    const float decrement = 25f;
+
+                    // Damping of rpm due to transfer of engine power to gears
                     var attenuated = TLab.Math.LinerApproach(toRawEngineRpm, GetFrameLerp(decrement), IDLING - 1);
                     m_feedbackRpm = attenuated;
 
-                    var wheelRpm = Mathf.Sign(m_rawWheelRPM) * attenuated / Mathf.Abs(m_totalGearRatio);
+                    var wheelRpm = Mathf.Sign(m_rawWheelRPM) * attenuated / Mathf.Abs(m_finalGearRatio);
                     m_currentWheelRpm = wheelRpm;
+
+                    //Debug.Log("feedback: " + m_feedbackRpm);
                 }
                 else
                 {
-                    float decrement = 0.5f;
-                    float targetRpm = 0.0f;
-                    m_feedbackRpm = m_engineRpm;
+                    const float decrement = 0.5f;
+                    const float targetRpm = 0.0f;
+                    m_feedbackRpm = m_driveData.engineRpm;
                     m_currentWheelRpm = TLab.Math.LinerApproach(m_rawWheelRPM, GetFrameLerp(decrement), targetRpm);
                 }
             }
             else
             {
-                float decrement = 0.5f;
-                float targetRpm = 0.0f;
+                const float decrement = 0.5f;
+                const float targetRpm = 0.0f;
                 m_currentWheelRpm = TLab.Math.LinerApproach(m_rawWheelRPM, GetFrameLerp(decrement), targetRpm);
             }
         }
 
-        public float DampingWithEngineBrake(float m_engineRPM)
+        public float DampingWithEngineBrake(float engineRPM)
         {
-            if (m_transmissionConnected)
+            if (m_driveData.transmissionConnected)
             {
-                var lerp = TLab.Math.LinerApproach(m_engineRPM, GetFrameLerp(BrakeInput * 50f), 0);
-                m_currentWheelRpm = Mathf.Sign(m_rawWheelRPM) * lerp / Mathf.Abs(m_totalGearRatio);
+                var lerp = TLab.Math.LinerApproach(engineRPM, GetFrameLerp(brakeInput * 50f), 0);
+                m_currentWheelRpm = Mathf.Sign(m_rawWheelRPM) * lerp / Mathf.Abs(m_finalGearRatio);
                 return lerp > IDLING ? lerp : IDLING - 1;
             }
             else
             {
-                m_currentWheelRpm = TLab.Math.LinerApproach(m_currentWheelRpm, GetFrameLerp(BrakeInput * 50f), 0);
-                return m_engineRPM;
+                m_currentWheelRpm = TLab.Math.LinerApproach(m_currentWheelRpm, GetFrameLerp(brakeInput * 50f), 0);
+                return engineRPM;
             }
         }
 
@@ -394,7 +346,7 @@ namespace TLab.VehiclePhysics
 
         public void Initialize()
         {
-            // タイヤのデバッグ用
+            // For debugging tires
             m_lineMaterial = new Material(m_lineMaterial);
 
             m_dummyWheel = new GameObject("DummyWheel").transform;
@@ -403,12 +355,10 @@ namespace TLab.VehiclePhysics
 
             m_rigidbody = GetComponentFromParent<Rigidbody>(this.transform, this.GetType().FullName.ToString());
 
-            // raycastを有効化するために，コライダーを追加
+            // Add a collider to enable raycast
             m_collider = gameObject.AddComponent<SphereCollider>();
             m_collider.center = new Vector3(0.0f, m_wheelPhysics.wheelRadius, 0.0f);
             m_collider.radius = 0.0f;
-
-            m_circleLength = m_wheelPhysics.wheelRadius * 2.0f * Mathf.PI;
         }
     }
 }

@@ -28,7 +28,7 @@ public class VehicleCameraInputManager : MonoBehaviour
 
     private void PilotIsPlayer()
     {
-        switch (m_inputManager.HowInput)
+        switch (m_inputManager.howInput)
         {
             case VehicleInputManager.InputMode.G29:
                 if (LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0))
@@ -58,26 +58,21 @@ public class VehicleCameraInputManager : MonoBehaviour
                 GetSwitchCameraEvent();
                 break;
             case VehicleInputManager.InputMode.UIButton:
-                //
                 break;
         }
     }
 
     private void InitializeWithInputMode()
     {
-        switch (GetComponent<VehicleInputManager>().HowInput)
+        switch (GetComponent<VehicleInputManager>().howInput)
         {
             case VehicleInputManager.InputMode.G29:
-                //
                 break;
             case VehicleInputManager.InputMode.Mouse:
-                //
                 break;
             case VehicleInputManager.InputMode.Keyborad:
-                //
                 break;
             case VehicleInputManager.InputMode.UIButton:
-                //
                 break;
         }
     }
@@ -87,10 +82,8 @@ public class VehicleCameraInputManager : MonoBehaviour
         switch (m_systemManager.CurrentPilot)
         {
             case VehicleSystemManager.Pilot.None:
-                //
                 break;
             case VehicleSystemManager.Pilot.AI:
-                //
                 break;
             case VehicleSystemManager.Pilot.Player:
                 InitializeWithInputMode();
@@ -108,10 +101,8 @@ public class VehicleCameraInputManager : MonoBehaviour
         switch (m_systemManager.CurrentPilot)
         {
             case VehicleSystemManager.Pilot.None:
-                //
                 break;
             case VehicleSystemManager.Pilot.AI:
-                //
                 break;
             case VehicleSystemManager.Pilot.Player:
                 PilotIsPlayer();

@@ -40,21 +40,21 @@ namespace TLab.VehiclePhysics
         private float m_shiftUpPressed = 0f;
         private float m_shiftDownPressed = 0f;
 
-        public InputMode HowInput => m_howInput;
+        public InputMode howInput => m_howInput;
 
-        public float ActualInput => m_actualInput;
+        public float actualInput => m_actualInput;
 
-        public float AckermanAngle => m_ackermanAngle;
+        public float ackermanAngle => m_ackermanAngle;
 
-        public float SteerInput => m_steerInput;
+        public float steerInput => m_steerInput;
 
-        public float BrakeInput => m_brakeInput;
+        public float brakeInput => m_brakeInput;
 
-        public float ClutchInput => m_clutchInput;
+        public float clutchInput => m_clutchInput;
 
-        public bool GearUpPressed { get => m_gearUpPressed; set => m_gearUpPressed = value; }
+        public bool gearUpPressed { get => m_gearUpPressed; set => m_gearUpPressed = value; }
 
-        public bool GearDownPressed { get => m_gearDownPressed; set => m_gearDownPressed = value; }
+        public bool gearDownPressed { get => m_gearDownPressed; set => m_gearDownPressed = value; }
 
         public void ForceBreak()
         {
@@ -67,14 +67,14 @@ namespace TLab.VehiclePhysics
         public void GearDownPressedFromUIButton() => m_gearDownPressed = true;
 
 #if !UNITY_EDITOR && UNITY_WEBGL
-    [System.Runtime.InteropServices.DllImport("__Internal")]
-    private static extern bool IsMobile();
+        [System.Runtime.InteropServices.DllImport("__Internal")]
+        private static extern bool IsMobile();
 #endif
 
         void Awake()
         {
 #if !UNITY_EDITOR && UNITY_WEBGL
-        m_howInput = IsMobile() == true ? InputMode.UIButton : m_howInput;
+            m_howInput = IsMobile() == true ? InputMode.UIButton : m_howInput;
 #endif
         }
 
@@ -135,7 +135,6 @@ namespace TLab.VehiclePhysics
                     {
                         m_gearDownPressed = false;
                     }
-
                     break;
                 case InputMode.Keyborad:
                     GetVirtualInputAxis();
@@ -147,12 +146,10 @@ namespace TLab.VehiclePhysics
                     m_brakeInput = Mathf.Clamp01(-(mousePos.y - Screen.height * 0.5f) / (Screen.height * 0.5f));
                     m_steerInput = (mousePos.x - Screen.width * 0.5f) / (Screen.width * 0.5f);
                     m_clutchInput = m_virtualClutch.AxisValue;
-
                     GetShiftChangeEvent();
                     break;
                 case InputMode.UIButton:
                     GetVirtualInputAxis();
-
                     break;
             }
         }

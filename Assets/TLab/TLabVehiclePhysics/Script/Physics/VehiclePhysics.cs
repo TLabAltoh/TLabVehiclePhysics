@@ -4,8 +4,8 @@ namespace TLab.VehiclePhysics
 {
     public class VehiclePhysics : MonoBehaviour
     {
-        [SerializeField] private TLabLUT m_frontDownForceCurve;
-        [SerializeField] private TLabLUT m_rearDownForceCurve;
+        [SerializeField] private LUT m_frontDownForceCurve;
+        [SerializeField] private LUT m_rearDownForceCurve;
 
         [SerializeField, Range(0.2f, 0.8f)] private float m_frontRatio = 0.5f;
 

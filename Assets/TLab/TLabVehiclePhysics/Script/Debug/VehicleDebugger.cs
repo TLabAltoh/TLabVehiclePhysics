@@ -26,11 +26,11 @@ public class VehicleDebugger : MonoBehaviour
 
         debugField = rootVE.Q<VisualElement>("rpm");
         value = debugField.Q<Label>("value");
-        value.text = m_engine.EngineRpm.ToString();
+        value.text = m_engine.engineRpm.ToString();
 
         debugField = rootVE.Q<VisualElement>("gear");
         value = debugField.Q<Label>("value");
-        value.text = m_engine.CurrentGear.ToString();
+        value.text = m_engine.currentGear.ToString();
 
         debugField = rootVE.Q<VisualElement>("speed");
         value = debugField.Q<Label>("value");

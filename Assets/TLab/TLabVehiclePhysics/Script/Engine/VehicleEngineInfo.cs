@@ -7,10 +7,10 @@ namespace TLab.VehiclePhysics
     {
         public Gear[] Gears { get => m_gears; }
 
-        public TLabLUT TorqueCurve { get => m_torqueCurve; }
+        public LUT torqueCurve { get => m_torqueCurve; }
 
         [SerializeField] private Gear[] m_gears;
-        [SerializeField] private TLabLUT m_torqueCurve;
+        [SerializeField] private LUT m_torqueCurve;
     }
 
     [System.Serializable]
