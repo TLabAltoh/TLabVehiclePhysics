@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba504698f631624189ea008d4b84144, type: 3}
+  m_Name: FrontDownForce
+  m_EditorClassIdentifier: 
+  lutDic:
+  - index: 0
+    color: {r: 1, g: 0, b: 0, a: 1}
+    lut: {fileID: 11400000, guid: fe5f2d0e2c30e004b986e9850b326d57, type: 2}
+  - index: 50
+    color: {r: 0, g: 1, b: 0.9800041, a: 1}
+    lut: {fileID: 11400000, guid: ec689060d7864214faed707a315d8fff, type: 2}
+  div: 5
+  xAccuracy: 1
+  yAccuracy: 1

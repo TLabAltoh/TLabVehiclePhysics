@@ -29,4 +29,4 @@ MonoBehaviour:
     ratio: 1
   - gear: 6
     ratio: 0.8
-  m_torqueCurve: {fileID: 11400000, guid: 25844915dfb025649999ea7f120279a5, type: 2}
+  m_torqueCurve: {fileID: 11400000, guid: fdd7d326224f13f4b824e5cc1605dbd2, type: 2}

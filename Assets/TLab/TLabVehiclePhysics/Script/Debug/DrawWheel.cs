@@ -9,18 +9,22 @@ namespace TLab.VehiclePhysics
 
         void Start()
         {
-            RenderPipelineManager.endCameraRendering += OnEndCameraRendering;
+            RenderPipelineManager.beginCameraRendering += OnRenderEvent;
+            RenderPipelineManager.endCameraRendering += OnRenderEvent;
         }
 
-        void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
+        void OnRenderEvent(ScriptableRenderContext context, Camera camera)
         {
             foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
+            {
                 wheelColliderSource.DrawWheel();
+            }
         }
 
         void OnDestroy()
         {
-            RenderPipelineManager.beginCameraRendering -= OnEndCameraRendering;
+            RenderPipelineManager.beginCameraRendering -= OnRenderEvent;
+            RenderPipelineManager.endCameraRendering -= OnRenderEvent;
         }
     }
 }

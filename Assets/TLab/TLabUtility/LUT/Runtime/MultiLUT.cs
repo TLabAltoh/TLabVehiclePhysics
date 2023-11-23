@@ -10,7 +10,13 @@ namespace TLab
 
 #if UNITY_EDITOR
         [SerializeField] [Range(0, 10)]
-        public int div = 10;
+        public int div = 5;
+
+        [SerializeField] [Range(1, 10)]
+        public int xAccuracy = 1;
+
+        [SerializeField] [Range(1, 10)]
+        public int yAccuracy = 1;
 #endif
 
         public static LerpLUT LerpLUT(int L, int H, LUTDic[] lutDic, float x)
@@ -79,7 +85,7 @@ namespace TLab
             var value0 = lerpLUT.lut0.Evaluate(y);
             var value1 = lerpLUT.lut1.Evaluate(y);
 
-            return value0 * lerpLUT.factor + value1 * (1f - lerpLUT.factor);
+            return value0 * (1f - lerpLUT.factor) + value1 * lerpLUT.factor;
         }
     }
 }

@@ -62,6 +62,11 @@ namespace TLab.VehiclePhysics
         /// </summary>
         public float maxWheelRpm => m_finalGearRatio != 0 ? m_engine.maxRpm / Mathf.Abs(m_finalGearRatio) : Mathf.Infinity;
 
+        /// <summary>
+        /// Grip coefficient dependent on downforce
+        /// </summary>
+        public float gripFactor => m_gripFactor;
+
         public void SetGripFactor(float factor) => m_gripFactor = factor;
 
         private float GetFrameLerp(float value) => value * FIXED_TIME * Time.fixedDeltaTime;
@@ -242,8 +247,8 @@ namespace TLab.VehiclePhysics
             m_frictionForce = velZDir * gravity * m_totalGrip;
 
             //Debug.Log("baseGrip: " + baseGrip + "slipRatio: " + slipRatio + "slipRatioGrip: " + slipRatioGrip);
-            //Debug.Log("transmission connected: " + m_driveData.transmissionConnected);
-            //Debug.Log("friction force: " + m_frictionForce);
+            //Debug.Log("transmissionConnected: " + m_driveData.transmissionConnected);
+            //Debug.Log("frictionForce: " + m_frictionForce);
 
             // Vectoring frictional forces ---> --->
 
@@ -253,13 +258,13 @@ namespace TLab.VehiclePhysics
 
             if (brakeInput > 0.1f || achieveMaxRPM)
             {
-                Debug.Log("achieveMaxRPM or brakeInput");
+                //Debug.Log("achieveMaxRPM or brakeInput");
                 targetZ = targetZ + Mathf.Cos(m_slipAngle) * m_frictionForce;
             }
             else if (m_driveData.transmissionConnected)
             {
-                //Debug.Log("transmission connected ! " + this.gameObject.name);
-                //Debug.Log("final torque: " + m_finalTorque);
+                //Debug.Log("transmissionConnected ! " + this.gameObject.name);
+                //Debug.Log("finalTorque: " + m_finalTorque);
                 targetZ = targetZ + m_finalTorque;
             }
 
@@ -289,10 +294,10 @@ namespace TLab.VehiclePhysics
                     var angleRatio = m_wheelPhysics.slipAngleVsLerpRatio.Evaluate(Mathf.Abs(m_slipAngle / Mathf.PI * 180));
                     var toRawEngineRpm = TLab.Math.LinerApproach(m_driveData.engineRpm, GetFrameLerp(increment) * angleRatio * torqueRatio, dst);
 
-                    //Debug.Log("torque: " + torqueRatio + " angle: " + angleRatio);
-                    //Debug.Log("slip angle: " + m_slipAngle);
-                    //Debug.Log("toraw: " + toRawEngineRpm);
-                    Debug.Log("engin: " + m_driveData.engineRpm);
+                    //Debug.Log("torqueRatio: " + torqueRatio + " angleRatio: " + angleRatio);
+                    //Debug.Log("slipAngle (rad): " + m_slipAngle);
+                    //Debug.Log("toRawEngienRpm: " + toRawEngineRpm);
+                    //Debug.Log("enginRpm: " + m_driveData.engineRpm);
 
                     const float decrement = 25f;
 
@@ -303,7 +308,7 @@ namespace TLab.VehiclePhysics
                     var wheelRpm = Mathf.Sign(m_rawWheelRPM) * attenuated / Mathf.Abs(m_finalGearRatio);
                     m_currentWheelRpm = wheelRpm;
 
-                    //Debug.Log("feedback: " + m_feedbackRpm);
+                    //Debug.Log("feedbackRpm: " + m_feedbackRpm);
                 }
                 else
                 {

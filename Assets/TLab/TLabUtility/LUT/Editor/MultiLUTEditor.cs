@@ -49,18 +49,20 @@ namespace TLab.Editor
             Debug.Log("Evaluate Result (" + index0 + ", " + index1 + "): " + value);
         }
 
-        private void CreateXLabel(Rect area, float areaYMax, float v, float x)
+        private float Floor(float value, int i) => Mathf.Floor(value * i) / i;
+
+        private void CreateXLabel(Rect area, float areaYMax, float v, float x, int i)
         {
             var vx = new Vector2(area.x + x - 10f, areaYMax + 1f);
 
-            GUI.Label(new Rect(vx, LABEL_SIZE), ((int)v).ToString());
+            GUI.Label(new Rect(vx, LABEL_SIZE), Floor(v, i).ToString());
         }
 
-        private void CreateYLable(Rect area, float v, float y)
+        private void CreateYLable(Rect area, float v, float y, int i)
         {
             Vector2 vy = new Vector2(area.x - 110f, area.y + y - 10f);
 
-            GUI.Label(new Rect(vy, LABEL_SIZE), ((int)v).ToString(), m_ylabelStyle);
+            GUI.Label(new Rect(vy, LABEL_SIZE), Floor(v, i).ToString(), m_ylabelStyle);
         }
 
         private void DrawGraph()
@@ -95,6 +97,8 @@ namespace TLab.Editor
             }
 
             var div = m_instance.div + 2;
+            var xAccuracy = m_instance.xAccuracy;
+            var yAccuracy = m_instance.yAccuracy;
 
             var xMax = -float.MaxValue;
             var xMin = float.MaxValue;
@@ -124,10 +128,10 @@ namespace TLab.Editor
                 colorQueue.Enqueue(color);
             }
 
-            CreateYLable(area, yMax, 0f);
-            CreateYLable(area, yMin, areaYSize);
-            CreateXLabel(area, areaYMax, xMin, 0f);
-            CreateXLabel(area, areaYMax, xMax, areaXSize);
+            CreateYLable(area, yMax, 0f, yAccuracy);
+            CreateYLable(area, yMin, areaYSize, yAccuracy);
+            CreateXLabel(area, areaYMax, xMin, 0f, xAccuracy);
+            CreateXLabel(area, areaYMax, xMax, areaXSize, xAccuracy);
 
             for (int xi = 1; xi < div - 1; ++xi)
             {
@@ -143,7 +147,7 @@ namespace TLab.Editor
                     continue;
                 }
 
-                CreateXLabel(area, areaYMax, v, x);
+                CreateXLabel(area, areaYMax, v, x, xAccuracy);
             }
 
             for (int yi = 1; yi < div - 1; ++yi)
@@ -160,7 +164,7 @@ namespace TLab.Editor
                     continue;
                 }
 
-                CreateYLable(area, v, y);
+                CreateYLable(area, v, y, yAccuracy);
             }
 
             // plot data
@@ -174,12 +178,12 @@ namespace TLab.Editor
                 if (values.Length > 0)
                 {
                     var points = new List<Vector3>();
-                    var dx = areaXSize / xMax;
-                    var dy = areaYSize / yMax;
+                    var dx = areaXSize / (xMax - yMin);
+                    var dy = areaYSize / (yMax - yMin);
                     for (var j = 0; j < values.Length; ++j)
                     {
-                        var x = area.x + dx * values[j].x;
-                        var y = areaYMax - dy * values[j].y;
+                        var x = area.x + dx * (values[j].x - xMin);
+                        var y = areaYMax - dy * (values[j].y - yMin);
                         points.Add(new Vector2(x, y));
                     }
                     Handles.DrawAAPolyLine(2.5f, points.ToArray());

@@ -146,10 +146,10 @@ namespace TLab.VehiclePhysics
             switch (m_currentState)
             {
                 case State.On:
-                    m_currentGearIndex = 2;
+                    m_currentGearIndex = 2; // gear 1
                     break;
                 case State.Off:
-                    m_currentGearIndex = 1;
+                    m_currentGearIndex = 1; // gear 0 (neutral)
                     break;
             }
             m_currentGear = m_engineInfo.Gears[m_currentGearIndex].gear;
@@ -160,6 +160,7 @@ namespace TLab.VehiclePhysics
         {
             SwitchEngine(State.On);
             m_maxRpm = GetMaxRPM();
+            Debug.Log("maxRpm: " + m_maxRpm);
         }
 
         public void UpdateEngine()
@@ -167,6 +168,8 @@ namespace TLab.VehiclePhysics
             float feedbackRPM = GetFeedbackRPM();
 
             m_engineRpm = GetAccelerated(feedbackRPM);
+
+            //Debug.Log("engineRpm: " + m_engineRpm);
 
             DampingWithEngineShaft();
             DampingWithEngineBrake();

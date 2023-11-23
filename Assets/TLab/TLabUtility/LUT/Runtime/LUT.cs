@@ -11,6 +11,12 @@ namespace TLab
 #if UNITY_EDITOR
         [SerializeField] [Range(0, 10)]
         public int div = 5;
+
+        [SerializeField] [Range(1, 10)]
+        public int xAccuracy = 1;
+
+        [SerializeField] [Range(1, 10)]
+        public int yAccuracy = 1;
 #endif
 
         public static float GetMax(Vector2[] values, int axis)
@@ -138,8 +144,8 @@ namespace TLab
         {
             var lerpElement = LerpFactor(x);
 
-            return values[lerpElement.index0].y * lerpElement.factor +
-                   values[lerpElement.index1].y * (1f - lerpElement.factor);
+            return values[lerpElement.index0].y * (1f -lerpElement.factor) +
+                   values[lerpElement.index1].y * lerpElement.factor;
         }
     }
 }
