@@ -40,7 +40,7 @@ public class VehicleDebugger : MonoBehaviour
         value = m_engine.engineRpm.ToString();
         DebugInfo(rootVE, "rpm", value);
 
-        value = m_engine.currentGear.ToString();
+        value = m_engine.gear.ToString();
         DebugInfo(rootVE, "gear", value);
 
         value = ((int)m_physics.minAngle).ToString();

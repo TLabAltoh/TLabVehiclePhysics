@@ -5,16 +5,16 @@ namespace TLab.VehiclePhysics
     [CreateAssetMenu()]
     public class VehicleEngineInfo : ScriptableObject
     {
-        public Gear[] Gears { get => m_gears; }
+        public GearInfo[] gearInfos { get => m_gearInfos; }
 
-        public LUT torqueCurve { get => m_torqueCurve; }
+        public MultiLUT torqueCurve { get => m_torqueCurve; }
 
-        [SerializeField] private Gear[] m_gears;
-        [SerializeField] private LUT m_torqueCurve;
+        [SerializeField] private GearInfo[] m_gearInfos;
+        [SerializeField] private MultiLUT m_torqueCurve;
     }
 
     [System.Serializable]
-    public class Gear
+    public class GearInfo
     {
         public int gear;
         public float ratio;

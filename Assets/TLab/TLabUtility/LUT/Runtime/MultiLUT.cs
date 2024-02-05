@@ -3,19 +3,22 @@ using TLab.LUTUtil;
 
 namespace TLab
 {
-    [CreateAssetMenu()]
+    [CreateAssetMenu(menuName = "TLab/LUT/MultiLUT")]
     public class MultiLUT : ScriptableObject
     {
         public LUTDic[] lutDic;
 
 #if UNITY_EDITOR
-        [SerializeField] [Range(0, 10)]
+        [SerializeField]
+        [Range(0, 10)]
         public int div = 5;
 
-        [SerializeField] [Range(1, 10)]
+        [SerializeField]
+        [Range(1, 10)]
         public int xAccuracy = 1;
 
-        [SerializeField] [Range(1, 10)]
+        [SerializeField]
+        [Range(1, 10)]
         public int yAccuracy = 1;
 #endif
 
@@ -78,10 +81,14 @@ namespace TLab
 
         public float Evaluate(float x, float y)
         {
-            // index lerp
+            /**
+             * index lerp
+             */
             var lerpLUT = LerpLUT(x);
 
-            // value lerp
+            /**
+             * value lerp
+             */
             var value0 = lerpLUT.lut0.Evaluate(y);
             var value1 = lerpLUT.lut1.Evaluate(y);
 

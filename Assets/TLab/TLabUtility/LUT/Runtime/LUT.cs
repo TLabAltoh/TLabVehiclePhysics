@@ -3,19 +3,22 @@ using TLab.LUTUtil;
 
 namespace TLab
 {
-    [CreateAssetMenu()]
+    [CreateAssetMenu(menuName = "TLab/LUT/LUT")]
     public class LUT : ScriptableObject
     {
         [SerializeField] public Vector2[] values;
 
 #if UNITY_EDITOR
-        [SerializeField] [Range(0, 10)]
+        [SerializeField]
+        [Range(0, 10)]
         public int div = 5;
 
-        [SerializeField] [Range(1, 10)]
+        [SerializeField]
+        [Range(1, 10)]
         public int xAccuracy = 1;
 
-        [SerializeField] [Range(1, 10)]
+        [SerializeField]
+        [Range(1, 10)]
         public int yAccuracy = 1;
 #endif
 
@@ -144,7 +147,7 @@ namespace TLab
         {
             var lerpElement = LerpFactor(x);
 
-            return values[lerpElement.index0].y * (1f -lerpElement.factor) +
+            return values[lerpElement.index0].y * (1f - lerpElement.factor) +
                    values[lerpElement.index1].y * lerpElement.factor;
         }
     }

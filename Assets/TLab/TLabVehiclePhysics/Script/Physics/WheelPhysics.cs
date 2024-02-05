@@ -2,18 +2,25 @@ using UnityEngine;
 
 namespace TLab.VehiclePhysics
 {
-    [CreateAssetMenu()]
+    [CreateAssetMenu(menuName = "TLab/VehiclePhysics/WheelPhysics", fileName = "WheelPhysics")]
     public class WheelPhysics : ScriptableObject
     {
         [Tooltip("Grip curve of the base (ƒÊ/ms)")]
-        public LUT baseGrip;
+        [SerializeField] public LUT baseGrip;
 
         [Tooltip("Grip Carp based on pecejka magic formula (ƒÊ/slipRatio)")]
-        public LUT slipRatioVsGrip;
+        [SerializeField] public LUT slipRatioVsGrip;
 
-        public LUT slipAngleVsLerpRatio;
+        [SerializeField] public LUT slipAngleVsRpmLerpRatio;
 
-        public LUT torqueVsLerpRatio;
+        [SerializeField] public LUT torqueVsRpmLerpRatio;
+
+        [SerializeField] public float spring = 75000f;
+        [SerializeField] public float damper = 5000f;
+        [SerializeField] public float wheelMass = 1f;
+        [SerializeField] public float susDst = 0.2f;
+        [SerializeField] public float targetPos = 0f;
+        [SerializeField] public float wheelRadius = 0.35f;
 
         public Vector3 amountOfReduction => Vector3.up * (susDst - susCps);
 
@@ -29,14 +36,10 @@ namespace TLab.VehiclePhysics
 
         public float vel2WheelRpm => 60 / circleLength;
 
-        public float spring = 75000f;
-        public float damper = 5000f;
-        public float wheelMass = 1f;
-        public float susDst = 0.2f;
-        public float targetPos = 0f;
-        public float wheelRadius = 0.35f;
+        /**
+         * Suspention
+         */
 
-        // Suspention
         [HideInInspector] public bool grounded = false;
         [HideInInspector] public float susCps = 0f;
         [HideInInspector] public float susCpsPrev = 0f;

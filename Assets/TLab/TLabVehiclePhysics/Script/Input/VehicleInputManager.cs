@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace TLab.VehiclePhysics
@@ -8,9 +7,9 @@ namespace TLab.VehiclePhysics
         public enum InputMode
         {
             G29,
-            Mouse,
-            Keyborad,
-            UIButton
+            MOUSE,
+            KEYBORAD,
+            UI_BUTTON
         };
 
         [SerializeField] private VehicleSystemManager m_systemManager;
@@ -100,7 +99,9 @@ namespace TLab.VehiclePhysics
                 case InputMode.G29:
                     if (!LogitechGSDK.LogiIsPlaying(0, LogitechGSDK.LOGI_FORCE_SPRING))
                     {
-                        // Set the handle to force toward 0 radians
+                        /**
+                         * Set the handle to force toward 0 radians
+                         */
                         LogitechGSDK.LogiPlaySpringForce(0, 0, 30, 100);
                     }
 
@@ -108,7 +109,9 @@ namespace TLab.VehiclePhysics
                     {
                         LogitechGSDK.DIJOYSTATE2ENGINES rec = LogitechGSDK.LogiGetStateUnity(0);
 
-                        // 32768 cannot be represented by int, so cast to float
+                        /**
+                         * 32768 cannot be represented by int, so cast to float
+                         */
                         m_steerInput = rec.lX / 32768f;
                         m_accelInput = (-rec.lY / 32768f + 1) * 0.5f;
                         m_brakeInput = (-rec.lRz / 32768f + 1) * 0.5f;
@@ -117,7 +120,10 @@ namespace TLab.VehiclePhysics
                         m_shiftDownPressed = rec.rgbButtons[5];
                     }
 
-                    // Provides the same behavior as GetButtonDown()
+                    /**
+                     * Provides the same behavior as GetButtonDown()
+                     */
+
                     if (m_shiftUpPressed == 128 && m_gearUpPressed == false)
                     {
                         m_gearUpPressed = true;
@@ -136,11 +142,11 @@ namespace TLab.VehiclePhysics
                         m_gearDownPressed = false;
                     }
                     break;
-                case InputMode.Keyborad:
+                case InputMode.KEYBORAD:
                     GetVirtualInputAxis();
                     GetShiftChangeEvent();
                     break;
-                case InputMode.Mouse:
+                case InputMode.MOUSE:
                     Vector3 mousePos = Input.mousePosition;
                     m_accelInput = Mathf.Clamp01((mousePos.y - Screen.height * 0.5f) / (Screen.height * 0.5f));
                     m_brakeInput = Mathf.Clamp01(-(mousePos.y - Screen.height * 0.5f) / (Screen.height * 0.5f));
@@ -148,7 +154,7 @@ namespace TLab.VehiclePhysics
                     m_clutchInput = m_virtualClutch.AxisValue;
                     GetShiftChangeEvent();
                     break;
-                case InputMode.UIButton:
+                case InputMode.UI_BUTTON:
                     GetVirtualInputAxis();
                     break;
             }
@@ -170,13 +176,13 @@ namespace TLab.VehiclePhysics
                     Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
                     UIButtonSetActive(false);
                     break;
-                case InputMode.Mouse:
+                case InputMode.MOUSE:
                     UIButtonSetActive(false);
                     break;
-                case InputMode.Keyborad:
+                case InputMode.KEYBORAD:
                     UIButtonSetActive(false);
                     break;
-                case InputMode.UIButton:
+                case InputMode.UI_BUTTON:
                     UIButtonSetActive(true);
                     break;
             }
@@ -187,10 +193,8 @@ namespace TLab.VehiclePhysics
             switch (m_systemManager.CurrentPilot)
             {
                 case VehicleSystemManager.Pilot.None:
-                    //
                     break;
                 case VehicleSystemManager.Pilot.AI:
-                    //
                     break;
                 case VehicleSystemManager.Pilot.Player:
                     InitializeWithInputMode();
@@ -205,6 +209,12 @@ namespace TLab.VehiclePhysics
 
         void Update()
         {
+            /**
+             * Input processing should be described in Update
+             * Ref1: https://unity-yuji.xyz/input-fixedupdate/
+             * Ref2: https://qiita.com/yuji_yasuhara/items/6f50ecdd5d59e83aac99
+             */
+
             switch (m_systemManager.CurrentPilot)
             {
                 case VehicleSystemManager.Pilot.None:
@@ -215,10 +225,6 @@ namespace TLab.VehiclePhysics
                     PilotIsPlayer();
                     break;
             }
-
-            // Input processing should be described in Update
-            // https://unity-yuji.xyz/input-fixedupdate/
-            // https://qiita.com/yuji_yasuhara/items/6f50ecdd5d59e83aac99
 
             m_actualInput = m_accelInput;
             m_ackermanAngle = m_steerInput * 55f;
@@ -231,11 +237,11 @@ namespace TLab.VehiclePhysics
                 case InputMode.G29:
                     Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
                     break;
-                case InputMode.Keyborad:
+                case InputMode.KEYBORAD:
                     break;
-                case InputMode.Mouse:
+                case InputMode.MOUSE:
                     break;
-                case InputMode.UIButton:
+                case InputMode.UI_BUTTON:
                     break;
             }
         }

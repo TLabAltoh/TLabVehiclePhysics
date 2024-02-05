@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
-  m_Name: TorqueVsLerpRatio
+  m_Name: FrontDownForceMax
   m_EditorClassIdentifier: 
   values:
-  - {x: 60, y: 1}
-  - {x: 3079.01, y: 0.9}
-  - {x: 5496.429, y: 0.05}
-  div: 3
+  - {x: 0, y: 1}
+  - {x: 75, y: 1.25}
+  - {x: 150, y: 2.5}
+  div: 5
+  xAccuracy: 1
+  yAccuracy: 1

@@ -6,8 +6,8 @@ namespace TLab.VehiclePhysics
     {
         public enum State
         {
-            On,
-            Off
+            ON,
+            OFF
         }
 
         [SerializeField] private WheelColliderSource[] m_driveWheels;
@@ -21,25 +21,28 @@ namespace TLab.VehiclePhysics
         [SerializeField] private VehiclePhysics m_vihiclePhysics;
         [SerializeField] private VehicleInputManager m_inputManager;
 
-        private int m_currentGearIndex = 2;
-        private int m_currentGear;
-        private float m_currentGearRatio;
+        private int m_gearIndex = 2;
+        private int m_gear;
+        private float m_gearRatio;
 
-        private State m_currentState = State.Off;
+        private State m_state = State.OFF;
 
-        private float m_maxRpm;
+        private float m_maxEngineRpm;
         private float m_engineRpm = IDLING;
+        private float m_rawEngineRpmRatio;
 
         private const float FIXED_TIME = 30f;
         private const float IDLING = 1400f;
         private const float RPM_INCREMENT = 250f;
         private const float RPM_ATTENUATION = 50f;
+        private const int GEAR_INDEX_ONE = 2;
+        private const int GEAR_INDEX_NEUTRAL = 1;
 
-        public int currentGear => m_currentGear;
+        public int gear => m_gear;
 
         public float engineRpm => m_engineRpm;
 
-        public float maxRpm => m_maxRpm;
+        public float maxEngineRpm => m_maxEngineRpm;
 
         private float timeError => Time.fixedDeltaTime * FIXED_TIME;
 
@@ -47,9 +50,9 @@ namespace TLab.VehiclePhysics
 
         private float clutchInput => m_inputManager.clutchInput;
 
-        public float pitch => 1f + ((m_engineRpm - IDLING) / (m_maxRpm - IDLING)) * 2f;
+        public float pitch => 1f + ((m_engineRpm - IDLING) / (m_maxEngineRpm - IDLING)) * 2f;
 
-        public bool transmissionDisConnected => m_currentGearRatio == 0 || clutchInput > 0.5f || (m_engineRpm < IDLING && actualInput < 0.1f);
+        public bool transmissionDisConnected => m_gearRatio == 0 || clutchInput > 0.5f || (m_engineRpm < IDLING && actualInput < 0.1f);
 
         private bool gearUpPressed
         {
@@ -63,32 +66,46 @@ namespace TLab.VehiclePhysics
             set => m_inputManager.gearDownPressed = value;
         }
 
-        public State CurrentState => m_currentState;
+        public State state => m_state;
 
-        private float GetFeedbackRPM()
+        private (float, float) GetFeedback()
         {
-            float rpmSum = 0f;
+            float engineRpmSum = 0f, engineRpmRatioSum = 0f;
             foreach (WheelColliderSource wheelOutput in m_driveWheels)
             {
-                rpmSum += wheelOutput.feedbackRpm;
+                engineRpmSum += wheelOutput.feedbackEngineRpm;
+                engineRpmRatioSum += wheelOutput.feedbackEngineRpmRatio;
             }
 
-            float feedbackRPM = rpmSum / m_driveWheels.Length;
-
-            return feedbackRPM;
+            return (engineRpmSum / m_driveWheels.Length, engineRpmRatioSum / m_driveWheels.Length);
         }
 
-        private float GetTorque() => m_engineInfo.torqueCurve.Evaluate(m_engineRpm) * actualInput;
-
-        private float GetMaxRPM() => LUT.GetMax(m_engineInfo.torqueCurve.values, 0);
-
-        private float GetAccelerated(float feedbackRPM) => TLab.Math.LinerApproach(feedbackRPM, RPM_INCREMENT * timeError * actualInput, m_maxRpm);
-
-        private void DampingWithEngineShaft()
+        private float GetTorque(float feedbackEngineRpmRatio)
         {
-            switch (m_currentState)
+            return m_engineInfo.torqueCurve.Evaluate(feedbackEngineRpmRatio, m_engineRpm) * actualInput;
+        }
+
+        private float GetMaxEngineRpm()
+        {
+            var lut = m_engineInfo.torqueCurve.lutDic[0].lut;
+
+            var values = new Vector2[lut.values.Length - 1]; // skip last index (0, 20, 500, 501 <--- skip 501)
+
+            System.Array.Copy(lut.values, values, values.Length);
+
+            return LUT.GetMax(lut.values, 0);
+        }
+
+        private float GetAcceleratedEngineRpm(float feedbackEngineRpm)
+        {
+            return TLab.Math.LinerApproach(feedbackEngineRpm, RPM_INCREMENT * timeError * actualInput, m_maxEngineRpm);
+        }
+
+        private void EngineRpmDampingWithEngineShaft()
+        {
+            switch (m_state)
             {
-                case State.On:
+                case State.ON:
                     if (m_engineRpm >= IDLING - 1)
                     {
                         m_engineRpm = TLab.Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError, IDLING - 1);
@@ -98,42 +115,41 @@ namespace TLab.VehiclePhysics
                         m_engineRpm = IDLING - 1;
                     }
                     break;
-                case State.Off:
+                case State.OFF:
                     m_engineRpm = TLab.Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError * 1.5f, 0.0f);
                     break;
             }
         }
 
-        private void DampingWithEngineBrake()
+        private void EngineRpmDampingWithEngineBrake()
         {
-            float rpmSum = 0f;
+            float sum = 0f;
             foreach (WheelColliderSource brakeWheel in m_brakeWheels)
             {
-                rpmSum += brakeWheel.DampingWithEngineBrake(m_engineRpm);
+                sum += brakeWheel.EngineRpmDampingWithEngineBrake(m_engineRpm);
             }
 
-            m_engineRpm = rpmSum / m_brakeWheels.Length;
+            m_engineRpm = sum / m_brakeWheels.Length;
         }
 
         private void Shift(int dir)
         {
-            m_currentGearIndex += dir;
-            m_currentGearIndex = Mathf.Clamp(m_currentGearIndex, 0, m_engineInfo.Gears.Length - 1);
+            m_gearIndex = Mathf.Clamp(m_gearIndex + dir, 0, m_engineInfo.gearInfos.Length - 1);
 
-            Gear gear = m_engineInfo.Gears[m_currentGearIndex];
-            m_currentGear = gear.gear;
-            m_currentGearRatio = gear.ratio;
+            GearInfo gearInfo = m_engineInfo.gearInfos[m_gearIndex];
+            m_gear = gearInfo.gear;
+            m_gearRatio = gearInfo.ratio;
         }
 
         public void UpdateShiftInput()
         {
-            if (gearUpPressed && m_currentGearIndex < m_engineInfo.Gears.Length - 1)
+            if (gearUpPressed && m_gearIndex < m_engineInfo.gearInfos.Length - 1)
             {
                 Shift(1);
                 gearUpPressed = false;
             }
 
-            if (gearDownPressed && m_currentGearIndex > 0)
+            if (gearDownPressed && m_gearIndex > 0)
             {
                 Shift(-1);
                 gearDownPressed = false;
@@ -142,44 +158,41 @@ namespace TLab.VehiclePhysics
 
         public void SwitchEngine(State state)
         {
-            m_currentState = state;
-            switch (m_currentState)
+            m_state = state;
+            switch (m_state)
             {
-                case State.On:
-                    m_currentGearIndex = 2; // gear 1
+                case State.ON:
+                    m_gearIndex = GEAR_INDEX_ONE;
                     break;
-                case State.Off:
-                    m_currentGearIndex = 1; // gear 0 (neutral)
+                case State.OFF:
+                    m_gearIndex = GEAR_INDEX_NEUTRAL;
                     break;
             }
-            m_currentGear = m_engineInfo.Gears[m_currentGearIndex].gear;
-            m_currentGearRatio = m_engineInfo.Gears[m_currentGearIndex].ratio;
+            m_gear = m_engineInfo.gearInfos[m_gearIndex].gear;
+            m_gearRatio = m_engineInfo.gearInfos[m_gearIndex].ratio;
         }
 
         public void Initialize()
         {
-            SwitchEngine(State.On);
-            m_maxRpm = GetMaxRPM();
-            Debug.Log("maxRpm: " + m_maxRpm);
+            SwitchEngine(State.ON);
+            m_maxEngineRpm = GetMaxEngineRpm();
         }
 
         public void UpdateEngine()
         {
-            float feedbackRPM = GetFeedbackRPM();
+            (float, float) feedback = GetFeedback();
 
-            m_engineRpm = GetAccelerated(feedbackRPM);
+            m_engineRpm = GetAcceleratedEngineRpm(feedback.Item1);
 
-            //Debug.Log("engineRpm: " + m_engineRpm);
+            EngineRpmDampingWithEngineShaft();
+            EngineRpmDampingWithEngineBrake();
 
-            DampingWithEngineShaft();
-            DampingWithEngineBrake();
-
-            float torque = !transmissionDisConnected ? GetTorque() : 0.0f;
+            float torque = !transmissionDisConnected ? GetTorque(feedback.Item2) : 0.0f;
 
             var driveData = new DriveData
             {
                 engineRpm = m_engineRpm,
-                gearRatio = m_currentGearRatio,
+                gearRatio = m_gearRatio,
                 torque = torque,
                 transmissionConnected = !transmissionDisConnected
             };

@@ -10,10 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
-  m_Name: SlipAngleVsLerpRatio
+  m_Name: RPMVsTorqueMin
   m_EditorClassIdentifier: 
   values:
-  - {x: 0, y: 1}
-  - {x: 15, y: 0.35}
-  - {x: 30, y: 0.2}
+  - {x: 0, y: 0}
+  - {x: 2500, y: 75}
+  - {x: 5000, y: 125}
+  - {x: 7500, y: 85}
+  - {x: 8000, y: 60}
+  - {x: 8100, y: 0}
   div: 5
+  xAccuracy: 1
+  yAccuracy: 1

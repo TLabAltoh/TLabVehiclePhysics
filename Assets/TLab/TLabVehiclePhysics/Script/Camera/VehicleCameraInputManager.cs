@@ -50,14 +50,14 @@ public class VehicleCameraInputManager : MonoBehaviour
                 }
                 GetSwitchCameraEvent();
                 break;
-            case VehicleInputManager.InputMode.Mouse:
+            case VehicleInputManager.InputMode.MOUSE:
                 GetSwitchCameraEvent();
                 break;
-            case VehicleInputManager.InputMode.Keyborad:
+            case VehicleInputManager.InputMode.KEYBORAD:
                 m_playerCamera.SetInputFromKeyBorad(m_xInputAxis.AxisValue, m_yInputAxis.AxisValue);
                 GetSwitchCameraEvent();
                 break;
-            case VehicleInputManager.InputMode.UIButton:
+            case VehicleInputManager.InputMode.UI_BUTTON:
                 break;
         }
     }
@@ -68,11 +68,11 @@ public class VehicleCameraInputManager : MonoBehaviour
         {
             case VehicleInputManager.InputMode.G29:
                 break;
-            case VehicleInputManager.InputMode.Mouse:
+            case VehicleInputManager.InputMode.MOUSE:
                 break;
-            case VehicleInputManager.InputMode.Keyborad:
+            case VehicleInputManager.InputMode.KEYBORAD:
                 break;
-            case VehicleInputManager.InputMode.UIButton:
+            case VehicleInputManager.InputMode.UI_BUTTON:
                 break;
         }
     }

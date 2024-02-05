@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9adeaf7a8e7ba144798ecdd107ac7ff6, type: 3}
   m_Name: DefaultEngineInfo
   m_EditorClassIdentifier: 
-  m_gears:
+  m_gearInfos:
   - gear: -1
     ratio: -3
   - gear: 0
@@ -29,4 +29,4 @@ MonoBehaviour:
     ratio: 1
   - gear: 6
     ratio: 0.8
-  m_torqueCurve: {fileID: 11400000, guid: fdd7d326224f13f4b824e5cc1605dbd2, type: 2}
+  m_torqueCurve: {fileID: 11400000, guid: 648711e70561ec64699d975b01a36b39, type: 2}
