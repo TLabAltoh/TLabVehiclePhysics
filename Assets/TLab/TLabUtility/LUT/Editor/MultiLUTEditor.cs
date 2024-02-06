@@ -8,31 +8,22 @@ namespace TLab.Editor
     public class MultiLUTEditor : UnityEditor.Editor
     {
         private MultiLUT m_instance;
-        private bool m_draw = false;
 
         private GUIStyle m_ylabelStyle = null;
         private readonly Vector2 LABEL_SIZE = new Vector2(100f, 50f);
+
+        private void OnEnable()
+        {
+            m_instance = target as MultiLUT;
+        }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            if (m_instance == null)
-            {
-                m_instance = target as MultiLUT;
-            }
-
-            if (GUILayout.Button("DrawGraph"))
-            {
-                m_draw = !m_draw;
-            }
-
-            if (m_draw)
-            {
-                EditorGUILayout.Space(20);
-                DrawGraph();
-                EditorGUILayout.Space();
-            }
+            EditorGUILayout.Space(20);
+            DrawGraph();
+            EditorGUILayout.Space(20);
 
             if (GUILayout.Button("Evaluate Test"))
             {

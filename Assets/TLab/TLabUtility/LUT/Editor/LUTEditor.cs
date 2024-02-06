@@ -8,33 +8,22 @@ namespace TLab.Editor
     public class LUTEditor : UnityEditor.Editor
     {
         private LUT m_instance;
-        private bool m_draw = false;
 
         private GUIStyle m_ylabelStyle = null;
         private readonly Vector2 LABEL_SIZE = new Vector2(100f, 50f);
+
+        private void OnEnable()
+        {
+            m_instance = target as LUT;
+        }
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            if (m_instance == null)
-            {
-                m_instance = target as LUT;
-            }
-
-            if (GUILayout.Button("DrawGraph"))
-            {
-                m_draw = !m_draw;
-
-                UnityEditor.EditorUtility.SetDirty(this);
-            }
-
-            if (m_draw)
-            {
-                EditorGUILayout.Space(20);
-                DrawGraph();
-                EditorGUILayout.Space();
-            }
+            EditorGUILayout.Space(20);
+            DrawGraph();
+            EditorGUILayout.Space(20);
 
             if (GUILayout.Button("Evaluate Test"))
             {

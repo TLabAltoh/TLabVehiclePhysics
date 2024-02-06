@@ -312,17 +312,17 @@ namespace TLab.VehiclePhysics
                     var toRawEngineRpm = TLab.Math.LinerApproach(m_driveData.engineRpm, GetFrameLerp(INCREMENT) * angleRatio * torqueRatio, rawEngineRpm);
 
                     /**
+                     * Update current tire rotation amount.
+                     */
+                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
+                    m_wheelRpm = wheelRpm;
+
+                    /**
                      * Damping of engine rpm due to transfer of engine power to gears
                      */
                     var feedbackEngineRpm = TLab.Math.LinerApproach(toRawEngineRpm, GetFrameLerp(DECREMENT), IDLING - 1);
                     m_feedbackEngineRpm = feedbackEngineRpm;
                     m_feedbackEngineRpmRatio = Mathf.Abs(rawEngineRpm / m_engine.maxEngineRpm);
-
-                    /**
-                     * Update current tire rotation amount.
-                     */
-                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * feedbackEngineRpm / Mathf.Abs(m_endPointGearRatio);
-                    m_wheelRpm = wheelRpm;
                 }
                 else
                 {
@@ -356,14 +356,18 @@ namespace TLab.VehiclePhysics
                 const float DECREMENT = 50f;
 
                 var lerpedEngineRpm = TLab.Math.LinerApproach(engineRPM, GetFrameLerp(brakeInput * DECREMENT), 0);
-                m_wheelRpm = Mathf.Sign(m_rawWheelRpm) * lerpedEngineRpm / Mathf.Abs(m_endPointGearRatio);
+
                 return lerpedEngineRpm > IDLING ? lerpedEngineRpm : IDLING - 1;
             }
             else
             {
                 const float DECREMENT = 50f;
 
+                /**
+                 * Since the engine cannot be braked, the tires are locked directly.
+                 */
                 m_wheelRpm = TLab.Math.LinerApproach(m_wheelRpm, GetFrameLerp(brakeInput * DECREMENT), 0);
+
                 return engineRPM;
             }
         }
