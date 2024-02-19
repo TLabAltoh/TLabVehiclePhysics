@@ -20,6 +20,10 @@ namespace TLab
         [SerializeField]
         [Range(1, 10)]
         public int yAccuracy = 1;
+
+        [SerializeField] public bool fixX = true;
+
+        [SerializeField] public bool fixY = true;
 #endif
 
         public static float GetMax(Vector2[] values, int axis)

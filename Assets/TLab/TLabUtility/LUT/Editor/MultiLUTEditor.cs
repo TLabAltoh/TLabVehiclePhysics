@@ -25,79 +25,53 @@ namespace TLab.Editor
             DrawGraph();
             EditorGUILayout.Space(20);
 
-            if (GUILayout.Button("Evaluate Test"))
-            {
-                LogEvaluate(0.0f, 0.0f);
-                LogEvaluate(-0.5f, 0.5f);
-                LogEvaluate(0.5f, -0.5f);
-                LogEvaluate(2.0f, 10.0f);
-            }
+            //if (GUILayout.Button("Evaluate Test"))
+            //{
+            //    LogEvaluate(0.0f, 0.0f);
+            //    LogEvaluate(-0.5f, 0.5f);
+            //    LogEvaluate(0.5f, -0.5f);
+            //    LogEvaluate(2.0f, 10.0f);
+            //}
         }
 
-        private void LogEvaluate(float index0, float index1)
-        {
-            var value = m_instance.Evaluate(index0, index1);
-            Debug.Log("Evaluate Result (" + index0 + ", " + index1 + "): " + value);
-        }
-
-        private float Floor(float value, int i) => Mathf.Floor(value * i) / i;
-
-        private void CreateXLabel(Rect area, float areaYMax, float v, float x, int i)
-        {
-            var vx = new Vector2(area.x + x - 10f, areaYMax + 1f);
-
-            GUI.Label(new Rect(vx, LABEL_SIZE), Floor(v, i).ToString());
-        }
-
-        private void CreateYLable(Rect area, float v, float y, int i)
-        {
-            Vector2 vy = new Vector2(area.x - 110f, area.y + y - 10f);
-
-            GUI.Label(new Rect(vy, LABEL_SIZE), Floor(v, i).ToString(), m_ylabelStyle);
-        }
+        //private void LogEvaluate(float index0, float index1)
+        //{
+        //    var value = m_instance.Evaluate(index0, index1);
+        //    Debug.Log("Evaluate Result (" + index0 + ", " + index1 + "): " + value);
+        //}
 
         private void DrawGraph()
         {
-            var margin = 0.8f;
-            var xoffset = Screen.width * (1 - margin) * 0.25f;
-
-            var area = GUILayoutUtility.GetRect(Screen.width * margin, 250f, GUILayout.ExpandWidth(false));
-            area.xMax += xoffset;
-            area.x += xoffset;
-
-            var areaXMax = area.xMax;
-            var areaYMax = area.yMax - 50f;
-            var areaXSize = areaXMax - area.xMin;
-            var areaYSize = areaYMax - area.yMin;
-
-            Handles.color = Color.white;
-            Handles.DrawLine(new Vector2(area.x, area.y), new Vector2(area.x, areaYMax));
-            Handles.DrawLine(new Vector2(area.x, area.y), new Vector2(areaXMax, area.y));
-            Handles.DrawLine(new Vector2(areaXMax, area.y), new Vector2(areaXMax, areaYMax));
-            Handles.DrawLine(new Vector2(area.x, areaYMax), new Vector2(areaXMax, areaYMax));
+            var area = LUTEditorUtil.DrawPreviewArea();
 
             if (m_instance.lutDic == null)
             {
                 return;
             }
 
-            if (m_ylabelStyle == null)
+            for (var i = 0; i < m_instance.lutDic.Length; i++)
             {
-                m_ylabelStyle = new GUIStyle(EditorStyles.label);
-                m_ylabelStyle.alignment = TextAnchor.UpperRight;
+                if (m_instance.lutDic[i].lut.values == null || m_instance.lutDic[i].lut.values.Length == 0)
+                {
+                    return;
+                }
             }
 
             var div = m_instance.div + 2;
             var xAccuracy = m_instance.xAccuracy;
             var yAccuracy = m_instance.yAccuracy;
 
-            var xMax = -float.MaxValue;
-            var xMin = float.MaxValue;
-            var yMax = -float.MaxValue;
-            var yMin = float.MaxValue;
-            var valuesQueue = new Queue<Vector2[]>();
             var colorQueue = new Queue<Color>();
+            var valuesQueue = new Queue<Vector2[]>();
 
+            var lutXMax = float.MinValue;
+            var lutXMin = float.MaxValue;
+            var lutYMax = float.MinValue;
+            var lutYMin = float.MaxValue;
+
+            /**
+             * get lut min, max value
+             */
             for (int i = 0; i < m_instance.lutDic.Length; i++)
             {
                 var lutDic = m_instance.lutDic[i];
@@ -106,59 +80,31 @@ namespace TLab.Editor
 
                 var values = lut.values;
 
-                var tmpXMin = values[0].x;
-                var tmpXMax = values[values.Length - 1].x;
-                var tmpYMax = LUT.GetMax(values, 1);
+                var tmpXMin = LUT.GetMin(values, 0);
+                var tmpXMax = LUT.GetMax(values, 0);
                 var tmpYMin = LUT.GetMin(values, 1);
-                xMax = tmpXMax > xMax ? tmpXMax : xMax;
-                xMin = tmpXMin < xMin ? tmpXMin : xMin;
-                yMax = tmpYMax > yMax ? tmpYMax : yMax;
-                yMin = tmpYMin < yMin ? tmpYMin : yMin;
+                var tmpYMax = LUT.GetMax(values, 1);
+                lutXMax = tmpXMax > lutXMax ? tmpXMax : lutXMax;
+                lutXMin = tmpXMin < lutXMin ? tmpXMin : lutXMin;
+                lutYMax = tmpYMax > lutYMax ? tmpYMax : lutYMax;
+                lutYMin = tmpYMin < lutYMin ? tmpYMin : lutYMin;
 
-                valuesQueue.Enqueue(values);
                 colorQueue.Enqueue(color);
+                valuesQueue.Enqueue(values);
             }
 
-            CreateYLable(area, yMax, 0f, yAccuracy);
-            CreateYLable(area, yMin, areaYSize, yAccuracy);
-            CreateXLabel(area, areaYMax, xMin, 0f, xAccuracy);
-            CreateXLabel(area, areaYMax, xMax, areaXSize, xAccuracy);
+            var delta = new Vector2(area.width / (lutXMax - lutXMin), area.height / (lutYMax - lutYMin));
 
-            for (int xi = 1; xi < div - 1; ++xi)
-            {
-                var lerp = (float)xi / (div - 1);
-                var x = lerp * areaXSize;
-                var v = xMin * (1f - lerp) + xMax * lerp;
+            LUTEditorUtil.CreateYLable(area, area.height, lutYMin, yAccuracy);
+            LUTEditorUtil.CreateYLable(area, 0f, lutYMax, yAccuracy);
+            LUTEditorUtil.CreateXLabel(area, 0f, lutXMin, xAccuracy);
+            LUTEditorUtil.CreateXLabel(area, area.width, lutXMax, xAccuracy);
 
-                // draw grid
-                Handles.DrawLine(new Vector2(area.x + x, area.y), new Vector2(area.x + x, areaYMax));
+            LUTEditorUtil.DrawGrid(area, div, xAccuracy, yAccuracy, lutXMin, lutXMax, lutYMin, lutYMax);
 
-                if ((int)v != v)
-                {
-                    continue;
-                }
-
-                CreateXLabel(area, areaYMax, v, x, xAccuracy);
-            }
-
-            for (int yi = 1; yi < div - 1; ++yi)
-            {
-                var lerp = (float)yi / (div - 1);
-                var y = areaYSize * (1f - lerp);
-                var v = yMin * (1f - lerp) + yMax * lerp;
-
-                // draw grid
-                Handles.DrawLine(new Vector2(area.x, area.y + y), new Vector2(areaXMax, area.y + y));
-
-                if ((int)v != v)
-                {
-                    continue;
-                }
-
-                CreateYLable(area, v, y, yAccuracy);
-            }
-
-            // plot data
+            /**
+             * plot data
+             */
             var queueLength = valuesQueue.Count;
             for (int i = 0; i < queueLength; i++)
             {
@@ -169,13 +115,13 @@ namespace TLab.Editor
                 if (values.Length > 0)
                 {
                     var points = new List<Vector3>();
-                    var dx = areaXSize / (xMax - yMin);
-                    var dy = areaYSize / (yMax - yMin);
                     for (var j = 0; j < values.Length; ++j)
                     {
-                        var x = area.x + dx * (values[j].x - xMin);
-                        var y = areaYMax - dy * (values[j].y - yMin);
-                        points.Add(new Vector2(x, y));
+                        var point = new Vector2(area.x + delta.x * (values[j].x - lutXMin), area.yMax - delta.y * (values[j].y - lutYMin));
+
+                        Handles.DrawSolidDisc(point, Vector3.forward, 5f);
+
+                        points.Add(point);
                     }
                     Handles.DrawAAPolyLine(2.5f, points.ToArray());
                 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TLab.VehiclePhysics
 {
-    [CreateAssetMenu()]
+    [CreateAssetMenu(menuName = "TLab/VehiclePhysics/EngineInfo", fileName = "EngineInfo")]
     public class VehicleEngineInfo : ScriptableObject
     {
         public GearInfo[] gearInfos { get => m_gearInfos; }

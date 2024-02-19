@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
+  m_Name: SlipRatioVsLateralGrip
+  m_EditorClassIdentifier: 
+  values:
+  - {x: 0, y: 1}
+  - {x: 0.12260357, y: 0.975248}
+  - {x: 0.32410613, y: 0.84692186}
+  - {x: 0.55940026, y: 0.5518985}
+  - {x: 1, y: 0.3041902}
+  div: 3
+  xAccuracy: 2
+  yAccuracy: 2
+  fixX: 1
+  fixY: 0

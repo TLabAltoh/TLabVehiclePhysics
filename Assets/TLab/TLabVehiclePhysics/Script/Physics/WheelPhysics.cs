@@ -9,7 +9,11 @@ namespace TLab.VehiclePhysics
         [SerializeField] public LUT baseGrip;
 
         [Tooltip("Grip Carp based on pecejka magic formula (É /slipRatio)")]
-        [SerializeField] public LUT slipRatioVsGrip;
+        [SerializeField] public LUT slipRatioVsLongitudinalGrip;
+
+        [SerializeField] public LUT slipRatioVsLateralGrip;
+
+        [SerializeField] public LUT slipAngleVsGrip;
 
         [SerializeField] public LUT slipAngleVsRpmLerpRatio;
 

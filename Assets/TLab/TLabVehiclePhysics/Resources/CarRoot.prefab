@@ -383,8 +383,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 079ee201b8e88324e9d44344dec39434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rearWheel: {fileID: 5902336353477284409}
-  m_frontWheel: {fileID: 4868004424742606035}
+  m_wheelFR: {fileID: 6402682022256991398}
+  m_wheelFL: {fileID: 4868004424742606035}
+  m_wheelRR: {fileID: 8367604793501537810}
+  m_wheelRL: {fileID: 5902336353477284409}
   m_physics: {fileID: 8728165046099144073}
   m_engine: {fileID: 301863819273784810}
   m_uiDocument: {fileID: 0}

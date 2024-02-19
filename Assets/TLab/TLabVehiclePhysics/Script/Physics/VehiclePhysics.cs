@@ -7,7 +7,8 @@ namespace TLab.VehiclePhysics
         [SerializeField] private MultiLUT m_frontDownForceCurve;
         [SerializeField] private MultiLUT m_rearDownForceCurve;
 
-        [SerializeField] [Range(0.2f, 0.8f)]
+        [SerializeField]
+        [Range(0.2f, 0.8f)]
         private float m_frontRatio = 0.5f;
 
         [SerializeField] private WheelColliderSource[] m_wheelsFront;
@@ -15,11 +16,25 @@ namespace TLab.VehiclePhysics
 
         [SerializeField] private Rigidbody m_rigidbody;
 
+        private float m_downforceFront = 0.0f;
+
+        private float m_downforceRear = 0.0f;
+
         private float m_angle = 0.0f;
 
         private float m_localVelZ = 0.0f;
 
         private const float MS2KMH = 3.6f;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float downforceFront => m_downforceFront;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public float downforceRear => m_downforceRear;
 
         /// <summary>
         /// Tilt of the z-direction of the vehicle body and the speed of the vehicle body (degree)
@@ -45,7 +60,7 @@ namespace TLab.VehiclePhysics
         {
             foreach (WheelColliderSource wheel in wheels)
             {
-                wheel.SetGripFactor(ratio);
+                wheel.SetDownForce(ratio);
             }
         }
 
@@ -67,11 +82,12 @@ namespace TLab.VehiclePhysics
 
             var angle = minAngle;
             var velKmPh = Mathf.Abs(m_localVelZ) * MS2KMH;
-            var rearDownForce = m_rearDownForceCurve.Evaluate(angle, velKmPh);
-            var frontDownForce = m_frontDownForceCurve.Evaluate(angle, velKmPh);
 
-            SetGripFactor(m_wheelsFront, m_frontRatio * 2f * frontDownForce);
-            SetGripFactor(m_wheelsRear, (1 - m_frontRatio) * 2f * rearDownForce);
+            m_downforceRear = m_rearDownForceCurve.Evaluate(angle, velKmPh);
+            m_downforceFront = m_frontDownForceCurve.Evaluate(angle, velKmPh);
+
+            SetGripFactor(m_wheelsFront, m_frontRatio * 2f * m_downforceFront);
+            SetGripFactor(m_wheelsRear, (1 - m_frontRatio) * 2f * m_downforceRear);
         }
     }
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
   - {x: 1, y: 0.8}
   - {x: 3, y: 1}
   div: 3
+  xAccuracy: 1
+  yAccuracy: 1

@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: RearWheelPhysics
   m_EditorClassIdentifier: 
   baseGrip: {fileID: 11400000, guid: c3d73cb54a8c5f44299b95c53ebc5c33, type: 2}
-  slipRatioVsGrip: {fileID: 11400000, guid: 3408b4e94b8baa84eb2a232663049e05, type: 2}
+  slipRatioVsLongitudinalGrip: {fileID: 11400000, guid: 3408b4e94b8baa84eb2a232663049e05,
+    type: 2}
+  slipRatioVsLateralGrip: {fileID: 11400000, guid: 0cbd407bbba345d429d1dbb88c7aa753,
+    type: 2}
+  slipAngleVsGrip: {fileID: 11400000, guid: 29892d1da16c8dd4bb05dca7c11e6ad7, type: 2}
   slipAngleVsRpmLerpRatio: {fileID: 11400000, guid: 925512f924cab97479c9b420157f93e6,
     type: 2}
   torqueVsRpmLerpRatio: {fileID: 11400000, guid: 25844915dfb025649999ea7f120279a5,
@@ -25,6 +29,6 @@ MonoBehaviour:
   targetPos: 0
   wheelRadius: 0.35
   grounded: 1
-  susCps: 0.063102245
-  susCpsPrev: 0.06074822
+  susCps: 0.039656162
+  susCpsPrev: 0.10652387
   gizmoColor: {r: 0, g: 1, b: 0, a: 1}

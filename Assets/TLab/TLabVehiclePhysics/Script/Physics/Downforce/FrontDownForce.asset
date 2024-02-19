@@ -21,4 +21,4 @@ MonoBehaviour:
     lut: {fileID: 11400000, guid: ec689060d7864214faed707a315d8fff, type: 2}
   div: 5
   xAccuracy: 1
-  yAccuracy: 4
+  yAccuracy: 2
