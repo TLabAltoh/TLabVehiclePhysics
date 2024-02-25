@@ -81,7 +81,7 @@ namespace TLab.VehiclePhysics
             m_localVelZ = transform.InverseTransformDirection(velocity).z;
 
             var angle = minAngle;
-            var velKmPh = Mathf.Abs(m_localVelZ) * MS2KMH;
+            var velKmPh = velocity.magnitude * MS2KMH;
 
             m_downforceRear = m_rearDownForceCurve.Evaluate(angle, velKmPh);
             m_downforceFront = m_frontDownForceCurve.Evaluate(angle, velKmPh);

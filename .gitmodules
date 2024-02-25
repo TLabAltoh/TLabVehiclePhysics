@@ -1,0 +1,3 @@
+[submodule "Assets/TLab/TLabCurveTool"]
+	path = Assets/TLab/TLabCurveTool
+	url = https://github.com/TLabAltoh/TLabCurveTool.git
