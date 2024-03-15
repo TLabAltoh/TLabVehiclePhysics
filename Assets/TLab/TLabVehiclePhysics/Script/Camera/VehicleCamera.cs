@@ -35,7 +35,6 @@ public class VehicleCamera : MonoBehaviour
 
     [SerializeField] private Rigidbody m_rigidbody;
 
-    [Header("-------------")]
     [SerializeField] private VehicleSystemManager m_systemManager;
 
     private float m_xInput;

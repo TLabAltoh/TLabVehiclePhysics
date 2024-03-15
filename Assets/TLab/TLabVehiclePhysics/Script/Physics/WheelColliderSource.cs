@@ -5,15 +5,24 @@ namespace TLab.VehiclePhysics
 {
     public class WheelColliderSource : MonoBehaviour
     {
+        [Header("Raycast Settings")]
         [SerializeField] private LayerMask m_layer;
+
+        [Header("Wheel Option")]
         [SerializeField] private bool m_steerEnabled = true;
         [SerializeField] private bool m_driveEnabled = false;
-        [Space(10)]
+
+        [Header("Engine")]
         [SerializeField] private VehicleEngine m_engine;
-        [SerializeField] private VehicleInputManager m_inputManager;
+
+        [Header("Physics")]
         [SerializeField] private WheelPhysics m_wheelPhysics;
         [SerializeField] private WheelColliderSource m_arbPear;
-        [Space(10)]
+
+        [Header("Input")]
+        [SerializeField] private VehicleInputManager m_inputManager;
+
+        [Header("Wheel Debugger Material")]
         [SerializeField] private Material m_lineMaterial;
 
         private SphereCollider m_collider;

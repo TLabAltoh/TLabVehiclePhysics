@@ -9,9 +9,6 @@ namespace TLab.Editor
     {
         private MultiLUT m_instance;
 
-        private GUIStyle m_ylabelStyle = null;
-        private readonly Vector2 LABEL_SIZE = new Vector2(100f, 50f);
-
         private void OnEnable()
         {
             m_instance = target as MultiLUT;

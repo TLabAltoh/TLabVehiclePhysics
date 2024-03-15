@@ -107,7 +107,7 @@ namespace TLab.EditorTool
             leftPane.makeItem = () => new Label();
             leftPane.bindItem = (item, index) => { (item as Label).text = assetBundleNames[index]; };
             leftPane.itemsSource = assetBundleNames;
-            leftPane.onSelectionChange += OnAssetSelectionChange;
+            leftPane.selectionChanged += OnAssetSelectionChange;
         }
 
         [MenuItem("Tools/Build AssetBundle")]

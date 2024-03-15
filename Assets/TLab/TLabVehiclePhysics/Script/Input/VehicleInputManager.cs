@@ -13,6 +13,7 @@ namespace TLab.VehiclePhysics
         };
 
         [SerializeField] private VehicleSystemManager m_systemManager;
+        [SerializeField] private VehicleEngine m_engine;
 
         [SerializeField] private VirtualInputAxis m_virtualVertical;
         [SerializeField] private VirtualInputAxis m_virtualHorizontal;
@@ -24,6 +25,8 @@ namespace TLab.VehiclePhysics
 
         [SerializeField] private KeyCode m_shiftUpKey;
         [SerializeField] private KeyCode m_shiftDownKey;
+
+        [SerializeField] private float m_maxAckermannAngle = 55f;
 
         private float m_actualInput = 0f;
         private float m_ackermanAngle = 0f;
@@ -90,6 +93,11 @@ namespace TLab.VehiclePhysics
         {
             m_gearUpPressed = Input.GetKeyDown(m_shiftUpKey);
             m_gearDownPressed = Input.GetKeyDown(m_shiftDownKey);
+        }
+
+        private void PilotIsAI()
+        {
+
         }
 
         private void PilotIsPlayer()
@@ -220,14 +228,20 @@ namespace TLab.VehiclePhysics
                 case VehicleSystemManager.Pilot.None:
                     break;
                 case VehicleSystemManager.Pilot.AI:
+                    PilotIsAI();
                     break;
                 case VehicleSystemManager.Pilot.Player:
                     PilotIsPlayer();
                     break;
             }
 
+            if (m_engine.info.transmission == VehicleEngineInfo.Transmission.AT)
+            {
+                m_clutchInput = 0f;
+            }
+
             m_actualInput = m_accelInput;
-            m_ackermanAngle = m_steerInput * 55f;
+            m_ackermanAngle = m_steerInput * m_maxAckermannAngle;
         }
 
         void OnApplicationQuit()
