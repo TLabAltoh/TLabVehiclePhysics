@@ -102,72 +102,63 @@ namespace TLab.VehiclePhysics
                 return;
             }
 
-            GL.PushMatrix();
+            m_lineMaterial.color = m_wheelPhysics.gizmoColor;
+            m_lineMaterial.SetPass(0);
+
+            GLUtil.PushMatrix();
             {
-                m_lineMaterial.color = m_wheelPhysics.gizmoColor;
-                m_lineMaterial.SetPass(0);
+                const float LINE_WIDTH = 0.0025f;
 
-                GL.Begin(GL.LINES);
+                const int DIM = 20;
+
+                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, false);
                 {
-                    GL.Vertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius);
-                    GL.Vertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)));
+                    GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, Camera.main);
+                    GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), Camera.main);
                 }
-                GL.End();
+                GLUtil.End();
 
-                m_lineMaterial.color = m_wheelPhysics.gizmoColor;
-                m_lineMaterial.SetPass(0);
+                GLUtil.CreateTrigonometricTable(DIM, out float[] sin, out float[] cos);
 
-                GL.Begin(GL.LINES);
+                Vector3[] points = new Vector3[DIM];
+
+                Vector3 susVec, offset = transform.TransformVector(Vector3.right * 0.1f);
+
+                for (int i = 0; i < DIM; i++)
                 {
-                    float theta = 0 / 20f * Mathf.PI * 2;
-                    float tmpSin = Mathf.Sin(theta);
-                    float tmpCos = Mathf.Cos(theta);
+                    susVec = new Vector3(0, sin[i], cos[i]);
+                    points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+                }
 
-                    Vector3 susVec = new Vector3(0, tmpSin, tmpCos);
-
-                    Vector3 offset = transform.TransformVector(Vector3.right * 0.1f);
-                    Vector3 point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
-
-                    GL.Vertex(point + offset);  // Connect Left and Right
-                    GL.Vertex(point - offset);
-
-                    Vector3 prevPoint = point;
-
-                    for (int i = 0; i < 20; ++i)
+                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, true);  // Right ring
+                {
+                    for (int i = 0; i < DIM; i++)
                     {
-                        theta = i / 20f * Mathf.PI * 2;
-                        tmpSin = Mathf.Sin(theta);
-                        tmpCos = Mathf.Cos(theta);
-                        susVec = new Vector3(0, tmpSin, tmpCos);
-                        point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
-
-                        GL.Vertex(prevPoint + offset);  // Right Side
-                        GL.Vertex(point + offset);
-
-                        GL.Vertex(prevPoint - offset);  // Left Side
-                        GL.Vertex(point - offset);
-
-                        GL.Vertex(point + offset);  // Connect Left and Right
-                        GL.Vertex(point - offset);
-
-                        prevPoint = point;
+                        GLUtil.WorldToScreenVertex(points[i] + offset, Camera.main);
                     }
-
-                    theta = Mathf.PI * 2;
-                    tmpSin = Mathf.Sin(theta);
-                    tmpCos = Mathf.Cos(theta);
-                    susVec = new Vector3(0, tmpSin, tmpCos);
-                    point = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
-
-                    GL.Vertex(prevPoint + offset);  // Right Side
-                    GL.Vertex(point + offset);
-
-                    GL.Vertex(prevPoint - offset);  // Left Side
-                    GL.Vertex(point - offset);
                 }
-                GL.End();
+                GLUtil.End();
+
+                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, true);  // Left ring
+                {
+                    for (int i = 0; i < DIM; i++)
+                    {
+                        GLUtil.WorldToScreenVertex(points[i] - offset, Camera.main);
+                    }
+                }
+                GLUtil.End();
+
+                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, false);
+                {
+                    for (int i = 0; i < DIM; i++)
+                    {
+                        GLUtil.WorldToScreenVertex(points[i] + offset, Camera.main);    // Connect Left and Right
+                        GLUtil.WorldToScreenVertex(points[i] - offset, Camera.main);
+                    }
+                }
+                GLUtil.End();
             }
-            GL.PopMatrix();
+            GLUtil.PopMatrix();
         }
 
         private void UpdateSuspension()

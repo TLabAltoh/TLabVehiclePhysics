@@ -961,7 +961,7 @@ MonoBehaviour:
   m_inputMethod: 0
   m_positiveKey: 275
   m_negativeKey: 276
-  moveSpeed: 2
+  moveSpeed: 1.5
   getBackSpeed: 5
   positiveButton: {fileID: 0}
   negativeButton: {fileID: 0}

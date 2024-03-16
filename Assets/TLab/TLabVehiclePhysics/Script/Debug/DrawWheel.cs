@@ -7,23 +7,23 @@ namespace TLab.VehiclePhysics
     {
         [SerializeField] private WheelColliderSource[] m_wheelColliderSources;
 
-        void Start()
+        private void Start()
         {
-            RenderPipelineManager.beginCameraRendering += OnRenderEvent;
             RenderPipelineManager.endCameraRendering += OnRenderEvent;
         }
 
-        void OnRenderEvent(ScriptableRenderContext context, Camera camera)
+        private void OnRenderEvent(ScriptableRenderContext context, Camera camera)
         {
+            GL.Clear(true, false, Color.black);
+
             foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
             {
                 wheelColliderSource.DrawWheel();
             }
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            RenderPipelineManager.beginCameraRendering -= OnRenderEvent;
             RenderPipelineManager.endCameraRendering -= OnRenderEvent;
         }
     }
