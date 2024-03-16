@@ -111,7 +111,7 @@ namespace TLab.VehiclePhysics
 
                 const int DIM = 20;
 
-                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, false);
+                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, false);
                 {
                     GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, Camera.main);
                     GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), Camera.main);
@@ -130,7 +130,7 @@ namespace TLab.VehiclePhysics
                     points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
                 }
 
-                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, true);  // Right ring
+                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, true);  // Right ring
                 {
                     for (int i = 0; i < DIM; i++)
                     {
@@ -139,7 +139,7 @@ namespace TLab.VehiclePhysics
                 }
                 GLUtil.End();
 
-                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, true);  // Left ring
+                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, true);  // Left ring
                 {
                     for (int i = 0; i < DIM; i++)
                     {
@@ -148,7 +148,7 @@ namespace TLab.VehiclePhysics
                 }
                 GLUtil.End();
 
-                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, false);
+                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, false);
                 {
                     for (int i = 0; i < DIM; i++)
                     {

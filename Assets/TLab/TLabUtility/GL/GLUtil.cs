@@ -91,7 +91,7 @@ namespace TLab
 
             m_verts.Clear();
 
-            if (m_mode == LINES_WIDTH)
+            if (m_mode == LINE_WIDTH)
             {
                 Vector3 normal, vert = verts[0], vertOL, vertOR, vertCL, vertCR;
 
@@ -199,7 +199,7 @@ namespace TLab
                     GL.Vertex(vertOL);
                 }
             }
-            else if (m_mode == LINE_WIDTH)
+            else if (m_mode == LINES_WIDTH)
             {
                 Vector3 normal, vert, vertOL, vertOR, vertCL, vertCR;
 
