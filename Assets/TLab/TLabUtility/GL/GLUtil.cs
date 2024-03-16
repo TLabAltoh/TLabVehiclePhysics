@@ -73,7 +73,14 @@ namespace TLab
             m_verts.Enqueue(projected);
         }
 
-        public static void Vertex(Vector3 vert)
+        public static void ScreenVertex(Vector3 vert)
+        {
+            m_screenSpace = true;
+
+            m_verts.Enqueue(vert);
+        }
+
+        public static void WorldVertex(Vector3 vert)
         {
             m_screenSpace = false;
 
