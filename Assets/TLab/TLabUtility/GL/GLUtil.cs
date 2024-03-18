@@ -11,6 +11,8 @@ namespace TLab
 
         private static int m_mode = 0;
 
+        private static int m_dim = 0;
+
         private static float m_width = 0;
 
         private static bool m_closed = false;
@@ -32,7 +34,7 @@ namespace TLab
 
                 for (int i = 0; i < dim; i++)
                 {
-                    float theta = i / 20f * Mathf.PI * 2;
+                    float theta = i / (float)dim * Mathf.PI * 2;
                     m_sin[i] = Mathf.Sin(theta);
                     m_cos[i] = Mathf.Cos(theta);
                 }
@@ -42,11 +44,13 @@ namespace TLab
             cos = m_cos;
         }
 
-        public static void Begin(int mode, float width = 0.0f, bool closed = false)
+        public static void Begin(int mode, float width = 0.0f, bool closed = false, int dim = 10)
         {
             m_verts.Clear();
 
             m_mode = mode;
+
+            m_dim = dim;
 
             m_width = width;
 
@@ -87,6 +91,55 @@ namespace TLab
             m_verts.Enqueue(vert);
         }
 
+        private static void DrawLine(Vector3 vert0, Vector3 vert1)
+        {
+            Vector3 normal, vertOL, vertOR, vertCL, vertCR;
+
+            normal = vert0 - vert1;
+            normal = new Vector2(normal.y, -normal.x);  // +90 degrees clockwise in xy axis
+            normal = normal.normalized;
+
+            vertCL = vert0 - normal * m_width;
+            vertCR = vert0 + normal * m_width;
+
+            vertOL = vert1 - normal * m_width;
+            vertOR = vert1 + normal * m_width;
+
+            GL.Vertex(vertOL);
+            GL.Vertex(vertCL);
+            GL.Vertex(vertCR);
+
+            GL.Vertex(vertCR);
+            GL.Vertex(vertOR);
+            GL.Vertex(vertOL);
+        }
+
+        private static void DrawCircle(Vector3 vert)
+        {
+            CreateTrigonometricTable(m_dim, out float[] sin, out float[] cos);
+
+            Vector3 offset0 = new Vector3(cos[0] * m_width, sin[0] * m_width), offset1 = Vector3.zero;
+
+            for (int i = 1; i < m_dim; i++)
+            {
+                offset1.x = cos[i] * m_width;
+                offset1.y = sin[i] * m_width;
+
+                GL.Vertex(vert);
+                GL.Vertex(vert + offset1);
+                GL.Vertex(vert + offset0);
+
+                offset0 = offset1;
+            }
+
+            offset1.x = cos[0] * m_width;
+            offset1.y = sin[0] * m_width;
+
+            GL.Vertex(vert);
+            GL.Vertex(vert + offset1);
+            GL.Vertex(vert + offset0);
+        }
+
         private static void DrawShape()
         {
             if (m_screenSpace)
@@ -100,138 +153,45 @@ namespace TLab
 
             if (m_mode == LINE_WIDTH)
             {
-                Vector3 normal, vert = verts[0], vertOL, vertOR, vertCL, vertCR;
-
                 if (verts.Length > 2)
                 {
-                    if (m_closed)
-                    {
-                        normal = (vert - verts[verts.Length - 1]).normalized + (verts[1] - vert).normalized;
-                        normal = normal.normalized;
-                    }
-                    else
-                    {
-                        normal = (verts[1] - vert).normalized;
-                    }
-
-                    normal = new Vector2(normal.y, -normal.x);  // +90 degrees clockwise
-
-                    vertOL = vert - normal * m_width;
-                    vertOR = vert + normal * m_width;
-
                     GL.Begin(GL.TRIANGLES);
                     {
-                        for (int i = 1; i < verts.Length - 1; i++)
+                        for (int i = 0; i < verts.Length - 1; i++)
                         {
-                            vert = verts[i];
-
-                            normal = (vert - verts[i - 1]).normalized + (verts[i + 1] - vert).normalized;
-                            normal = normal.normalized;
-                            normal = new Vector2(normal.y, -normal.x);
-
-                            vertCL = vert - normal * m_width;
-                            vertCR = vert + normal * m_width;
-
-                            GL.Vertex(vertOL);
-                            GL.Vertex(vertCL);
-                            GL.Vertex(vertCR);
-
-                            GL.Vertex(vertCR);
-                            GL.Vertex(vertOR);
-                            GL.Vertex(vertOL);
-
-                            vertOL = vertCL;
-                            vertOR = vertCR;
+                            DrawCircle(verts[i]);
+                            DrawLine(verts[i + 0], verts[i + 1]);
                         }
 
-                        vert = verts[verts.Length - 1];
-
-                        normal = (vert - verts[verts.Length - 2]).normalized + (verts[0] - vert).normalized;
-                        normal = normal.normalized;
-                        normal = new Vector2(normal.y, -normal.x);
-
-                        vertCL = vert - normal * m_width;
-                        vertCR = vert + normal * m_width;
-
-                        GL.Vertex(vertOL);
-                        GL.Vertex(vertCL);
-                        GL.Vertex(vertCR);
-
-                        GL.Vertex(vertCR);
-                        GL.Vertex(vertOR);
-                        GL.Vertex(vertOL);
-
-                        vertOL = vertCL;
-                        vertOR = vertCR;
+                        DrawCircle(verts[verts.Length - 1]);
 
                         if (m_closed)
                         {
-                            vert = verts[0];
-
-                            normal = (vert - verts[verts.Length - 1]).normalized + (verts[1] - vert).normalized;
-                            normal = normal.normalized;
-                            normal = new Vector2(normal.y, -normal.x);
-
-                            vertCL = vert - normal * m_width;
-                            vertCR = vert + normal * m_width;
-
-                            GL.Vertex(vertOL);
-                            GL.Vertex(vertCL);
-                            GL.Vertex(vertCR);
-
-                            GL.Vertex(vertCR);
-                            GL.Vertex(vertOR);
-                            GL.Vertex(vertOL);
+                            DrawLine(verts[verts.Length - 1], verts[0]);
                         }
                     }
                     GL.End();
                 }
                 else if (verts.Length == 2)
                 {
-                    normal = (verts[1] - vert).normalized;
-                    normal = new Vector2(normal.y, -normal.x);  // +90 degrees clockwise
+                    DrawCircle(verts[0]);
 
-                    vertOL = verts[0] - normal * m_width;
-                    vertOR = verts[0] + normal * m_width;
+                    DrawLine(verts[0], verts[1]);
 
-                    vertCL = verts[1] - normal * m_width;
-                    vertCR = verts[1] + normal * m_width;
-
-                    GL.Vertex(vertOL);
-                    GL.Vertex(vertCL);
-                    GL.Vertex(vertCR);
-
-                    GL.Vertex(vertCR);
-                    GL.Vertex(vertOR);
-                    GL.Vertex(vertOL);
+                    DrawCircle(verts[1]);
                 }
             }
             else if (m_mode == LINES_WIDTH)
             {
-                Vector3 normal, vert, vertOL, vertOR, vertCL, vertCR;
-
                 GL.Begin(GL.TRIANGLES);
                 {
                     for (int i = 0; i < verts.Length - 1; i += 2)
                     {
-                        vert = verts[i];
+                        DrawCircle(verts[i + 0]);
 
-                        normal = (verts[i + 1] - vert).normalized;
-                        normal = new Vector2(normal.y, -normal.x);  // +90 degrees clockwise
+                        DrawLine(verts[i + 0], verts[i + 1]);
 
-                        vertOL = verts[i] - normal * m_width;
-                        vertOR = verts[i] + normal * m_width;
-
-                        vertCL = verts[i + 1] - normal * m_width;
-                        vertCR = verts[i + 1] + normal * m_width;
-
-                        GL.Vertex(vertOL);
-                        GL.Vertex(vertCL);
-                        GL.Vertex(vertCR);
-
-                        GL.Vertex(vertCR);
-                        GL.Vertex(vertOR);
-                        GL.Vertex(vertOL);
+                        DrawCircle(verts[i + 1]);
                     }
                 }
                 GL.End();

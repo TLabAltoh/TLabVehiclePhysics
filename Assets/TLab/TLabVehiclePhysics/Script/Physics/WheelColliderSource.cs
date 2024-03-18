@@ -82,6 +82,8 @@ namespace TLab.VehiclePhysics
         /// </summary>
         public float downforce => m_downforce;
 
+        public Bounds bounds => new Bounds(transform.position, Vector3.one * m_wheelPhysics.wheelRadius * 2.0f);
+
         public void SetDownForce(float factor) => m_downforce = factor;
 
         private float GetFrameLerp(float value) => value * FIXED_TIME * Time.fixedDeltaTime;
@@ -94,11 +96,18 @@ namespace TLab.VehiclePhysics
             m_endPointTorque = driveData.torque * m_endPointGearRatio / m_wheelPhysics.wheelRadius;
         }
 
-        public void DrawWheel()
+        public void DrawWheel(Camera camera)
         {
             if (!m_lineMaterial)
             {
                 Debug.LogError("line material is null");
+                return;
+            }
+
+            Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
+
+            if (!GeometryUtility.TestPlanesAABB(planes, bounds))
+            {
                 return;
             }
 
@@ -113,8 +122,8 @@ namespace TLab.VehiclePhysics
 
                 GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, false);
                 {
-                    GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, Camera.main);
-                    GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), Camera.main);
+                    GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, camera);
+                    GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), camera);
                 }
                 GLUtil.End();
 
@@ -134,7 +143,7 @@ namespace TLab.VehiclePhysics
                 {
                     for (int i = 0; i < DIM; i++)
                     {
-                        GLUtil.WorldToScreenVertex(points[i] + offset, Camera.main);
+                        GLUtil.WorldToScreenVertex(points[i] + offset, camera);
                     }
                 }
                 GLUtil.End();
@@ -143,7 +152,7 @@ namespace TLab.VehiclePhysics
                 {
                     for (int i = 0; i < DIM; i++)
                     {
-                        GLUtil.WorldToScreenVertex(points[i] - offset, Camera.main);
+                        GLUtil.WorldToScreenVertex(points[i] - offset, camera);
                     }
                 }
                 GLUtil.End();
@@ -152,8 +161,8 @@ namespace TLab.VehiclePhysics
                 {
                     for (int i = 0; i < DIM; i++)
                     {
-                        GLUtil.WorldToScreenVertex(points[i] + offset, Camera.main);    // Connect Left and Right
-                        GLUtil.WorldToScreenVertex(points[i] - offset, Camera.main);
+                        GLUtil.WorldToScreenVertex(points[i] + offset, camera);    // Connect Left and Right
+                        GLUtil.WorldToScreenVertex(points[i] - offset, camera);
                     }
                 }
                 GLUtil.End();

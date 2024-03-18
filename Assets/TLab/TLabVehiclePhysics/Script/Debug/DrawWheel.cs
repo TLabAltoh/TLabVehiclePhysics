@@ -14,12 +14,12 @@ namespace TLab.VehiclePhysics
 
         private void OnRenderEvent(ScriptableRenderContext context, Camera camera)
         {
-            GL.Clear(true, false, Color.black);
-
             foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
             {
-                wheelColliderSource.DrawWheel();
+                wheelColliderSource.DrawWheel(camera);
             }
+
+            GL.Clear(true, false, Color.black);
         }
 
         private void OnDestroy()
