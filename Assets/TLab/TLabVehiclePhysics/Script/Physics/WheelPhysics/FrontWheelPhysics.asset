@@ -23,12 +23,12 @@ MonoBehaviour:
   torqueVsRpmLerpRatio: {fileID: 11400000, guid: 25844915dfb025649999ea7f120279a5,
     type: 2}
   spring: 55000
-  damper: 1000
+  damper: 2000
   wheelMass: 1
   susDst: 0.3
   targetPos: 0
   wheelRadius: 0.35
   grounded: 1
-  susCps: 0.07888055
-  susCpsPrev: 0.14658475
+  susCps: 0.07021552
+  susCpsPrev: 0.06350982
   gizmoColor: {r: 0, g: 1, b: 0, a: 1}

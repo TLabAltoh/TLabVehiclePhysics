@@ -327,7 +327,7 @@ namespace TLab.VehiclePhysics
             }
 
             var suspentionForce = m_raycastHit.normal * m_wheelPhysics.suspentionFource;
-            var totalTireForce = m_dummyWheel.transform.TransformDirection(targetX, 0f, targetZ);
+            var totalTireForce = m_rigidbody.transform.TransformDirection(targetX, 0f, targetZ);
 
             m_rigidbody.AddForceAtPosition(totalTireForce, m_dummyWheel.position, ForceMode.Force);
             m_rigidbody.AddForceAtPosition(suspentionForce, transform.position, ForceMode.Force);
@@ -344,7 +344,7 @@ namespace TLab.VehiclePhysics
             {
                 if (m_driveData.transmissionConnected)
                 {
-                    const float INCREMENT = 2000f, DECREMENT = 25f;
+                    const float INCREMENT = 500f, DECREMENT = 25f;
 
                     /**
                      * Tires are more likely to slip when the car is inclined with respect to the direction of travel
@@ -396,7 +396,7 @@ namespace TLab.VehiclePhysics
         {
             if (m_driveData.transmissionConnected)
             {
-                const float DECREMENT = 50f;
+                const float DECREMENT = 2500f;
 
                 var lerpedEngineRpm = Math.LinerApproach(engineRPM, GetFrameLerp(brakeInput * DECREMENT), 0);
 
@@ -404,7 +404,7 @@ namespace TLab.VehiclePhysics
             }
             else
             {
-                const float DECREMENT = 50f;
+                const float DECREMENT = 2500f;
 
                 /**
                  * Since the engine cannot be braked, the tires are locked directly.

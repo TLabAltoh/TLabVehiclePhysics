@@ -60,10 +60,10 @@ public class VehicleDebugger : MonoBehaviour
         m_labelGripF.text = m_physics.downforceFront.ToString("0.00");
 
         float height = m_gageSlipBG.resolvedStyle.height;
-        m_gageSlipFL.style.height = m_wheelFL.feedbackSlipRatio * height;
-        m_gageSlipFR.style.height = m_wheelFR.feedbackSlipRatio * height;
-        m_gageSlipRL.style.height = m_wheelRL.feedbackSlipRatio * height;
-        m_gageSlipRR.style.height = m_wheelRR.feedbackSlipRatio * height;
+        m_gageSlipFL.style.height = Mathf.Abs(m_wheelFL.feedbackSlipRatio) * height;
+        m_gageSlipFR.style.height = Mathf.Abs(m_wheelFR.feedbackSlipRatio) * height;
+        m_gageSlipRL.style.height = Mathf.Abs(m_wheelRL.feedbackSlipRatio) * height;
+        m_gageSlipRR.style.height = Mathf.Abs(m_wheelRR.feedbackSlipRatio) * height;
     }
 }
 
