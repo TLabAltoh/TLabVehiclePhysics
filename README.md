@@ -15,16 +15,8 @@ The following is the commit ID before the destructive update ``` commit 61e21c8d
 <table>
 <tr>
    <td>
-	    <img src="Media/ontrack.gif" width="500" />
+	    <img src="Media/sample.gif" width="500" />
 	 </td>
-</tr>
-</table>
-
-<table>
-<tr>
-   <td> 
-      <img src="Media/suspention.gif" width="500" />
-   </td>
 </tr>
 </table>
 
