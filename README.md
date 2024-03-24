@@ -14,22 +14,6 @@ The following is the commit ID before the destructive update ``` commit 61e21c8d
 
 <table>
 <tr>
-   <td> 
-      <img src="Media/drift.gif" width="500" />
-   </td>
-</tr>
-</table>
-
-<table>
-<tr>
-   <td> 
-      <img src="Media/overview.gif" width="500" />
-   </td>
-</tr>
-</table>
-
-<table>
-<tr>
    <td>
 	    <img src="Media/ontrack.gif" width="500" />
 	 </td>
@@ -54,6 +38,10 @@ The following is the commit ID before the destructive update ``` commit 61e21c8d
 Clone the repository to any directory with the following command  
 ```
 git clone https://github.com/TLabAltoh/TLabVehiclePhysics.git
+
+cd TLabVehiclePhysics
+
+git submodule upadte --init
 ```
 
 ### WheelColiderSource
@@ -70,6 +58,6 @@ git clone https://github.com/TLabAltoh/TLabVehiclePhysics.git
 - Z: Switch Camera (FPS / TPS)
 
 ## Reference
-- https://github.com/JustInvoke/Randomation-Vehicle-Physics
-- https://github.com/unity-car-tutorials/Unity5-WheelColliderSource
+- [Randomation-Vehicle-Physics](https://github.com/JustInvoke/Randomation-Vehicle-Physics)
+- [Unity5-WheelCollider](https://github.com/unity-car-tutorials/Unity5-WheelColliderSource)
 

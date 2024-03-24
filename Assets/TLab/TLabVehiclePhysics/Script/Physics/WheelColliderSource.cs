@@ -114,60 +114,59 @@ namespace TLab.VehiclePhysics
             m_lineMaterial.color = m_wheelPhysics.gizmoColor;
             m_lineMaterial.SetPass(0);
 
-            GLUtil.PushMatrix();
+            const float LINE_WIDTH = 0.0025f;
+
+            const int DIM = 20;
+
+            GLUtil.ClearVertCash();
             {
-                const float LINE_WIDTH = 0.0025f;
+                GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, camera));
+                GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), camera));
+                GLUtil.DrawLinesWidth(GLUtil.VertCashToArray(), LINE_WIDTH, DIM);
+            }
 
-                const int DIM = 20;
+            GLUtil.CreateTrigonometricTable(DIM, out float[] sin, out float[] cos);
 
-                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, false);
-                {
-                    GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, camera);
-                    GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), camera);
-                }
-                GLUtil.End();
+            Vector3[] points = new Vector3[DIM];
 
-                GLUtil.CreateTrigonometricTable(DIM, out float[] sin, out float[] cos);
+            Vector3 susVec, offset = transform.TransformVector(Vector3.right * 0.1f);
 
-                Vector3[] points = new Vector3[DIM];
+            for (int i = 0; i < DIM; i++)
+            {
+                susVec = new Vector3(0, sin[i], cos[i]);
+                points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+            }
 
-                Vector3 susVec, offset = transform.TransformVector(Vector3.right * 0.1f);
-
+            GLUtil.ClearVertCash();
+            {
                 for (int i = 0; i < DIM; i++)
                 {
-                    susVec = new Vector3(0, sin[i], cos[i]);
-                    points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
+                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] + offset, camera));
                 }
 
-                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, true);  // Right ring
-                {
-                    for (int i = 0; i < DIM; i++)
-                    {
-                        GLUtil.WorldToScreenVertex(points[i] + offset, camera);
-                    }
-                }
-                GLUtil.End();
-
-                GLUtil.Begin(GLUtil.LINE_WIDTH, LINE_WIDTH, true);  // Left ring
-                {
-                    for (int i = 0; i < DIM; i++)
-                    {
-                        GLUtil.WorldToScreenVertex(points[i] - offset, camera);
-                    }
-                }
-                GLUtil.End();
-
-                GLUtil.Begin(GLUtil.LINES_WIDTH, LINE_WIDTH, false);
-                {
-                    for (int i = 0; i < DIM; i++)
-                    {
-                        GLUtil.WorldToScreenVertex(points[i] + offset, camera);    // Connect Left and Right
-                        GLUtil.WorldToScreenVertex(points[i] - offset, camera);
-                    }
-                }
-                GLUtil.End();
+                GLUtil.DrawLineWidth(GLUtil.VertCashToArray(), LINE_WIDTH, true, DIM);
             }
-            GLUtil.PopMatrix();
+
+            GLUtil.ClearVertCash();
+            {
+                for (int i = 0; i < DIM; i++)
+                {
+                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] - offset, camera));
+                }
+
+                GLUtil.DrawLineWidth(GLUtil.VertCashToArray(), LINE_WIDTH, true, DIM);
+            }
+
+            GLUtil.ClearVertCash();
+            {
+                for (int i = 0; i < DIM; i++)
+                {
+                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] + offset, camera)); // Connect Left and Right
+                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] - offset, camera));
+                }
+
+                GLUtil.DrawLinesWidth(GLUtil.VertCashToArray(), LINE_WIDTH, DIM);
+            }
         }
 
         private void UpdateSuspension()

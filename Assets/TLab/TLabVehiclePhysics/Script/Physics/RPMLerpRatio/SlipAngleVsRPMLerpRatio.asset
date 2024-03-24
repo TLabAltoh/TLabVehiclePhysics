@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   values:
   - {x: 0, y: 1}
-  - {x: 3.5614972, y: 0.6384}
-  - {x: 11.069519, y: 0.37280002}
+  - {x: 6.7058825, y: 0.8848}
+  - {x: 18, y: 0.6256}
   - {x: 30, y: 0.2}
   div: 5
   xAccuracy: 1

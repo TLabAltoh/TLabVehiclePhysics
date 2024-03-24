@@ -29,6 +29,11 @@ namespace TLab.VehiclePhysics
         /// <summary>
         /// 
         /// </summary>
+        public Rigidbody rb => m_rigidbody;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public float downforceFront => m_downforceFront;
 
         /// <summary>
