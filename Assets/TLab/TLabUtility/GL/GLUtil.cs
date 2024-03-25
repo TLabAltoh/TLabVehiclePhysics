@@ -9,21 +9,16 @@ namespace TLab
 
         private static float[] m_cos = null;
 
-        public static Queue<Vector3> m_cash = new Queue<Vector3>();
+        public static Queue<Vector3> m_verts = new Queue<Vector3>();
 
-        public static void AddVertCash(Vector3 vert)
+        public static void AddVertex(Vector3 vert)
         {
-            m_cash.Enqueue(vert);
+            m_verts.Enqueue(vert);
         }
 
-        public static void ClearVertCash()
+        public static void ClearVertex()
         {
-            m_cash.Clear();
-        }
-
-        public static Vector3[] VertCashToArray()
-        {
-            return m_cash.ToArray();
+            m_verts.Clear();
         }
 
         public static void CreateTrigonometricTable(int dim, out float[] sin, out float[] cos)
@@ -109,8 +104,15 @@ namespace TLab
         }
 
         public static void DrawLineWidth(
-            Vector3[] verts, float width = 0.0f, bool closed = false, int dim = 10)
+            Camera camera, float width = 0.0f, bool closed = false, int dim = 10)
         {
+            Vector3[] verts = m_verts.ToArray();
+
+            for (int i = 0; i < verts.Length; i++)
+            {
+                verts[i] = WorldToScreenVertex(verts[i], camera);
+            }
+
             GL.PushMatrix();
             {
                 GL.LoadOrtho();
@@ -147,8 +149,15 @@ namespace TLab
         }
 
         public static void DrawLinesWidth(
-            Vector3[] verts, float width = 0.0f, int dim = 10)
+            Camera camera, float width = 0.0f, int dim = 10)
         {
+            Vector3[] verts = m_verts.ToArray();
+
+            for (int i = 0; i < verts.Length; i++)
+            {
+                verts[i] = WorldToScreenVertex(verts[i], camera);
+            }
+
             GL.PushMatrix();
             {
                 GL.LoadOrtho();

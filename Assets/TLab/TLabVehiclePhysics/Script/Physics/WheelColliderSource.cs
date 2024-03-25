@@ -118,11 +118,11 @@ namespace TLab.VehiclePhysics
 
             const int DIM = 20;
 
-            GLUtil.ClearVertCash();
+            GLUtil.ClearVertex();
             {
-                GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius, camera));
-                GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)), camera));
-                GLUtil.DrawLinesWidth(GLUtil.VertCashToArray(), LINE_WIDTH, DIM);
+                GLUtil.AddVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius);
+                GLUtil.AddVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)));
+                GLUtil.DrawLinesWidth(camera, LINE_WIDTH, DIM);
             }
 
             GLUtil.CreateTrigonometricTable(DIM, out float[] sin, out float[] cos);
@@ -137,35 +137,35 @@ namespace TLab.VehiclePhysics
                 points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
             }
 
-            GLUtil.ClearVertCash();
+            GLUtil.ClearVertex();
             {
                 for (int i = 0; i < DIM; i++)
                 {
-                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] + offset, camera));
+                    GLUtil.AddVertex(points[i] + offset);
                 }
 
-                GLUtil.DrawLineWidth(GLUtil.VertCashToArray(), LINE_WIDTH, true, DIM);
+                GLUtil.DrawLineWidth(camera, LINE_WIDTH, true, DIM);
             }
 
-            GLUtil.ClearVertCash();
+            GLUtil.ClearVertex();
             {
                 for (int i = 0; i < DIM; i++)
                 {
-                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] - offset, camera));
+                    GLUtil.AddVertex(points[i] - offset);
                 }
 
-                GLUtil.DrawLineWidth(GLUtil.VertCashToArray(), LINE_WIDTH, true, DIM);
+                GLUtil.DrawLineWidth(camera, LINE_WIDTH, true, DIM);
             }
 
-            GLUtil.ClearVertCash();
+            GLUtil.ClearVertex();
             {
                 for (int i = 0; i < DIM; i++)
                 {
-                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] + offset, camera)); // Connect Left and Right
-                    GLUtil.AddVertCash(GLUtil.WorldToScreenVertex(points[i] - offset, camera));
+                    GLUtil.AddVertex(points[i] + offset);   // Connect Left and Right
+                    GLUtil.AddVertex(points[i] - offset);
                 }
 
-                GLUtil.DrawLinesWidth(GLUtil.VertCashToArray(), LINE_WIDTH, DIM);
+                GLUtil.DrawLinesWidth(camera, LINE_WIDTH, DIM);
             }
         }
 
