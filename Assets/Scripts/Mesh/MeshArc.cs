@@ -19,7 +19,7 @@ namespace TLab.MeshEngine
             for (int i = 0; i < m_resolusion; i++)
             {
                 var fill = (float)i / (m_resolusion - 1);
-                var theta = fill * Mathf.PI;
+                var theta = fill * Mathf.PI * 2.0f;
                 var sin = Mathf.Sin(theta);
                 var cos = Mathf.Cos(theta);
 

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   themeUss: {fileID: -4733365628477956816, guid: b1b77b3c3859d5545b695c085656de85,
     type: 3}
-  m_TargetTexture: {fileID: 8400000, guid: 1e1b652fe862b5e4eb116ac4ce912f19, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_ScaleMode: 1
   m_ReferenceSpritePixelsPerUnit: 100
   m_Scale: 1

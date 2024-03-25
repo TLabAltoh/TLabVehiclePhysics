@@ -252,14 +252,18 @@ namespace TLab.VehiclePhysics
 
             var rawAngularVelocity = (m_rawWheelRpm * m_wheelPhysics.wheelRpm2Vel);
 
+            var absRawAngularVelocity = Mathf.Abs(rawAngularVelocity);
+
             var slipZ = angularVelocity - rawAngularVelocity;
+
+            var absSlipZ = Mathf.Abs(slipZ);
+
+            m_slipRatio = (absRawAngularVelocity > 0.1f) ? (absSlipZ / absRawAngularVelocity) : (absSlipZ > 0.1f ? 1f : 0f);
+
             var slipAmount = Mathf.Sqrt(
                 slipZ * slipZ + // Forward slip
                 wheelLocalVelocity.x * wheelLocalVelocity.x // Horizontal slip
                 );
-
-            var absRawAngularVelocity = Mathf.Abs(rawAngularVelocity);
-            m_slipRatio = (absRawAngularVelocity > 0.1f) ? (slipZ / absRawAngularVelocity) : (slipZ > 0.1f ? 1f : 0f);
 
             /**
              * Calculate frictional force ---> ---->
@@ -356,7 +360,7 @@ namespace TLab.VehiclePhysics
                     /**
                      * Update current tire rotation amount.
                      */
-                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
+                    var wheelRpm = -Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
                     m_wheelRpm = wheelRpm;
 
                     /**
