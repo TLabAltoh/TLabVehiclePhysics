@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TLab.VehiclePhysics
 {
@@ -28,6 +29,9 @@ namespace TLab.VehiclePhysics
         [SerializeField] private VehicleInputManager m_inputManager;
 
         [SerializeField] private VehicleSystemManager m_systemManager;
+
+        [Header("Callback")]
+        [SerializeField] private UnityEvent m_onShiftChanged;
 
         private VehicleEngineInfo.GearInfo m_gearInfo;
         private int m_gearIndex = 2;
@@ -164,14 +168,23 @@ namespace TLab.VehiclePhysics
                     break;
             }
 
-            m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
+            SetShift(m_gearIndex);
         }
 
-        private void Shift(int dir)
+        public void SetShift(int index)
         {
-            m_gearIndex = Mathf.Clamp(m_gearIndex + dir, 0, m_engineInfo.gearInfos.Length - 1);
+            m_gearIndex = Mathf.Clamp(index, 0, m_engineInfo.gearInfos.Length - 1);
 
             m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
+
+            m_shiftChangeIntervals = m_engineInfo.shiftChangeIntervals;
+
+            m_onShiftChanged.Invoke();
+        }
+
+        public void MoveShift(int dir)
+        {
+            SetShift(m_gearIndex + dir);
         }
 
         public void UpdateShiftInput()
@@ -204,16 +217,12 @@ namespace TLab.VehiclePhysics
 
                         if (m_engineRpm > m_gearInfo.maxRpmThreshold)
                         {
-                            Shift(1);
-
-                            m_shiftChangeIntervals = m_engineInfo.shiftChangeIntervals;
+                            MoveShift(1);
                         }
 
                         if (m_engineRpm < m_gearInfo.minRpmThreshold)
                         {
-                            Shift(-1);
-
-                            m_shiftChangeIntervals = m_engineInfo.shiftChangeIntervals;
+                            MoveShift(-1);
                         }
                     }
                     break;
@@ -223,13 +232,13 @@ namespace TLab.VehiclePhysics
 
                     if (inputGearUp)
                     {
-                        Shift(1);
+                        MoveShift(1);
                         gearUpPressed = false;
                     }
 
                     if (inputGearDown)
                     {
-                        Shift(-1);
+                        MoveShift(-1);
                         gearDownPressed = false;
                     }
                     break;
@@ -255,9 +264,12 @@ namespace TLab.VehiclePhysics
             m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
         }
 
-        public void Initialize()
+        public void Initialize(State state, int gear)
         {
-            SwitchEngine(State.ON);
+            SwitchEngine(state);
+
+            SetShift(gear);
+
             m_maxEngineRpm = GetMaxEngineRpm();
         }
 

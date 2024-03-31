@@ -219,29 +219,39 @@ namespace TLab.VehiclePhysics
         {
             /**
              * Input processing should be described in Update
-             * Ref1: https://unity-yuji.xyz/input-fixedupdate/
-             * Ref2: https://qiita.com/yuji_yasuhara/items/6f50ecdd5d59e83aac99
+             * 1: https://unity-yuji.xyz/input-fixedupdate/
+             * 2: https://qiita.com/yuji_yasuhara/items/6f50ecdd5d59e83aac99
              */
 
-            switch (m_systemManager.CurrentPilot)
+            switch (m_engine.state)
             {
-                case VehicleSystemManager.Pilot.None:
+                case VehicleEngine.State.ON:
+                    switch (m_systemManager.CurrentPilot)
+                    {
+                        case VehicleSystemManager.Pilot.None:
+                            break;
+                        case VehicleSystemManager.Pilot.AI:
+                            PilotIsAI();
+                            break;
+                        case VehicleSystemManager.Pilot.Player:
+                            PilotIsPlayer();
+                            break;
+                    }
+
+                    if (m_engine.info.transmission == VehicleEngineInfo.Transmission.AT)
+                    {
+                        m_clutchInput = 0f;
+                    }
+
+                    m_actualInput = m_accelInput;
+                    m_ackermanAngle = m_steerInput * m_maxAckermannAngle;
                     break;
-                case VehicleSystemManager.Pilot.AI:
-                    PilotIsAI();
-                    break;
-                case VehicleSystemManager.Pilot.Player:
-                    PilotIsPlayer();
+                case VehicleEngine.State.OFF:
+                    m_actualInput = 0.0f;
+                    m_brakeInput = 1.0f;
+                    m_clutchInput = 0.0f;
                     break;
             }
-
-            if (m_engine.info.transmission == VehicleEngineInfo.Transmission.AT)
-            {
-                m_clutchInput = 0f;
-            }
-
-            m_actualInput = m_accelInput;
-            m_ackermanAngle = m_steerInput * m_maxAckermannAngle;
         }
 
         void OnApplicationQuit()

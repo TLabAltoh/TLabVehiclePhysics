@@ -15,11 +15,11 @@ MonoBehaviour:
   m_gearInfos:
   - gear: -1
     ratio: -3
-    maxRpmThreshold: 7000
+    maxRpmThreshold: 9000
     minRpmThreshold: -1
   - gear: 0
     ratio: 0
-    maxRpmThreshold: 2000
+    maxRpmThreshold: 9000
     minRpmThreshold: -1
   - gear: 1
     ratio: 4.5
@@ -47,4 +47,4 @@ MonoBehaviour:
     minRpmThreshold: 4000
   m_transmission: 0
   m_torqueCurve: {fileID: 11400000, guid: 648711e70561ec64699d975b01a36b39, type: 2}
-  m_shiftChangeIntervals: 0.1
+  m_shiftChangeIntervals: 1
