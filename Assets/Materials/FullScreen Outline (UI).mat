@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FullScreenOutline
+  m_Name: FullScreen Outline (UI)
   m_Shader: {fileID: 4800000, guid: fa0a2103cbdf5794d961897a3ab23ecd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
