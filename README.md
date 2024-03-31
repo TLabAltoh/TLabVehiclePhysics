@@ -9,7 +9,7 @@ This project uses URP, but TLabVihiclePhysics itself can also be used in the bui
 <table>
 <tr>
    <td>
-	    <img src="Media/capture.gif" width="512" />
+	    <img src="Media/sample.gif" width="512" />
 	 </td>
 </tr>
 </table>
