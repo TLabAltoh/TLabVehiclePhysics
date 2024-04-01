@@ -18,6 +18,8 @@ namespace TLab.UI
 
 		protected Material m_material;
 
+		protected Mask m_mask;
+
 		public Material material => m_material;
 
 		[HideInInspector, SerializeField] protected MaskableGraphic m_image;
@@ -38,6 +40,8 @@ namespace TLab.UI
 			{
 				m_image.material = m_material;
 			}
+
+			m_mask = GetComponent<Mask>();
 		}
 
 		protected virtual void OnRectTransformDimensionsChange()
@@ -45,6 +49,15 @@ namespace TLab.UI
 			if (enabled && m_material != null)
 			{
 				Refresh();
+
+				if (m_mask != null)
+				{
+					var old = m_mask.enabled;
+
+					m_mask.enabled = !old;
+
+					m_mask.enabled = old;
+				}
 			}
 		}
 

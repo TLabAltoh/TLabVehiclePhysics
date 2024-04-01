@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
+#if UNITY_EDITOR
 namespace TLab.EditorTool
 {
     public static class SceneViewCapture
@@ -36,3 +37,4 @@ namespace TLab.EditorTool
         }
     }
 }
+#endif

@@ -76,7 +76,7 @@ namespace TLab.VehiclePhysics
         void Awake()
         {
 #if !UNITY_EDITOR && UNITY_WEBGL
-            m_howInput = IsMobile() == true ? InputMode.UIButton : m_howInput;
+            m_howInput = IsMobile() == true ? InputMode.UI_BUTTON : m_howInput;
 #endif
         }
 

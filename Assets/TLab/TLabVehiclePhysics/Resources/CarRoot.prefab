@@ -372,6 +372,9 @@ MonoBehaviour:
   m_vihiclePhysics: {fileID: 8728165046099144073}
   m_inputManager: {fileID: 4820882414211504125}
   m_systemManager: {fileID: 301863819526358899}
+  m_onShiftChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &301863819526358901
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +422,9 @@ MonoBehaviour:
   m_engine: {fileID: 301863819273784810}
   m_inputManager: {fileID: 4820882414211504125}
   m_currentPilot: 0
+  m_shiftEnabled: 1
+  m_initialEngineGear: 2
+  m_initialEngineState: 0
   m_wheelColliderSources:
   - {fileID: 4868004424742606035}
   - {fileID: 6402682022256991398}
@@ -1302,7 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
