@@ -39,12 +39,13 @@ Shader "UI/SDF/Quad" {
 
         Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
         ZWrite Off
+        ZTest Off
 
         Pass {
             CGPROGRAM
 
             #include "UnityCG.cginc"
-            #include "UnityUI.cginc" 
+            #include "UnityUI.cginc"
             #include "SDFUtils.cginc"
             #include "ShaderSetup.cginc"
 

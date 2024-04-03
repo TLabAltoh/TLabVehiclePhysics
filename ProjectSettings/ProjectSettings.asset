@@ -721,7 +721,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     Android: CROSS_PLATFORM_INPUT;MOBILE_INPUT
     Standalone: CROSS_PLATFORM_INPUT
-    WebGL: TLAB_RELEASE
+    WebGL: 
     Windows Store Apps: MOBILE_INPUT
     iPhone: CROSS_PLATFORM_INPUT;MOBILE_INPUT
   additionalCompilerArguments:

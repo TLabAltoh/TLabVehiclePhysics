@@ -14,27 +14,32 @@ Shader "Hidden/TLab/UI/Fade"
     }
         SubShader
         {
-            Tags { "Renderpipeline" = "UniversalPipeline" }
+            Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 
             Blend SrcAlpha OneMinusSrcAlpha, One OneMinusSrcAlpha
+
+            LOD 100
+            ZTest Off
             ZWrite Off
 
             Pass
             {
-                HLSLPROGRAM
+                CGPROGRAM
+                #pragma fragmentoption ARB_precision_hint_fastest
                 #pragma vertex vert
                 #pragma fragment frag
 
-                #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+                #include "UnityCG.cginc"
+                #include "UnityUI.cginc"
 
-                struct Attributes
+                struct appdata
                 {
                     half4 vertex : POSITION;
                     half2 uv : TEXCOORD0;
                     half4 color: COLOR;
                 };
 
-                struct Varyings
+                struct v2f
                 {
                     half2 uv : TEXCOORD0;
                     half4 vertex : SV_POSITION;
@@ -49,17 +54,17 @@ Shader "Hidden/TLab/UI/Fade"
                 half _XOffset;
                 half _YOffset;
 
-                Varyings vert(Attributes IN)
+                v2f vert(appdata IN)
                 {
-                    Varyings OUT;
-                    OUT.vertex = TransformObjectToHClip(IN.vertex.xyz);
+                    v2f OUT;
+                    OUT.vertex = UnityObjectToClipPos(IN.vertex.xyz);
                     OUT.uv = IN.uv;
                     OUT.color = IN.color;
 
                     return OUT;
                 }
 
-                half4 frag(Varyings IN) : SV_Target
+                half4 frag(v2f IN) : SV_Target
                 {
                     half cosAngle = cos(_Angle);
                     half sinAngle = sin(_Angle);
@@ -88,7 +93,7 @@ Shader "Hidden/TLab/UI/Fade"
 
                     return color;
                 }
-                ENDHLSL
+                ENDCG
             }
         }
 }
