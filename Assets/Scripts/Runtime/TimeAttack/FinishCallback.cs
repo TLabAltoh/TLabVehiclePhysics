@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace TLab
+namespace TLab.Scene.TimeAttack
 {
     public class FinishCallback : MonoBehaviour
     {

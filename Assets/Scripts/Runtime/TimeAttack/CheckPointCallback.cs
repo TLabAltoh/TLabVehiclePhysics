@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace TLab
+namespace TLab.Game.TimeAttack
 {
     public class CheckPointCallback : MonoBehaviour
     {
@@ -9,9 +9,20 @@ namespace TLab
         [SerializeField] private Material m_matGoal;
         [SerializeField] private Material m_matSleep;
         [SerializeField] private Material m_matTarget;
+        [SerializeField] private LayerMask m_target;
         [SerializeField] private UnityEvent m_onFinish;
 
         private int m_goalGatePassCount = 0;
+
+        public int goal => m_goal;
+
+        public Material matGoal => m_matGoal;
+
+        public Material matSleep => m_matSleep;
+
+        public Material matTarget => m_matTarget;
+
+        public LayerMask target => m_target;
 
         public void OnCheckPointPass(int index)
         {
