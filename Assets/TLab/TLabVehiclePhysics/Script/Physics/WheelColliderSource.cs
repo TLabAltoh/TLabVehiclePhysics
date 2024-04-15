@@ -60,6 +60,10 @@ namespace TLab.VehiclePhysics
 
         public float finalGearRatio => m_endPointGearRatio;
 
+        public float rawWheelRpm => m_rawWheelRpm;
+
+        public float wheelRpm => m_wheelRpm;
+
         /**
          * input axis
          */
@@ -207,11 +211,6 @@ namespace TLab.VehiclePhysics
 
         private void WheelAddForce()
         {
-            if (m_driveEnabled && m_driveData.transmissionConnected)
-            {
-                m_wheelRpm = m_driveData.engineRpm / m_endPointGearRatio;
-            }
-
             if (!m_wheelPhysics.grounded)
             {
                 return;
@@ -360,7 +359,7 @@ namespace TLab.VehiclePhysics
                     /**
                      * Update current tire rotation amount.
                      */
-                    var wheelRpm = -Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
+                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
                     m_wheelRpm = wheelRpm;
 
                     /**
@@ -372,7 +371,7 @@ namespace TLab.VehiclePhysics
                 }
                 else
                 {
-                    const float DECREMENT = 0.5f, TARGET_RPM = 0.0f;
+                    const float DECREMENT = 1.0f, TARGET_RPM = 0.0f;
 
                     /**
                      * Because the transmission is not connected, the amount of tire rotation is dragged by the inertia of the vehicle body.
@@ -386,7 +385,7 @@ namespace TLab.VehiclePhysics
             }
             else
             {
-                const float DECREMENT = 0.5f, TARGET_RPM = 0.0f;
+                const float DECREMENT = 1.0f, TARGET_RPM = 0.0f;
 
                 /**
                  * Because the transmission is not connected, the amount of tire rotation is dragged by the inertia of the vehicle body.
