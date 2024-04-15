@@ -28,6 +28,8 @@ namespace TLab.VehiclePhysics
         private Label m_labelRawWheelRpmR;
         private Label m_labelWheelRpmL;
         private Label m_labelWheelRpmR;
+        private Label m_labelWheelForceL;
+        private Label m_labelWheelForceR;
 
         void Start()
         {
@@ -42,14 +44,21 @@ namespace TLab.VehiclePhysics
             m_labelGear = rootVE.GetElement<Label>("gear", "value");
             m_labelAngle = rootVE.GetElement<Label>("angle", "value");
             m_labelSpeed = rootVE.GetElement<Label>("speed", "value");
+
             m_labelGripR = rootVE.GetElement<Label>("grip_r", "value");
             m_labelGripF = rootVE.GetElement<Label>("grip_f", "value");
+
             m_labelTorqueR = rootVE.GetElement<Label>("torque_r", "value");
             m_labelTorqueL = rootVE.GetElement<Label>("torque_l", "value");
+
             m_labelRawWheelRpmR = rootVE.GetElement<Label>("raw_wheel_rpm_r", "value");
             m_labelRawWheelRpmL = rootVE.GetElement<Label>("raw_wheel_rpm_l", "value");
+
             m_labelWheelRpmR = rootVE.GetElement<Label>("wheel_rpm_r", "value");
             m_labelWheelRpmL = rootVE.GetElement<Label>("wheel_rpm_l", "value");
+
+            m_labelWheelForceL = rootVE.GetElement<Label>("wheel_force_l", "value");
+            m_labelWheelForceR = rootVE.GetElement<Label>("wheel_force_r", "value");
         }
 
         void Update()
@@ -58,14 +67,21 @@ namespace TLab.VehiclePhysics
             m_labelGear.text = m_engine.gear.ToString();
             m_labelAngle.text = m_physics.minAngle.ToString("0.00");
             m_labelSpeed.text = m_physics.kilometerPerHourInLocal.ToString("0.0");
+
             m_labelGripR.text = m_physics.downforceRear.ToString("0.00");
             m_labelGripF.text = m_physics.downforceFront.ToString("0.00");
+
             m_labelTorqueR.text = m_wheelRR.finalTorque.ToString("0.00");
             m_labelTorqueL.text = m_wheelRL.finalTorque.ToString("0.00");
+
             m_labelRawWheelRpmR.text = m_wheelRR.rawWheelRpm.ToString("0.00");
             m_labelRawWheelRpmL.text = m_wheelRL.rawWheelRpm.ToString("0.00");
+
             m_labelWheelRpmR.text = m_wheelRR.wheelRpm.ToString("0.00");
             m_labelWheelRpmL.text = m_wheelRL.wheelRpm.ToString("0.00");
+
+            m_labelWheelForceL.text = m_wheelRL.totalTireForceLocal.ToString("+#;-#;0.00;");
+            m_labelWheelForceR.text = m_wheelRR.totalTireForceLocal.ToString("+#;-#;0.00;");
         }
     }
 }

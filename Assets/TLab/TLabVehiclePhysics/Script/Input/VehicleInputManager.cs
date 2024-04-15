@@ -26,7 +26,8 @@ namespace TLab.VehiclePhysics
         [SerializeField] private KeyCode m_shiftUpKey;
         [SerializeField] private KeyCode m_shiftDownKey;
 
-        [SerializeField] private float m_maxAckermannAngle = 55f;
+        [Header("The Ackerman angle must not exceed 90.")]
+        [SerializeField, Range(0f, 89f)] private float m_maxAckermannAngle = 55f;
 
         private float m_actualInput = 0f;
         private float m_ackermanAngle = 0f;

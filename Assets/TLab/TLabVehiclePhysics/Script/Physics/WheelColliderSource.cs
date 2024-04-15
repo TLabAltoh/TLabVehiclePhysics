@@ -42,6 +42,9 @@ namespace TLab.VehiclePhysics
         private float m_feedbackEngineRpmRatio = 0f;
         private float m_endPointTorque = 0f;
         private float m_endPointGearRatio = 0f;
+        private Vector3 m_totalTireForceLocal;
+        private Vector3 m_totalTireForce;
+        private Vector3 m_suspentionForce;
 
         private const float WEIGHT_RATIO = 0.25f;
         private const float DIFFGEAR_RATIO = 3.42f;
@@ -63,6 +66,12 @@ namespace TLab.VehiclePhysics
         public float rawWheelRpm => m_rawWheelRpm;
 
         public float wheelRpm => m_wheelRpm;
+
+        public Vector3 totalTireForce => m_totalTireForce;
+
+        public Vector3 totalTireForceLocal => m_totalTireForceLocal;
+
+        public Vector3 suspentionForce => m_suspentionForce;
 
         /**
          * input axis
@@ -307,17 +316,24 @@ namespace TLab.VehiclePhysics
 
             var slipAngleGrip = m_wheelPhysics.slipAngleVsGrip.Evaluate(Mathf.Abs(m_slipAngle) * Mathf.Rad2Deg);
 
-            var lateralGrip = baseGrip * slipAngleGrip * slipRatioLateralGrip * m_downforce;
+            var corneringGrip = baseGrip * slipAngleGrip * slipRatioLateralGrip * m_downforce;
 
-            var lateralForce = velXDir * gravity * lateralGrip;
+            var corneringForce = velXDir * gravity * corneringGrip;
 
             /**
              * Vectoring frictional forces ---> --->
              */
 
-            var targetX = lateralForce;
+            var targetX = corneringForce;
 
             var targetZ = rollingResistance;
+
+            if (m_steerEnabled)
+            {
+                var corneringResistance = Mathf.Sin(ackermanAngle * Mathf.Deg2Rad) * (corneringForce / Mathf.Cos(ackermanAngle * Mathf.Deg2Rad));
+
+                targetZ -= corneringResistance;
+            }
 
             if (brakeInput > 0.1f || achieveMaxWheelRPM)
             {
@@ -328,11 +344,13 @@ namespace TLab.VehiclePhysics
                 targetZ = targetZ + m_endPointTorque;
             }
 
-            var suspentionForce = m_raycastHit.normal * m_wheelPhysics.suspentionFource;
-            var totalTireForce = m_rigidbody.transform.TransformDirection(targetX, 0f, targetZ);
+            m_suspentionForce = m_raycastHit.normal * m_wheelPhysics.suspentionFource;
 
-            m_rigidbody.AddForceAtPosition(totalTireForce, m_dummyWheel.position, ForceMode.Force);
-            m_rigidbody.AddForceAtPosition(suspentionForce, transform.position, ForceMode.Force);
+            m_totalTireForceLocal = new Vector3(targetX, 0f, targetZ);
+            m_totalTireForce = m_rigidbody.transform.TransformDirection(m_totalTireForceLocal);
+
+            m_rigidbody.AddForceAtPosition(m_totalTireForce, m_dummyWheel.position, ForceMode.Force);
+            m_rigidbody.AddForceAtPosition(m_suspentionForce, transform.position, ForceMode.Force);
         }
 
         private void UpdateEngineRpm()
