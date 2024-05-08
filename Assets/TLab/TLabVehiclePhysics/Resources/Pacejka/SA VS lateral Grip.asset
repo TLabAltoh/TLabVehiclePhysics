@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c405c88ee9c08ac45b7fd67b72ab6c37, type: 3}
+  m_Name: SA VS lateral Grip
+  m_EditorClassIdentifier: 
+  pacejkaDic:
+  - index: 0
+    color: {r: 1, g: 0, b: 0, a: 1}
+    pacejka: {fileID: 11400000, guid: 9f4057d0a454e544bb153d1dd85a2878, type: 2}
+  - index: 1
+    color: {r: 0, g: 0.91210127, b: 1, a: 1}
+    pacejka: {fileID: 11400000, guid: 771c96d2a0a56e04394592d22b718179, type: 2}
+  graphSettings:
+    xrange: 60
+    yrange: 1
+    num: 20
+    div: 5
+    xAccuracy: 1
+    yAccuracy: 1

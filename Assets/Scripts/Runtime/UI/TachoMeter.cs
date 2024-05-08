@@ -7,7 +7,7 @@ namespace TLab
 {
     public class TachoMeter : MonoBehaviour
     {
-        [SerializeField] private VehicleEngine m_engine;
+        [SerializeField] private Engine m_engine;
 
         [SerializeField] private SDFRing m_tacho;
 

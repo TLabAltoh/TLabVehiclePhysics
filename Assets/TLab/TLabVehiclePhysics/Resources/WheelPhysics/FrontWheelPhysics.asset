@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5bb45ea9073274e8aecf5d8b0047f1, type: 3}
+  m_Name: FrontWheelPhysics
+  m_EditorClassIdentifier: 
+  baseGrip: {fileID: 11400000, guid: c3d73cb54a8c5f44299b95c53ebc5c33, type: 2}
+  longitudinalGrip: {fileID: 11400000, guid: 4e46c5d881bc111428b82c1b50b1b46c, type: 2}
+  lateralGrip: {fileID: 11400000, guid: 98e3801d7fc25454295f7d5095854a94, type: 2}
+  spring: 55000
+  damper: 2000
+  wheelMass: 1
+  susDst: 0.3
+  targetPos: 0
+  wheelRadius: 0.35
+  grounded: 1
+  susCps: 0.07021552
+  susCpsPrev: 0.06350982
+  gizmoColor: {r: 0, g: 1, b: 0, a: 1}

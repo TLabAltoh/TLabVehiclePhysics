@@ -1,18 +1,39 @@
 # TLabVehiclePhysics
-An open source wheel collider sample project  
-This project uses URP, but TLabVihiclePhysics itself can also be used in the built-in render pipeline
+Open Source WheelCollider for Unity. pacejka based wheel logic and utility for creating simple tire models.
 
 ## Support
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/tlabaltoh)
 
 ## Screenshot
 <table>
-<tr>
-   <td>
-	    <img src="Media/sample.gif" width="512" />
-	 </td>
-</tr>
+    <caption>GamePlay Overview</caption>
+    <tr>
+        <td><img src="Media/sample.gif" width="512" /></td>
+    </tr>
 </table>
+
+<details>
+
+<summary>Parameters used by this project</summary>
+<table>
+    <caption>Downforce and Torque Curve with LUT</caption>
+    <tr>
+        <td><img src="Media/lut-downforce-max.png" width="530" /></td>
+        <td><img src="Media/lut-downforce-min.png" width="530" /></td>
+    </tr>
+    <tr>
+        <td><img src="Media/multi-lut-downforce.png" width="530" /></td>
+        <td><img src="Media/multi-lut-torque-curve.png" width="530" /></td>
+    </tr>
+</table>
+<table>
+    <caption>Pacejka</caption>
+    <tr>
+        <td><img src="Media/pacejka-longitudinal.png" width="530" /></td>
+        <td><img src="Media/pacejka-lateral.png" width="530" /></td>
+    </tr>
+</table>
+</details>
 
 ## Getting Started
 ### Prerequisites
@@ -40,7 +61,7 @@ git submodule upadte --init
 - C: Clutch
 ##### Camera Operation
 - ASDW: Camera Rotation
-- Z: Switch Camera (FPS / TPS)
+- Z: Switch Camera (Pov / Follow)
 
 ## Reference
 - [Randomation-Vehicle-Physics](https://github.com/JustInvoke/Randomation-Vehicle-Physics)
