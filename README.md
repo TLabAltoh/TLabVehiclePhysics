@@ -14,7 +14,15 @@ Open Source WheelCollider for Unity. pacejka based wheel logic and utility for c
 
 <details>
 
-<summary>Parameters used by this project</summary>
+<summary>Example parameters used in this project</summary>
+<table>
+    <caption>Pacejka</caption>
+    <tr>
+        <td><img src="Media/pacejka.png" width="530" /></td>
+        <td><img src="Media/pacejka-lateral.png" width="530" /></td>
+        <td><img src="Media/pacejka-longitudinal.png" width="530" /></td>
+    </tr>
+</table>
 <table>
     <caption>Downforce and Torque Curve with LUT</caption>
     <tr>
@@ -24,13 +32,6 @@ Open Source WheelCollider for Unity. pacejka based wheel logic and utility for c
     <tr>
         <td><img src="Media/multi-lut-downforce.png" width="530" /></td>
         <td><img src="Media/multi-lut-torque-curve.png" width="530" /></td>
-    </tr>
-</table>
-<table>
-    <caption>Pacejka</caption>
-    <tr>
-        <td><img src="Media/pacejka-longitudinal.png" width="530" /></td>
-        <td><img src="Media/pacejka-lateral.png" width="530" /></td>
     </tr>
 </table>
 </details>
