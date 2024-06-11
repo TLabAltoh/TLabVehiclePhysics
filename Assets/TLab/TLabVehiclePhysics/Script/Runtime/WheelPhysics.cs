@@ -8,6 +8,7 @@ namespace TLab.VehiclePhysics
     public class WheelPhysics : ScriptableObject
     {
         [SerializeField] public LUT baseGrip;
+        [SerializeField] public MultiLUT engineFeedback;
 
         [SerializeField] public MultiPacejka longitudinalGrip;
         [SerializeField] public MultiPacejka lateralGrip;

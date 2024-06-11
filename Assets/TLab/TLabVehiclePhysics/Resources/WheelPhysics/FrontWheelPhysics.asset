@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FrontWheelPhysics
   m_EditorClassIdentifier: 
   baseGrip: {fileID: 11400000, guid: c3d73cb54a8c5f44299b95c53ebc5c33, type: 2}
+  engineFeedback: {fileID: 11400000, guid: 2855f72efd4a97543b010880f081341d, type: 2}
   longitudinalGrip: {fileID: 11400000, guid: 4e46c5d881bc111428b82c1b50b1b46c, type: 2}
   lateralGrip: {fileID: 11400000, guid: 98e3801d7fc25454295f7d5095854a94, type: 2}
   spring: 55000
@@ -22,6 +23,6 @@ MonoBehaviour:
   targetPos: 0
   wheelRadius: 0.35
   grounded: 1
-  susCps: 0.07021552
-  susCpsPrev: 0.06350982
+  susCps: 0.082986474
+  susCpsPrev: 0.041882932
   gizmoColor: {r: 0, g: 1, b: 0, a: 1}

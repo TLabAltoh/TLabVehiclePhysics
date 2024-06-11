@@ -372,19 +372,27 @@ namespace TLab.VehiclePhysics
                 {
                     const float DECREMENT = 25f;
 
-                    var rawEngineRpm = Mathf.Abs(m_rawWheelRpm * m_endPointGearRatio);
+                    var targetEngineRpm = Mathf.Abs(m_rawWheelRpm * m_endPointGearRatio);
 
-                    var toRawEngineRpm = Mathf.Lerp(m_driveData.engineRpm, rawEngineRpm, m_longitudinalGrip);
+                    var absEngienRpmGapRatio = (targetEngineRpm > 0.1f) ? Mathf.Abs((m_driveData.engineRpm - targetEngineRpm) / m_driveData.engineRpm) : (m_driveData.engineRpm > 0.1f ? 1f : 0f);
+
+                    var absSlipAngle = Mathf.Abs(m_slipAngle);
+
+                    var feedbackRatio = m_wheelPhysics.engineFeedback.Evaluate(absSlipAngle * Mathf.Rad2Deg, absEngienRpmGapRatio * 100f);
+
+                    Debug.Log(feedbackRatio);
+
+                    var lerpedToTargetEngineRpm = Mathf.Lerp(m_driveData.engineRpm, targetEngineRpm, feedbackRatio);
 
                     // Update current tire rotation amount.
-                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * toRawEngineRpm / Mathf.Abs(m_endPointGearRatio);
+                    var wheelRpm = Mathf.Sign(m_rawWheelRpm) * lerpedToTargetEngineRpm / Mathf.Abs(m_endPointGearRatio);
                     m_wheelRpm = wheelRpm;
 
                     // Damping of engine rpm due to transfer of
                     // engine power to gears
-                    var feedbackEngineRpm = Math.LinerApproach(toRawEngineRpm, GetFrameLerp(DECREMENT), IDLING - 1);
+                    var feedbackEngineRpm = Math.LinerApproach(lerpedToTargetEngineRpm, GetFrameLerp(DECREMENT), IDLING - 1);
                     m_feedbackEngineRpm = feedbackEngineRpm;
-                    m_feedbackEngineRpmRatio = Mathf.Abs(rawEngineRpm / m_engine.maxEngineRpm);
+                    m_feedbackEngineRpmRatio = Mathf.Abs(targetEngineRpm / m_engine.maxEngineRpm);
                 }
                 else
                 {

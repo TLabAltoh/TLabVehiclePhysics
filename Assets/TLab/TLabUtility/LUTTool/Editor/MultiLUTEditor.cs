@@ -48,7 +48,9 @@ namespace TLab.LUTTool.Editor
 
             for (var i = 0; i < m_instance.lutDic.Length; i++)
             {
-                if (m_instance.lutDic[i].lut.values == null || m_instance.lutDic[i].lut.values.Length == 0)
+                if (m_instance.lutDic[i].lut == null || 
+                    m_instance.lutDic[i].lut.values == null || 
+                    m_instance.lutDic[i].lut.values.Length == 0)
                 {
                     return;
                 }
