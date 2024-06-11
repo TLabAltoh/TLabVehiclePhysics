@@ -479,6 +479,10 @@ MonoBehaviour:
   - {fileID: 6402682022256991398}
   - {fileID: 5902336353477284409}
   - {fileID: 8367604793501537810}
+  m_debugWheelMat: {fileID: 2100000, guid: 3b88d4884c2d3bf488048b28ac572bc1, type: 2}
+  m_overall: 0.15
+  m_tread: 0.085
+  m_rim: 0.25
 --- !u!1 &557500836202851940
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,7 +876,6 @@ MonoBehaviour:
   m_wheelPhysics: {fileID: 11400000, guid: d8b4f6b62a8330c439dcde42e4d05649, type: 2}
   m_arbPear: {fileID: 5902336353477284409}
   m_inputManager: {fileID: 4820882414211504125}
-  m_lineMaterial: {fileID: 2100000, guid: 3b88d4884c2d3bf488048b28ac572bc1, type: 2}
 --- !u!1 &4868004424742606036
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,7 +929,6 @@ MonoBehaviour:
   m_wheelPhysics: {fileID: 11400000, guid: d2e61fcc44c683b41b6b515007958693, type: 2}
   m_arbPear: {fileID: 6402682022256991398}
   m_inputManager: {fileID: 4820882414211504125}
-  m_lineMaterial: {fileID: 2100000, guid: 3b88d4884c2d3bf488048b28ac572bc1, type: 2}
 --- !u!1 &4872740735055811385
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +982,6 @@ MonoBehaviour:
   m_wheelPhysics: {fileID: 11400000, guid: d2e61fcc44c683b41b6b515007958693, type: 2}
   m_arbPear: {fileID: 4868004424742606035}
   m_inputManager: {fileID: 4820882414211504125}
-  m_lineMaterial: {fileID: 2100000, guid: 3b88d4884c2d3bf488048b28ac572bc1, type: 2}
 --- !u!1 &5785646615157170480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1067,7 +1068,6 @@ MonoBehaviour:
   m_wheelPhysics: {fileID: 11400000, guid: d8b4f6b62a8330c439dcde42e4d05649, type: 2}
   m_arbPear: {fileID: 8367604793501537810}
   m_inputManager: {fileID: 4820882414211504125}
-  m_lineMaterial: {fileID: 2100000, guid: 3b88d4884c2d3bf488048b28ac572bc1, type: 2}
 --- !u!1 &6431187993873775726
 GameObject:
   m_ObjectHideFlags: 0

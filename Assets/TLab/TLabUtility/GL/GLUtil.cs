@@ -5,10 +5,6 @@ namespace TLab
 {
     public static class GLUtil
     {
-        private static float[] m_sin = null;
-
-        private static float[] m_cos = null;
-
         public static Queue<Vector3> m_verts = new Queue<Vector3>();
 
         public static void AddVertex(Vector3 vert)
@@ -23,21 +19,26 @@ namespace TLab
 
         public static void CreateTrigonometricTable(int dim, out float[] sin, out float[] cos)
         {
-            if ((m_sin == null) || (m_sin.Length != dim))
+            sin = new float[dim];
+            cos = new float[dim];
+
+            for (int i = 0; i < dim; i++)
             {
-                m_sin = new float[dim];
-                m_cos = new float[dim];
-
-                for (int i = 0; i < dim; i++)
-                {
-                    float theta = i / (float)dim * Mathf.PI * 2;
-                    m_sin[i] = Mathf.Sin(theta);
-                    m_cos[i] = Mathf.Cos(theta);
-                }
+                float theta = i / (float)dim * Mathf.PI * 2;
+                sin[i] = Mathf.Sin(theta);
+                cos[i] = Mathf.Cos(theta);
             }
+        }
 
-            sin = m_sin;
-            cos = m_cos;
+        public static void CreateTrigonometricTable(int dim, out Vector2[] table)
+        {
+            table = new Vector2[dim];
+
+            for (int i = 0; i < dim; i++)
+            {
+                float theta = i / (float)dim * Mathf.PI * 2;
+                table[i] = new Vector2(Mathf.Sin(theta), Mathf.Cos(theta));
+            }
         }
 
         public static Vector2 WorldToScreenVertex(Vector3 vert, in Camera camera)

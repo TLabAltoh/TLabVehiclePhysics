@@ -23,9 +23,6 @@ namespace TLab.VehiclePhysics
         [Header("Input")]
         [SerializeField] private InputManager m_inputManager;
 
-        [Header("Wheel Debugger Material")]
-        [SerializeField] private Material m_lineMaterial;
-
         private SphereCollider m_collider;
         private Transform m_dummyWheel;
         private Rigidbody m_rigidbody;
@@ -76,6 +73,8 @@ namespace TLab.VehiclePhysics
 
         public Vector3 suspentionForce => m_suspentionForce;
 
+        public WheelPhysics wheelPhysics => m_wheelPhysics;
+
         // 
         // Input Axis
         //
@@ -123,83 +122,6 @@ namespace TLab.VehiclePhysics
 
             m_endPointGearRatio = driveData.gearRatio * DIFFGEAR_RATIO;
             m_endPointTorque = driveData.torque * m_endPointGearRatio / m_wheelPhysics.wheelRadius;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="camera"></param>
-        public void DrawWheel(Camera camera)
-        {
-            if (!m_lineMaterial)
-            {
-                Debug.LogError("line material is null");
-                return;
-            }
-
-            var planes = GeometryUtility.CalculateFrustumPlanes(camera);
-
-            if (!GeometryUtility.TestPlanesAABB(planes, bounds))
-            {
-                return;
-            }
-
-            m_lineMaterial.color = m_wheelPhysics.gizmoColor;
-            m_lineMaterial.SetPass(0);
-
-            const float LINE_WIDTH = 0.0025f;
-
-            const int DIM = 20;
-
-            GLUtil.ClearVertex();
-            {
-                GLUtil.AddVertex(transform.position - m_dummyWheel.up * m_wheelPhysics.wheelRadius);
-                GLUtil.AddVertex(transform.position + (m_dummyWheel.up * (m_wheelPhysics.susDst - m_wheelPhysics.susCps)));
-                GLUtil.DrawLinesWidth(camera, LINE_WIDTH, DIM);
-            }
-
-            GLUtil.CreateTrigonometricTable(DIM, out float[] sin, out float[] cos);
-
-            var points = new Vector3[DIM];
-
-            Vector3 susVec, offset = transform.TransformVector(Vector3.right * 0.1f);
-
-            for (int i = 0; i < DIM; i++)
-            {
-                susVec = new Vector3(0, sin[i], cos[i]);
-                points[i] = transform.TransformPoint(m_wheelPhysics.wheelRadius * susVec);
-            }
-
-            GLUtil.ClearVertex();
-            {
-                for (int i = 0; i < DIM; i++)
-                {
-                    GLUtil.AddVertex(points[i] + offset);
-                }
-
-                GLUtil.DrawLineWidth(camera, LINE_WIDTH, true, DIM);
-            }
-
-            GLUtil.ClearVertex();
-            {
-                for (int i = 0; i < DIM; i++)
-                {
-                    GLUtil.AddVertex(points[i] - offset);
-                }
-
-                GLUtil.DrawLineWidth(camera, LINE_WIDTH, true, DIM);
-            }
-
-            GLUtil.ClearVertex();
-            {
-                for (int i = 0; i < DIM; i++)
-                {
-                    GLUtil.AddVertex(points[i] + offset);   // Connect Left and Right
-                    GLUtil.AddVertex(points[i] - offset);
-                }
-
-                GLUtil.DrawLinesWidth(camera, LINE_WIDTH, DIM);
-            }
         }
 
         /// <summary>
@@ -374,13 +296,9 @@ namespace TLab.VehiclePhysics
 
                     var targetEngineRpm = Mathf.Abs(m_rawWheelRpm * m_endPointGearRatio);
 
-                    var absEngienRpmGapRatio = (targetEngineRpm > 0.1f) ? Mathf.Abs((m_driveData.engineRpm - targetEngineRpm) / m_driveData.engineRpm) : (m_driveData.engineRpm > 0.1f ? 1f : 0f);
-
                     var absSlipAngle = Mathf.Abs(m_slipAngle);
 
-                    var feedbackRatio = m_wheelPhysics.engineFeedback.Evaluate(absSlipAngle * Mathf.Rad2Deg, absEngienRpmGapRatio * 100f);
-
-                    Debug.Log(feedbackRatio);
+                    var feedbackRatio = m_wheelPhysics.engineFeedback.Evaluate(absSlipAngle * Mathf.Rad2Deg, Mathf.Abs(m_endPointTorque));
 
                     var lerpedToTargetEngineRpm = Mathf.Lerp(m_driveData.engineRpm, targetEngineRpm, feedbackRatio);
 
@@ -462,9 +380,6 @@ namespace TLab.VehiclePhysics
         /// </summary>
         public void Initialize()
         {
-            // For debugging tires
-            m_lineMaterial = new Material(m_lineMaterial);
-
             m_dummyWheel = new GameObject(nameof(m_dummyWheel)).transform;
             m_dummyWheel.transform.position = this.transform.position;
             m_dummyWheel.transform.parent = this.transform.parent;

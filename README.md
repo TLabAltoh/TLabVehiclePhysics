@@ -8,7 +8,7 @@ Open Source WheelCollider for Unity. pacejka based wheel logic and utility for c
 <table>
     <caption>GamePlay Overview</caption>
     <tr>
-        <td><img src="Media/sample.gif" width="512" /></td>
+        <td><img src="Media/overview.png" width="512" /></td>
     </tr>
 </table>
 
