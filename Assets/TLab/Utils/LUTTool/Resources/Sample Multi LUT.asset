@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba504698f631624189ea008d4b84144, type: 3}
+  m_Name: Sample Multi LUT
+  m_EditorClassIdentifier: 
+  lutDic:
+  - index: 0
+    color: {r: 1, g: 0, b: 0, a: 1}
+    lut: {fileID: 11400000, guid: 1214f273047f8a441a08291441dabdc8, type: 2}
+  - index: 1
+    color: {r: 0, g: 1, b: 0.99020815, a: 1}
+    lut: {fileID: 11400000, guid: 97d0a7ceb31f6a64c95cc25840172c2c, type: 2}
+  div: 4

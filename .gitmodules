@@ -1,3 +1,9 @@
 [submodule "Assets/TLab/TLabCurveTool"]
 	path = Assets/TLab/TLabCurveTool
 	url = https://github.com/TLabAltoh/TLabCurveTool.git
+[submodule "Assets/TLab/Unity-SDF-UI-Toolkit"]
+	path = Assets/TLab/Unity-SDF-UI-Toolkit
+	url = https://github.com/TLabAltoh/Unity-SDF-UI-Toolkit.git
+[submodule "Assets/TLab/TLab-Spline"]
+	path = Assets/TLab/TLab-Spline
+	url = https://github.com/TLabAltoh/TLab-Spline.git

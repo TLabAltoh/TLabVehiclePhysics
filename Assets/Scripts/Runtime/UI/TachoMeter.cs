@@ -1,6 +1,6 @@
 using UnityEngine;
 using TMPro;
-using TLab.UI;
+using TLab.UI.SDF;
 using TLab.VehiclePhysics;
 
 namespace TLab
@@ -31,17 +31,15 @@ namespace TLab
 
         private void Update()
         {
-            const float limmit = 0.8f;
+            const float LIMMIT = 0.8f;
 
-            const float offset = 0.7f;
+            const float OFFSET = 0.7f;
 
-            var theta = m_engine.engineRpm / m_engine.maxEngineRpm * (Mathf.PI * limmit);
+            var theta = m_engine.engineRpm / m_engine.maxEngineRpm * (Mathf.PI * LIMMIT);
 
-            m_tacho.material.SetFloat(SDFUI.PROP_THETA, theta);
+            m_tacho.material.SetFloat(SDFRing.PROP_THETA, theta);
 
-            m_tacho.transform.rotation =
-                Quaternion.Euler(
-                    new Vector3(0f, 0f, -(theta - (Mathf.PI * offset)) * Mathf.Rad2Deg));
+            m_tacho.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -(theta - (Mathf.PI * OFFSET)) * Mathf.Rad2Deg));
         }
     }
 }
