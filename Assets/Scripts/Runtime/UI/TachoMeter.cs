@@ -35,11 +35,11 @@ namespace TLab
 
             const float OFFSET = 0.7f;
 
-            var theta = m_engine.engineRpm / m_engine.maxEngineRpm * (Mathf.PI * LIMMIT);
+            var fillAmount = Mathf.Clamp(m_engine.engineRpm / m_engine.maxEngineRpm, 0, LIMMIT);
 
-            m_tacho.material.SetFloat(SDFRing.PROP_THETA, theta);
+            m_tacho.fillAmount = fillAmount;
 
-            m_tacho.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -(theta - (Mathf.PI * OFFSET)) * Mathf.Rad2Deg));
+            m_tacho.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -(fillAmount * Mathf.PI - (Mathf.PI * OFFSET)) * Mathf.Rad2Deg));
         }
     }
 }
