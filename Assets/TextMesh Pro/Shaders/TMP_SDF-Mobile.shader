@@ -199,6 +199,7 @@ SubShader {
 
 			half d = tex2D(_MainTex, input.texcoord0.xy).a * input.param.x;
 			half4 c = input.faceColor * saturate(d - input.param.w);
+			//return saturate(d - input.param.w);		// d = 0 ~ 1
 
 			#ifdef OUTLINE_ON
 			c = lerp(input.outlineColor, input.faceColor, saturate(d - input.param.z));
@@ -208,6 +209,9 @@ SubShader {
 			#if UNDERLAY_ON
 			d = tex2D(_MainTex, input.texcoord1.xy).a * input.underlayParam.x;
 			c += float4(_UnderlayColor.rgb * _UnderlayColor.a, _UnderlayColor.a) * saturate(d - input.underlayParam.y) * (1 - c.a);
+			//d = tex2D(_MainTex, input.texcoord1.xy).a * input.param.x;
+			//c = saturate(d);
+			//return d;
 			#endif
 
 			#if UNDERLAY_INNER
