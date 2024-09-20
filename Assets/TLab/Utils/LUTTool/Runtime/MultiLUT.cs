@@ -5,98 +5,74 @@ namespace TLab.LUTTool
     [CreateAssetMenu(menuName = "TLab/LUTTool/MultiLUT")]
     public class MultiLUT : ScriptableObject
     {
-        public LUTDic[] lutDic;
+        [System.Serializable]
+        public class Element
+        {
+            public float index;
+            public Color color = Color.red;
+            public LUT lut;
+        }
+
+        public Element[] table;
 
 #if UNITY_EDITOR
-        [SerializeField] public GraphSettings graphSettings;
+        public GraphSettings graphSettings;
 #endif
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="L"></param>
-        /// <param name="H"></param>
-        /// <param name="lutDic"></param>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public static LerpLUT LerpLUT(int L, int H, LUTDic[] lutDic, float x)
+        public static LUTAndLerpFactor GetLUTAndLerpFactor(int L, int H, Element[] table, float x)
         {
-            int M = (L + H) / 2;
-            bool a = x >= lutDic[M].index;
-            bool b = x <= lutDic[M + 1].index;
+            var M = (L + H) / 2;
+            var a = x >= table[M].index;
+            var b = x <= table[M + 1].index;
 
             if (L <= H && a && b)
             {
-                LerpLUT element = new LerpLUT
+                var element = new LUTAndLerpFactor
                 {
-                    lut0 = lutDic[M].lut,
-                    lut1 = lutDic[M + 1].lut,
-                    factor = (x - lutDic[M].index) / (lutDic[M + 1].index - lutDic[M].index)
+                    lut0 = table[M].lut,
+                    lut1 = table[M + 1].lut,
+                    factor = (x - table[M].index) / (table[M + 1].index - table[M].index)
                 };
-
                 return element;
             }
             else if (!a && b)
-            {
-                return LerpLUT(L, M, lutDic, x);
-            }
+                return GetLUTAndLerpFactor(L, M, table, x);
             else
-            {
-                return LerpLUT(M, H, lutDic, x);
-            }
+                return GetLUTAndLerpFactor(M, H, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public LerpLUT LerpLUT(float x)
+        public LUTAndLerpFactor GetLUTAndLerpFactor(float x)
         {
-            if (x <= lutDic[0].index)
+            if (x <= table[0].index)
             {
-                LerpLUT element = new LerpLUT
+                var element = new LUTAndLerpFactor
                 {
-                    lut0 = lutDic[0].lut,
-                    lut1 = lutDic[0].lut,
+                    lut0 = table[0].lut,
+                    lut1 = table[0].lut,
                     factor = 0f
                 };
-
                 return element;
             }
-            else if (x >= lutDic[lutDic.Length - 1].index)
+            else if (x >= table[table.Length - 1].index)
             {
-                LerpLUT element = new LerpLUT
+                var element = new LUTAndLerpFactor
                 {
-                    lut0 = lutDic[lutDic.Length - 1].lut,
-                    lut1 = lutDic[lutDic.Length - 1].lut,
+                    lut0 = table[table.Length - 1].lut,
+                    lut1 = table[table.Length - 1].lut,
                     factor = 1f
                 };
-
                 return element;
             }
             else
-            {
-                return LerpLUT(0, lutDic.Length - 1, lutDic, x);
-            }
+                return GetLUTAndLerpFactor(0, table.Length - 1, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
         public float Evaluate(float x, float y)
         {
-            // index lerp
-            var lerpLUT = LerpLUT(x);
-
-            // value lerp
-            var value0 = lerpLUT.lut0.Evaluate(y);
-            var value1 = lerpLUT.lut1.Evaluate(y);
-
-            return value0 * (1f - lerpLUT.factor) + value1 * lerpLUT.factor;
+            var element = GetLUTAndLerpFactor(x);
+            var value0 = element.lut0.Evaluate(y);
+            var value1 = element.lut1.Evaluate(y);
+            return value0 * (1f - element.factor) + value1 * element.factor;
         }
     }
 }

@@ -17,9 +17,6 @@ MonoBehaviour:
   b: 0.075
   e: 1
   graphSettings:
-    xrange: 100
-    yrange: 1
-    num: 20
-    div: 5
-    xAccuracy: 1
-    yAccuracy: 1
+    range: {x: 100, y: 1}
+    param: {x: 20, y: 5}
+    accuracy: {x: 1, y: 1}

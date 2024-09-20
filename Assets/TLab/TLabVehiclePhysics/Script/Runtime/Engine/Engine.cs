@@ -91,12 +91,11 @@ namespace TLab.VehiclePhysics
         private void GetFeedback(out float feedbackEngineRpm, out float feedbackEngineRpmRatio)
         {
             float engineRpmSum = 0f, engineRpmRatioSum = 0f;
-            foreach (WheelColliderSource wheelOutput in m_driveWheels)
+            foreach (var wheel in m_driveWheels)
             {
-                engineRpmSum += wheelOutput.feedbackEngineRpm;
-                engineRpmRatioSum += wheelOutput.feedbackEngineRpmRatio;
+                engineRpmSum += wheel.feedbackEngineRpm;
+                engineRpmRatioSum += wheel.feedbackEngineRpmRatio;
             }
-
             feedbackEngineRpm = engineRpmSum / m_driveWheels.Length;
             feedbackEngineRpmRatio = engineRpmRatioSum / m_driveWheels.Length;
         }
@@ -108,18 +107,16 @@ namespace TLab.VehiclePhysics
 
         private float GetMaxEngineRpm()
         {
-            var lut = m_engineInfo.torqueCurve.lutDic[0].lut;
-
-            var values = new Vector2[lut.values.Length - 1]; // skip last index (0, 20, 500, 501 <--- skip 501)
-
-            System.Array.Copy(lut.values, values, values.Length);
-
-            return LUT.GetMax(lut.values, 0);
+            var maxEngineRpm = 0f;
+            var table = m_engineInfo.torqueCurve.table;
+            for (var i = 0; i < table.Length; i++)
+                maxEngineRpm = Mathf.Max(maxEngineRpm, table[i].lut.GetMax(LUT.Axis.X));
+            return maxEngineRpm;
         }
 
         private void GetAcceleratedEngineRpm(float feedbackEngineRpm, out float engineRpm)
         {
-            engineRpm = TLab.Math.LinerApproach(feedbackEngineRpm, RPM_INCREMENT * timeError * actualInput, m_maxEngineRpm);
+            engineRpm = Math.LinerApproach(feedbackEngineRpm, RPM_INCREMENT * timeError * actualInput, m_maxEngineRpm);
         }
 
         private void EngineRpmDampingWithEngineShaft()
@@ -128,16 +125,12 @@ namespace TLab.VehiclePhysics
             {
                 case State.ON:
                     if (m_engineRpm >= IDLING - 1)
-                    {
-                        m_engineRpm = TLab.Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError, IDLING - 1);
-                    }
+                        m_engineRpm = Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError, IDLING - 1);
                     else
-                    {
                         m_engineRpm = IDLING - 1;
-                    }
                     break;
                 case State.OFF:
-                    m_engineRpm = TLab.Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError * 1.5f, 0.0f);
+                    m_engineRpm = Math.LinerApproach(m_engineRpm, RPM_ATTENUATION * timeError * 1.5f, 0.0f);
                     break;
             }
         }
@@ -146,17 +139,13 @@ namespace TLab.VehiclePhysics
         {
             float sum = 0f;
             foreach (WheelColliderSource brakeWheel in m_brakeWheels)
-            {
                 sum += brakeWheel.EngineRpmDampingWithEngineBrake(m_engineRpm);
-            }
-
             m_engineRpm = sum / m_brakeWheels.Length;
         }
 
         private void SetDrive(int dir)
         {
             m_drive = (Drive)Mathf.Clamp((int)(m_drive + dir), (int)Drive.REVERSE, (int)Drive.DRIVE);
-
             switch (m_drive)
             {
                 case Drive.NEUTRAL:
@@ -169,18 +158,14 @@ namespace TLab.VehiclePhysics
                     m_gearIndex = 0;
                     break;
             }
-
             SetShift(m_gearIndex);
         }
 
         public void SetShift(int index)
         {
             m_gearIndex = Mathf.Clamp(index, 0, m_engineInfo.gearInfos.Length - 1);
-
             m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
-
             m_shiftChangeIntervals = m_engineInfo.shiftChangeIntervals;
-
             m_onShiftChanged.Invoke();
         }
 
@@ -191,54 +176,40 @@ namespace TLab.VehiclePhysics
 
         public void UpdateShiftInput()
         {
-            bool inputGearUp, inputGearDown;
-
+            bool gearUp, gearDown;
             switch (m_engineInfo.transmission)
             {
                 case EngineInfo.Transmission.AT:
-                    inputGearUp = gearUpPressed && (m_gearInfo.gear < 1);
-                    inputGearDown = gearDownPressed && (m_gearInfo.gear > -1);
-
-                    if (inputGearUp)
+                    gearUp = gearUpPressed && (m_gearInfo.gear < 1);
+                    gearDown = gearDownPressed && (m_gearInfo.gear > -1);
+                    if (gearUp)
                     {
                         SetDrive(1);
                         gearUpPressed = false;
                     }
-
-                    if (inputGearDown)
+                    if (gearDown)
                     {
                         SetDrive(-1);
                         gearDownPressed = false;
                     }
-
-                    m_shiftChangeIntervals -= Time.deltaTime;
-
-                    if (m_shiftChangeIntervals < 0)
+                    if ((m_shiftChangeIntervals -= Time.deltaTime) < 0)
                     {
                         m_shiftChangeIntervals = -1;
-
                         if (m_engineRpm > m_gearInfo.maxRpmThreshold)
-                        {
                             MoveShift(1);
-                        }
-
                         if (m_engineRpm < m_gearInfo.minRpmThreshold)
-                        {
                             MoveShift(-1);
-                        }
                     }
                     break;
                 case EngineInfo.Transmission.MT:
-                    inputGearUp = gearUpPressed && (m_gearIndex < m_engineInfo.gearInfos.Length - 1);
-                    inputGearDown = gearDownPressed && (m_gearIndex > 0);
-
-                    if (inputGearUp)
+                    gearUp = gearUpPressed && (m_gearIndex < m_engineInfo.gearInfos.Length - 1);
+                    gearDown = gearDownPressed && (m_gearIndex > 0);
+                    if (gearUp)
                     {
                         MoveShift(1);
                         gearUpPressed = false;
                     }
-
-                    if (inputGearDown)
+                    if (gearDown)
                     {
                         MoveShift(-1);
                         gearDownPressed = false;
@@ -250,7 +221,6 @@ namespace TLab.VehiclePhysics
         public void SwitchEngine(State state)
         {
             m_state = state;
-
             switch (m_state)
             {
                 case State.ON:
@@ -262,23 +232,19 @@ namespace TLab.VehiclePhysics
                     m_drive = Drive.NEUTRAL;
                     break;
             }
-
             m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
         }
 
         public void Initialize(State state, int gear)
         {
             SwitchEngine(state);
-
             SetShift(gear);
-
             m_maxEngineRpm = GetMaxEngineRpm();
         }
 
         public void UpdateEngine()
         {
             GetFeedback(out float feedbackEngineRpm, out float feedbackEngineRpmRatio);
-
             GetAcceleratedEngineRpm(feedbackEngineRpm, out m_engineRpm);
 
             EngineRpmDampingWithEngineShaft();
@@ -294,10 +260,8 @@ namespace TLab.VehiclePhysics
                 transmissionConnected = !transmissionDisConnected
             };
 
-            foreach (WheelColliderSource outputDrive in m_driveWheels)
-            {
-                outputDrive.SetDriveData(driveData);
-            }
+            foreach (var wheel in m_driveWheels)
+                wheel.SetDriveData(driveData);
         }
     }
 }

@@ -5,173 +5,120 @@ namespace TLab.LUTTool
     [CreateAssetMenu(menuName = "TLab/LUTTool/LUT")]
     public class LUT : ScriptableObject
     {
-        [SerializeField] public Vector2[] values;
+        public enum Axis
+        {
+            X,
+            Y,
+        };
+
+        public Vector2[] table;
 
 #if UNITY_EDITOR
-        [SerializeField] public GraphSettings graphSettings;
-
-        [SerializeField] public bool fixX = true;
-
-        [SerializeField] public bool fixY = true;
+        public GraphSettings graphSettings;
 #endif
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="axis"></param>
-        /// <returns></returns>
-        public static float GetMax(Vector2[] values, int axis)
+        public static float GetMax(Vector2[] table, Axis axis)
         {
-            float maxValue = -float.MaxValue;
+            var maxValue = -float.MaxValue;
             switch (axis)
             {
-                case 0:
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i].x > maxValue)
-                        {
-                            maxValue = values[i].x;
-                        }
-                    }
+                case Axis.X:
+                    for (var i = 0; i < table.Length; i++)
+                        if (table[i].x > maxValue)
+                            maxValue = table[i].x;
                     break;
-                case 1:
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i].y > maxValue)
-                        {
-                            maxValue = values[i].y;
-                        }
-                    }
-                    break;
-                default:
-                    Debug.LogError("axis is invalid.");
-                    maxValue = 0f;
+                case Axis.Y:
+                    for (var i = 0; i < table.Length; i++)
+                        if (table[i].y > maxValue)
+                            maxValue = table[i].y;
                     break;
             }
-
             return maxValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="axis"></param>
-        /// <returns></returns>
-        public static float GetMin(Vector2[] values, int axis)
+        public static float GetMin(Vector2[] table, Axis axis)
         {
-            float minValue = float.MaxValue;
+            var minValue = float.MaxValue;
             switch (axis)
             {
-                case 0:
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i].x < minValue)
-                        {
-                            minValue = values[i].x;
-                        }
-                    }
+                case Axis.X:
+                    for (var i = 0; i < table.Length; i++)
+                        if (table[i].x < minValue)
+                            minValue = table[i].x;
                     break;
-                case 1:
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i].y < minValue)
-                        {
-                            minValue = values[i].y;
-                        }
-                    }
-                    break;
-                default:
-                    Debug.LogError("axis is invalid.");
-                    minValue = 0f;
+                case Axis.Y:
+                    for (var i = 0; i < table.Length; i++)
+                        if (table[i].y < minValue)
+                            minValue = table[i].y;
                     break;
             }
-
             return minValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="L"></param>
-        /// <param name="H"></param>
-        /// <param name="values"></param>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public static LerpElement LerpFactor(int L, int H, Vector2[] values, float x)
+        public float GetMax(Axis axis)
         {
-            int M = (L + H) / 2;
-            bool a = x >= values[M].x;
-            bool b = x <= values[M + 1].x;
+            return GetMax(table, axis);
+        }
+
+        public float GetMin(Axis axis)
+        {
+            return GetMin(table, axis);
+        }
+
+        public static IndexAndLerpFactor GetIndexAndLerpFactor(int L, int H, Vector2[] table, float x)
+        {
+            var M = (L + H) / 2;
+            var a = x >= table[M].x;
+            var b = x <= table[M + 1].x;
 
             if (L <= H && a && b)
             {
-                LerpElement element = new LerpElement
+                var candidate = new IndexAndLerpFactor
                 {
                     index0 = M,
                     index1 = M + 1,
-                    factor = (x - values[M].x) / (values[M + 1].x - values[M].x)
+                    factor = (x - table[M].x) / (table[M + 1].x - table[M].x)
                 };
-
-                return element;
+                return candidate;
             }
             else if (!a && b)
-            {
-                return LerpFactor(L, M, values, x);
-            }
+                return GetIndexAndLerpFactor(L, M, table, x);
             else
-            {
-                return LerpFactor(M, H, values, x);
-            }
+                return GetIndexAndLerpFactor(M, H, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public LerpElement LerpFactor(float x)
+        public IndexAndLerpFactor GetIndexAndLerpFactor(float x)
         {
-            if (x <= values[0].x)
+            if (x <= table[0].x)
             {
-                LerpElement element = new LerpElement
+                var candidate = new IndexAndLerpFactor
                 {
                     index0 = 0,
                     index1 = 0,
                     factor = 0f
                 };
-
-                return element;
+                return candidate;
             }
-            else if (x >= values[values.Length - 1].x)
+            else if (x >= table[table.Length - 1].x)
             {
-                LerpElement element = new LerpElement
+                var candidate = new IndexAndLerpFactor
                 {
-                    index0 = values.Length - 1,
-                    index1 = values.Length - 1,
+                    index0 = table.Length - 1,
+                    index1 = table.Length - 1,
                     factor = 1f
                 };
-
-                return element;
+                return candidate;
             }
             else
-            {
-                return LerpFactor(0, values.Length - 1, values, x);
-            }
+                return GetIndexAndLerpFactor(0, table.Length - 1, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
         public float Evaluate(float x)
         {
-            var lerpElement = LerpFactor(x);
-
-            return values[lerpElement.index0].y * (1f - lerpElement.factor) +
-                   values[lerpElement.index1].y * lerpElement.factor;
+            var candidate = GetIndexAndLerpFactor(x);
+            var y0 = table[candidate.index0].y;
+            var y1 = table[candidate.index1].y;
+            return y0 * (1f - candidate.factor) + y1 * candidate.factor;
         }
     }
 }

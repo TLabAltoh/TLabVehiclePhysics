@@ -12,10 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
   m_Name: RearDownForceMin
   m_EditorClassIdentifier: 
-  values:
+  table:
   - {x: 0, y: 1}
   - {x: 75, y: 1.5}
   - {x: 150, y: 2.5}
-  div: 5
-  xAccuracy: 1
-  yAccuracy: 1
+  tmp:
+  - {x: 0, y: 1}
+  - {x: 75, y: 1.5}
+  - {x: 150, y: 2.5}
+  graphSettings:
+    accuracy: {x: 1, y: 1}
+    param: 5
+  editSettings:
+    lockX: 1
+    lockY: 1

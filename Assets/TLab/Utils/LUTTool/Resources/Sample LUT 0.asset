@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
   m_Name: Sample LUT 0
   m_EditorClassIdentifier: 
-  values:
+  table:
   - {x: 0, y: 0}
-  - {x: 1, y: 1}
-  - {x: 2, y: 2}
-  - {x: 3, y: 3}
-  - {x: 4, y: 2}
-  div: 0
+  - {x: 1.17, y: 0.13464001}
+  - {x: 3.5, y: 0.66}
+  graphSettings:
+    accuracy: {x: 1, y: 1}
+    param: 5
+    lockX: 1
+    lockY: 0

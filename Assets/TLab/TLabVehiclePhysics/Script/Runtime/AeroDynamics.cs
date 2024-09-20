@@ -5,17 +5,18 @@ namespace TLab.VehiclePhysics
 {
     public class AeroDynamics : MonoBehaviour
     {
+        [Header("Downforce Settings")]
         [SerializeField] private MultiLUT m_frontDownForceCurve;
         [SerializeField] private MultiLUT m_rearDownForceCurve;
+        [SerializeField, Range(0.2f, 0.8f)] private float m_frontRatio = 0.5f;
 
-        [SerializeField]
-        [Range(0.2f, 0.8f)]
-        private float m_frontRatio = 0.5f;
+        [Header("Rigdbody Settings")]
+        [SerializeField] private Rigidbody m_rigidbody;
+        [SerializeField] private Vector3 m_inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
 
+        [Header("Wheel Settings")]
         [SerializeField] private WheelColliderSource[] m_wheelsFront;
         [SerializeField] private WheelColliderSource[] m_wheelsRear;
-
-        [SerializeField] private Rigidbody m_rigidbody;
 
         private float m_downforceFront = 0.0f;
 
@@ -27,19 +28,10 @@ namespace TLab.VehiclePhysics
 
         private const float MS2KMH = 3.6f;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public Rigidbody rb => m_rigidbody;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public float downforceFront => m_downforceFront;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public float downforceRear => m_downforceRear;
 
         /// <summary>
@@ -47,9 +39,6 @@ namespace TLab.VehiclePhysics
         /// </summary>
         public float angle => m_angle;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public float minAngle => 180f - m_angle < m_angle ? 180f - m_angle : m_angle;
 
         /// <summary>
@@ -64,16 +53,14 @@ namespace TLab.VehiclePhysics
 
         private void SetGripFactor(WheelColliderSource[] wheels, float ratio)
         {
-            foreach (WheelColliderSource wheel in wheels)
-            {
+            foreach (var wheel in wheels)
                 wheel.SetDownForce(ratio);
-            }
         }
 
         void Start()
         {
             m_rigidbody.maxAngularVelocity = Mathf.Infinity;
-            m_rigidbody.inertiaTensor = new Vector3(2886.4406f, 3003.5281f, 1971.9375f);
+            m_rigidbody.inertiaTensor = m_inertiaTensor;
             m_rigidbody.inertiaTensorRotation = Quaternion.identity;
 
             SetGripFactor(m_wheelsFront, m_frontRatio * 2.0f);

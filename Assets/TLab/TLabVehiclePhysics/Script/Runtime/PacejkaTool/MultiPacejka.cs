@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TLab.VehiclePhysics.PacejkaTool
@@ -6,98 +5,74 @@ namespace TLab.VehiclePhysics.PacejkaTool
     [CreateAssetMenu(fileName = "MultiPacejka", menuName = "TLab/VehiclePhysics/PacejkaTool/MultiPacejka")]
     public class MultiPacejka : ScriptableObject
     {
-        [SerializeField] public PacejkaDic[] pacejkaDic;
+        [System.Serializable]
+        public class Element
+        {
+            public float index;
+            public Color color = Color.red;
+            public Pacejka pacejka;
+        }
+
+        [SerializeField] public Element[] table;
 
 #if UNITY_EDITOR
         [SerializeField] public GraphSettings graphSettings;
 #endif
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="L"></param>
-        /// <param name="H"></param>
-        /// <param name="pacejkaDic"></param>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public static LerpPacejka LerpPacejka(int L, int H, PacejkaDic[] pacejkaDic, float x)
+        public static PacejkaAndLerpFactor GetPacejkaAndLerpFactor(int L, int H, Element[] table, float x)
         {
-            int M = (L + H) / 2;
-            bool a = x >= pacejkaDic[M].index;
-            bool b = x <= pacejkaDic[M + 1].index;
+            var M = (L + H) / 2;
+            var a = x >= table[M].index;
+            var b = x <= table[M + 1].index;
 
             if (L <= H && a && b)
             {
-                LerpPacejka element = new LerpPacejka
+                var candidate = new PacejkaAndLerpFactor
                 {
-                    pacejka0 = pacejkaDic[M].pacejka,
-                    pacejka1 = pacejkaDic[M + 1].pacejka,
-                    factor = (x - pacejkaDic[M].index) / (pacejkaDic[M + 1].index - pacejkaDic[M].index)
+                    pacejka0 = table[M].pacejka,
+                    pacejka1 = table[M + 1].pacejka,
+                    factor = (x - table[M].index) / (table[M + 1].index - table[M].index)
                 };
-
-                return element;
+                return candidate;
             }
             else if (!a && b)
-            {
-                return LerpPacejka(L, M, pacejkaDic, x);
-            }
+                return GetPacejkaAndLerpFactor(L, M, table, x);
             else
-            {
-                return LerpPacejka(M, H, pacejkaDic, x);
-            }
+                return GetPacejkaAndLerpFactor(M, H, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        public LerpPacejka LerpPacejka(float x)
+        public PacejkaAndLerpFactor GetPacejkaAndLerpFactor(float x)
         {
-            if (x <= pacejkaDic[0].index)
+            if (x <= table[0].index)
             {
-                LerpPacejka element = new LerpPacejka
+                var candidate = new PacejkaAndLerpFactor
                 {
-                    pacejka0 = pacejkaDic[0].pacejka,
-                    pacejka1 = pacejkaDic[0].pacejka,
+                    pacejka0 = table[0].pacejka,
+                    pacejka1 = table[0].pacejka,
                     factor = 0f
                 };
-
-                return element;
+                return candidate;
             }
-            else if (x >= pacejkaDic[pacejkaDic.Length - 1].index)
+            else if (x >= table[table.Length - 1].index)
             {
-                LerpPacejka element = new LerpPacejka
+                var candidate = new PacejkaAndLerpFactor
                 {
-                    pacejka0 = pacejkaDic[pacejkaDic.Length - 1].pacejka,
-                    pacejka1 = pacejkaDic[pacejkaDic.Length - 1].pacejka,
+                    pacejka0 = table[table.Length - 1].pacejka,
+                    pacejka1 = table[table.Length - 1].pacejka,
                     factor = 1f
                 };
-
-                return element;
+                return candidate;
             }
             else
-            {
-                return LerpPacejka(0, pacejkaDic.Length - 1, pacejkaDic, x);
-            }
+                return GetPacejkaAndLerpFactor(0, table.Length - 1, table, x);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
         public float Evaluate(float x, float y)
         {
-            // index lerp
-            var lerpPacejka = LerpPacejka(x);
-
-            // value lerp
-            var value0 = lerpPacejka.pacejka0.Evaluate(y);
-            var value1 = lerpPacejka.pacejka1.Evaluate(y);
-
-            return value0 * (1f - lerpPacejka.factor) + value1 * lerpPacejka.factor;
+            var candidate = GetPacejkaAndLerpFactor(x);
+            var value0 = candidate.pacejka0.Evaluate(y);
+            var value1 = candidate.pacejka1.Evaluate(y);
+            return value0 * (1f - candidate.factor) + value1 * candidate.factor;
         }
     }
 }

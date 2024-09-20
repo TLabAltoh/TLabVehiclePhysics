@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TLab.VehiclePhysics.PacejkaTool
+namespace TLab.LUTTool
 {
     public struct IndexAndLerpFactor
     {
@@ -9,10 +9,10 @@ namespace TLab.VehiclePhysics.PacejkaTool
         public float factor;
     }
 
-    public struct PacejkaAndLerpFactor
+    public struct LUTAndLerpFactor
     {
-        public Pacejka pacejka0;
-        public Pacejka pacejka1;
+        public LUT lut0;
+        public LUT lut1;
         public float factor;
     }
 
@@ -21,13 +21,14 @@ namespace TLab.VehiclePhysics.PacejkaTool
     [System.Serializable]
     public class GraphSettings
     {
-        public Vector2Int range = new Vector2Int(1, 1);
-
-        [Min(0)]
-        public Vector2Int param = new Vector2Int(20, 5);
-
         [Min(0)]
         public Vector2Int accuracy = new Vector2Int(1, 1);
+
+        [Min(0)]
+        public int param = 5;
+
+        public bool lockX = true;
+        public bool lockY = true;
     }
 #endif
 }

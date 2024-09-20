@@ -21,105 +21,75 @@ namespace TLab.LUTTool.Editor
             EditorGUILayout.Space(20);
             DrawGraph();
             EditorGUILayout.Space(20);
-
-            //if (GUILayout.Button("Evaluate Test"))
-            //{
-            //    LogEvaluate(0.0f, 0.0f);
-            //    LogEvaluate(-0.5f, 0.5f);
-            //    LogEvaluate(0.5f, -0.5f);
-            //    LogEvaluate(2.0f, 10.0f);
-            //}
         }
-
-        //private void LogEvaluate(float index0, float index1)
-        //{
-        //    var value = m_instance.Evaluate(index0, index1);
-        //    Debug.Log("Evaluate Result (" + index0 + ", " + index1 + "): " + value);
-        //}
 
         private void DrawGraph()
         {
             var area = LUTEditorUtil.DrawPreviewArea();
 
-            if (m_instance.lutDic == null)
-            {
+            if (m_instance.table == null)
                 return;
-            }
 
-            for (var i = 0; i < m_instance.lutDic.Length; i++)
+            for (var i = 0; i < m_instance.table.Length; i++)
             {
-                if (m_instance.lutDic[i].lut == null || 
-                    m_instance.lutDic[i].lut.values == null || 
-                    m_instance.lutDic[i].lut.values.Length == 0)
-                {
+                var lut = m_instance.table[i].lut;
+                if (lut == null || lut.table == null || lut.table.Length == 0)
                     return;
-                }
             }
 
-            var div = m_instance.graphSettings.div + 2;
-            var xAccuracy = m_instance.graphSettings.xAccuracy;
-            var yAccuracy = m_instance.graphSettings.yAccuracy;
+            var div = m_instance.graphSettings.param + 2;
+            var accuracy = m_instance.graphSettings.accuracy;
 
             var colorQueue = new Queue<Color>();
-            var valuesQueue = new Queue<Vector2[]>();
+            var tableQueue = new Queue<Vector2[]>();
 
             var lutXMax = float.MinValue;
             var lutXMin = float.MaxValue;
             var lutYMax = float.MinValue;
             var lutYMin = float.MaxValue;
 
-            /**
-             * get lut min, max value
-             */
-            for (int i = 0; i < m_instance.lutDic.Length; i++)
+            for (int i = 0; i < m_instance.table.Length; i++)
             {
-                var lutDic = m_instance.lutDic[i];
-                var lut = lutDic.lut;
-                var color = lutDic.color;
+                var table0 = m_instance.table[i];
+                var lut = table0.lut;
+                var color = table0.color;
+                var table1 = lut.table;
 
-                var values = lut.values;
-
-                var tmpXMin = LUT.GetMin(values, 0);
-                var tmpXMax = LUT.GetMax(values, 0);
-                var tmpYMin = LUT.GetMin(values, 1);
-                var tmpYMax = LUT.GetMax(values, 1);
+                var tmpXMin = LUT.GetMin(table1, LUT.Axis.X);
+                var tmpXMax = LUT.GetMax(table1, LUT.Axis.X);
+                var tmpYMin = LUT.GetMin(table1, LUT.Axis.Y);
+                var tmpYMax = LUT.GetMax(table1, LUT.Axis.Y);
                 lutXMax = tmpXMax > lutXMax ? tmpXMax : lutXMax;
                 lutXMin = tmpXMin < lutXMin ? tmpXMin : lutXMin;
                 lutYMax = tmpYMax > lutYMax ? tmpYMax : lutYMax;
                 lutYMin = tmpYMin < lutYMin ? tmpYMin : lutYMin;
 
                 colorQueue.Enqueue(color);
-                valuesQueue.Enqueue(values);
+                tableQueue.Enqueue(table1);
             }
 
             var delta = new Vector2(area.width / (lutXMax - lutXMin), area.height / (lutYMax - lutYMin));
 
-            LUTEditorUtil.CreateYLable(area, area.height, lutYMin, yAccuracy);
-            LUTEditorUtil.CreateYLable(area, 0f, lutYMax, yAccuracy);
-            LUTEditorUtil.CreateXLabel(area, 0f, lutXMin, xAccuracy);
-            LUTEditorUtil.CreateXLabel(area, area.width, lutXMax, xAccuracy);
+            LUTEditorUtil.CreateYLable(area, area.height, lutYMin, accuracy.y);
+            LUTEditorUtil.CreateYLable(area, 0f, lutYMax, accuracy.y);
+            LUTEditorUtil.CreateXLabel(area, 0f, lutXMin, accuracy.x);
+            LUTEditorUtil.CreateXLabel(area, area.width, lutXMax, accuracy.x);
+            LUTEditorUtil.DrawGrid(area, div, accuracy.x, accuracy.y, lutXMin, lutXMax, lutYMin, lutYMax);
 
-            LUTEditorUtil.DrawGrid(area, div, xAccuracy, yAccuracy, lutXMin, lutXMax, lutYMin, lutYMax);
-
-            /**
-             * plot data
-             */
-            var queueLength = valuesQueue.Count;
-            for (int i = 0; i < queueLength; i++)
+            var queueLength = tableQueue.Count;
+            for (var i = 0; i < queueLength; i++)
             {
-                var values = valuesQueue.Dequeue();
+                var table = tableQueue.Dequeue();
                 var color = colorQueue.Dequeue();
 
                 Handles.color = color;
-                if (values.Length > 0)
+                if (table.Length > 0)
                 {
                     var points = new List<Vector3>();
-                    for (var j = 0; j < values.Length; ++j)
+                    for (var j = 0; j < table.Length; ++j)
                     {
-                        var point = new Vector2(area.x + delta.x * (values[j].x - lutXMin), area.yMax - delta.y * (values[j].y - lutYMin));
-
+                        var point = new Vector2(area.x + delta.x * (table[j].x - lutXMin), area.yMax - delta.y * (table[j].y - lutYMin));
                         Handles.DrawSolidDisc(point, Vector3.forward, 5f);
-
                         points.Add(point);
                     }
                     Handles.DrawAAPolyLine(2.5f, points.ToArray());

@@ -425,7 +425,7 @@ MonoBehaviour:
   m_shiftEnabled: 1
   m_initialEngineGear: 2
   m_initialEngineState: 0
-  m_wheelColliderSources:
+  m_wheels:
   - {fileID: 4868004424742606035}
   - {fileID: 6402682022256991398}
   - {fileID: 5902336353477284409}

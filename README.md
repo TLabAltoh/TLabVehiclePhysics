@@ -1,40 +1,46 @@
 # TLabVehiclePhysics
-Open Source WheelCollider for Unity. pacejka based wheel logic and utility for creating simple tire models.
+Open Source WheelCollider for Unity. This project implements a pacejka based tire logic. 
 
 ## Support
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/tlabaltoh)
 
 ## Screenshot
-<table>
-    <caption>GamePlay Overview</caption>
-    <tr>
-        <td><img src="Media/overview.png" width="512" /></td>
-    </tr>
-</table>
+<img src="Media/overview.png" width="512" />
 
-<details>
-
-<summary>Example parameters used in this project</summary>
+<details><summary>Pacejka and LUT Tool</summary>
 <table>
-    <caption>Pacejka</caption>
     <tr>
-        <td><img src="Media/pacejka.png" width="530" /></td>
-        <td><img src="Media/pacejka-lateral.png" width="530" /></td>
-        <td><img src="Media/pacejka-longitudinal.png" width="530" /></td>
-    </tr>
-</table>
-<table>
-    <caption>Downforce and Torque Curve with LUT</caption>
-    <tr>
-        <td><img src="Media/lut-downforce-max.png" width="530" /></td>
-        <td><img src="Media/lut-downforce-min.png" width="530" /></td>
-    </tr>
-    <tr>
-        <td><img src="Media/multi-lut-downforce.png" width="530" /></td>
-        <td><img src="Media/multi-lut-torque-curve.png" width="530" /></td>
+        <td><img src="Media/pacejka-tool.png" width="256" /></td>
+        <td><img src="Media/lut-tool.png" width="256" /></td>
     </tr>
 </table>
 </details>
+
+<details><summary>Physical parameters for vehicle</summary>
+<table>
+    <caption>Pacejka</caption>
+    <tr>
+        <td><img src="Media/pacejka-lateral.png" width="256" /></td>
+        <td><img src="Media/pacejka-longitudinal.png" width="256" /></td>
+    </tr>
+</table>
+<table>
+    <caption>Downforce</caption>
+    <tr>
+        <td><img src="Media/multi-lut-downforce-front.png" width="256" /></td>
+        <td><img src="Media/multi-lut-downforce-rear.png" width="256" /></td>
+    </tr>
+</table>
+<table>
+    <caption>Torque Curve</caption>
+    <tr>
+        <td><img src="Media/multi-lut-torque-curve.png" width="256" /></td>
+    </tr>
+</table>
+</details>
+
+## Approach to tire physics implementation
+This project uses [```Pacejka```](https://en.wikipedia.org/wiki/Hans_B._Pacejka) and ```LUT (Look up table)``` for the minimum physics parameter unit. And most of the physics parameters are culculated as interprate 2 parameters (```Pacejka```, ```LUT```) by additional ```float``` type parameters (```slip angle```, ```slip ratio```, ```yaw of vehicle``` etc ...) in order to behave vehicle as more complex. 
 
 ## Getting Started
 ### Prerequisites
@@ -51,18 +57,15 @@ cd TLabVehiclePhysics
 git submodule upadte --init
 ```
 
-### WheelColiderSource
-#### How to play
-##### Car Operation
-- Left / Right Arrow: Handle
-- Up Arrow: Accelerator
-- Down Arrow: Brake
-- Q: Shift Up
-- E: Shift Down
-- C: Clutch
-##### Camera Operation
-- ASDW: Camera Rotation
-- Z: Switch Camera (Pov / Follow)
+### How to play
+- ```⇦ ⇨```: Handle
+- ```⇧```: Accelerator
+- ```⇩```: Brake
+- ```Q```: Shift Up
+- ```E```: Shift Down
+- ```C```: Clutch
+- ```ASDW```: Camera Rotation
+- ```Z```: Switch Camera (```Pov``` / ```Follow```)
 
 ## Reference
 - [Randomation-Vehicle-Physics](https://github.com/JustInvoke/Randomation-Vehicle-Physics)

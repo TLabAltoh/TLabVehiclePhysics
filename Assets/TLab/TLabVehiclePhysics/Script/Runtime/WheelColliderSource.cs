@@ -99,50 +99,26 @@ namespace TLab.VehiclePhysics
 
         public Bounds bounds => new Bounds(transform.position, Vector3.one * m_wheelPhysics.wheelRadius * 2.0f);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="factor"></param>
         public void SetDownForce(float factor) => m_downforce = factor;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         private float GetFrameLerp(float value) => value * FIXED_TIME * Time.fixedDeltaTime;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="driveData"></param>
         public void SetDriveData(DriveData driveData)
         {
             m_driveData = driveData;
-
             m_endPointGearRatio = driveData.gearRatio * DIFFGEAR_RATIO;
             m_endPointTorque = driveData.torque * m_endPointGearRatio / m_wheelPhysics.wheelRadius;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void UpdateSuspension()
         {
             var grounded = Physics.Raycast(new Ray(m_dummyWheel.position, -m_dummyWheel.up), out m_raycastHit, m_wheelPhysics.wheelRadius + m_wheelPhysics.susDst, m_layer);
-
             transform.localPosition = m_wheelPhysics.UpdateSuspention(m_raycastHit, m_dummyWheel, grounded);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void UpdateWheelRot()
         {
-            // Dummy wheel
             m_dummyWheel.localEulerAngles = new Vector3(0f, ackermanAngle, 0f);
-
-            // Visual wheel
             m_wheelRotationY += m_wheelRpm / 60 * 360 * Time.fixedDeltaTime;
             transform.localEulerAngles = new Vector3(m_wheelRotationY, ackermanAngle, 0f);
         }
@@ -162,32 +138,21 @@ namespace TLab.VehiclePhysics
         /// </summary>
         public float angularVelocity => m_wheelRpm * m_wheelPhysics.wheelRpm2Vel;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void WheelAddForce()
         {
             m_longitudinalGrip = 0f;
-
             m_lateralGrip = 0f;
 
             if (!m_wheelPhysics.grounded)
-            {
                 return;
-            }
 
             var wheelLocalVelocity = localVelocity;
-
             var velXDir = -System.Math.Sign(wheelLocalVelocity.x);
-
             var velZDir = -System.Math.Sign(wheelLocalVelocity.z);
-
             var vel2WheelRPM = wheelLocalVelocity.z * m_wheelPhysics.vel2WheelRpm;
-
             var achieveMaxWheelRPM = Mathf.Abs(vel2WheelRPM) >= maxWheelRpm;
 
             m_slipAngle = 0f;
-
             if (velZDir == 0)   // Prevents division-by-zero errors
             {
                 // wheelLocalVelocity.z = 0 : already established
@@ -205,11 +170,8 @@ namespace TLab.VehiclePhysics
             m_rawWheelRpm = achieveMaxWheelRPM ? Mathf.Sign(vel2WheelRPM) * maxWheelRpm : vel2WheelRPM;
 
             var rawAngularVelocity = (m_rawWheelRpm * m_wheelPhysics.wheelRpm2Vel);
-
             var absRawAngularVelocity = Mathf.Abs(rawAngularVelocity);
-
             var slipZ = angularVelocity - rawAngularVelocity;
-
             var absSlipZ = Mathf.Abs(slipZ);
 
             m_slipRatio = (absRawAngularVelocity > 0.1f) ? (absSlipZ / absRawAngularVelocity) : (absSlipZ > 0.1f ? 1f : 0f);
@@ -224,7 +186,6 @@ namespace TLab.VehiclePhysics
             //
 
             var absSlipRatio = Mathf.Abs(m_slipRatio);
-
             var absSlipAngle = Mathf.Abs(m_slipAngle);
 
             // Gravity on the tire
@@ -241,7 +202,6 @@ namespace TLab.VehiclePhysics
             //
 
             m_longitudinalGrip = m_wheelPhysics.longitudinalGrip.Evaluate(absSlipAngle * Mathf.Rad2Deg, absSlipRatio * 100f);
-
             var longitudinalForce = velZDir * gravity * baseGrip * m_downforce * m_longitudinalGrip;
 
             //
@@ -249,7 +209,6 @@ namespace TLab.VehiclePhysics
             //
 
             m_lateralGrip = m_wheelPhysics.lateralGrip.Evaluate(absSlipRatio, absSlipAngle * Mathf.Rad2Deg);
-
             var lateralForce = velXDir * gravity * baseGrip * m_downforce * m_lateralGrip;
 
             //
@@ -257,17 +216,12 @@ namespace TLab.VehiclePhysics
             //
 
             var targetX = lateralForce;
-
             var targetZ = rollingResistance;
 
             if (brakeInput > 0.1f || achieveMaxWheelRPM)
-            {
                 targetZ = targetZ + Mathf.Cos(m_slipAngle) * longitudinalForce;
-            }
             else if (m_driveData.transmissionConnected)
-            {
                 targetZ = targetZ + m_endPointTorque;
-            }
 
             m_suspentionForce = m_raycastHit.normal * m_wheelPhysics.suspentionFource;
 
@@ -278,28 +232,18 @@ namespace TLab.VehiclePhysics
             m_rigidbody.AddForceAtPosition(m_suspentionForce, transform.position, ForceMode.Force);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void UpdateEngineRpm()
         {
             if (!m_wheelPhysics.grounded)
-            {
                 m_rawWheelRpm = m_wheelRpm;
-            }
 
             if (m_driveEnabled)
-            {
                 if (m_driveData.transmissionConnected)
                 {
                     const float DECREMENT = 25f;
-
                     var targetEngineRpm = Mathf.Abs(m_rawWheelRpm * m_endPointGearRatio);
-
                     var absSlipAngle = Mathf.Abs(m_slipAngle);
-
                     var feedbackRatio = m_wheelPhysics.engineFeedback.Evaluate(absSlipAngle * Mathf.Rad2Deg, Mathf.Abs(m_endPointTorque));
-
                     var lerpedToTargetEngineRpm = Mathf.Lerp(m_driveData.engineRpm, targetEngineRpm, feedbackRatio);
 
                     // Update current tire rotation amount.
@@ -325,7 +269,6 @@ namespace TLab.VehiclePhysics
 
                     m_wheelRpm = Math.LinerApproach(m_rawWheelRpm, GetFrameLerp(DECREMENT), TARGET_RPM);
                 }
-            }
             else
             {
                 const float DECREMENT = 1.0f, TARGET_RPM = 0.0f;
@@ -337,19 +280,12 @@ namespace TLab.VehiclePhysics
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="engineRPM"></param>
-        /// <returns></returns>
         public float EngineRpmDampingWithEngineBrake(float engineRPM)
         {
             if (m_driveData.transmissionConnected)
             {
                 const float DECREMENT = 2500f;
-
                 var lerpedEngineRpm = Math.LinerApproach(engineRPM, GetFrameLerp(brakeInput * DECREMENT), 0);
-
                 return lerpedEngineRpm > IDLING ? lerpedEngineRpm : IDLING - 1;
             }
             else
@@ -359,14 +295,10 @@ namespace TLab.VehiclePhysics
                 // Since the engine cannot be braked,
                 // the tires are locked directly.
                 m_wheelRpm = Math.LinerApproach(m_wheelRpm, GetFrameLerp(brakeInput * DECREMENT), 0);
-
                 return engineRPM;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void UpdateWheel()
         {
             UpdateSuspension();
@@ -375,9 +307,6 @@ namespace TLab.VehiclePhysics
             UpdateEngineRpm();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void Initialize()
         {
             m_dummyWheel = new GameObject(nameof(m_dummyWheel)).transform;

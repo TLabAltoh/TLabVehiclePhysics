@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590ea00590399e2468d4f1bb6fd5d94f, type: 3}
   m_Name: Torque VS EngineFeedback Ratio SA 20
   m_EditorClassIdentifier: 
-  values:
+  table:
+  - {x: 0, y: 0.4}
+  - {x: 2022.6631, y: 0.09200001}
+  - {x: 5167, y: 0}
+  tmp:
   - {x: 0, y: 0.4}
   - {x: 2022.6631, y: 0.09200001}
   - {x: 5167, y: 0}
   graphSettings:
-    div: 5
-    xAccuracy: 1
-    yAccuracy: 1
-  fixX: 0
-  fixY: 0
+    accuracy: {x: 1, y: 1}
+    param: 5
+  editSettings:
+    lockX: 1
+    lockY: 1

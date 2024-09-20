@@ -19,6 +19,15 @@ MonoBehaviour:
   - index: 1
     color: {r: 0, g: 0.85423136, b: 1, a: 1}
     lut: {fileID: 11400000, guid: 8771c1ba81530ca46be64aee1085d9a9, type: 2}
-  div: 5
-  xAccuracy: 1
-  yAccuracy: 1
+  table:
+  - index: 0
+    color: {r: 1, g: 0, b: 0, a: 1}
+    lut: {fileID: 11400000, guid: fdd7d326224f13f4b824e5cc1605dbd2, type: 2}
+  - index: 1
+    color: {r: 0, g: 0.85423136, b: 1, a: 1}
+    lut: {fileID: 11400000, guid: 8771c1ba81530ca46be64aee1085d9a9, type: 2}
+  graphSettings:
+    accuracy: {x: 1, y: 1}
+    param: 5
+    lockX: 1
+    lockY: 1

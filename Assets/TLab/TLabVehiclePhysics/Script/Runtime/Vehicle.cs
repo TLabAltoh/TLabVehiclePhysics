@@ -12,18 +12,18 @@ namespace TLab.VehiclePhysics
             None
         }
 
-        [SerializeField] private Engine m_engine;
+        [Header("Input Settings")]
         [SerializeField] private InputManager m_inputManager;
-
         [SerializeField] private Pilot m_currentPilot = Pilot.Player;
 
-        [Header("Initial")]
+        [Header("Engine Settings")]
+        [SerializeField] private Engine m_engine;
         [SerializeField] private bool m_shiftEnabled = true;
         [SerializeField] private int m_initialEngineGear = 2;
         [SerializeField] Engine.State m_initialEngineState = Engine.State.ON;
 
-        [Header("Wheels")]
-        [SerializeField] private WheelColliderSource[] m_wheelColliderSources;
+        [Header("Wheel Settings")]
+        [SerializeField] private WheelColliderSource[] m_wheels;
 
         public Pilot CurrentPilot { get => m_currentPilot; set => m_currentPilot = value; }
 
@@ -34,10 +34,8 @@ namespace TLab.VehiclePhysics
 
         void Start()
         {
-            foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
-            {
-                wheelColliderSource.Initialize();
-            }
+            foreach (var wheel in m_wheels)
+                wheel.Initialize();
 
             m_engine.Initialize(m_initialEngineState, m_initialEngineGear);
         }
@@ -45,19 +43,15 @@ namespace TLab.VehiclePhysics
         void Update()
         {
             if (m_shiftEnabled)
-            {
                 m_engine.UpdateShiftInput();
-            }
         }
 
         public void FixedUpdate()
         {
             m_engine.UpdateEngine();
 
-            foreach (WheelColliderSource wheelColliderSource in m_wheelColliderSources)
-            {
-                wheelColliderSource.UpdateWheel();
-            }
+            foreach (var wheel in m_wheels)
+                wheel.UpdateWheel();
         }
     }
 }

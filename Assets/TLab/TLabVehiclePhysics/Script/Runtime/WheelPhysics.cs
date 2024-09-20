@@ -34,22 +34,11 @@ namespace TLab.VehiclePhysics
 
         public float vel2WheelRpm => 60 / circleLength;
 
-        //
-        // Suspention
-        //
-
         [HideInInspector] public bool grounded = false;
         [HideInInspector] public float susCps = 0f;
         [HideInInspector] public float susCpsPrev = 0f;
         [HideInInspector] public Color gizmoColor = Color.green;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="raycastHit"></param>
-        /// <param name="dummyWheel"></param>
-        /// <param name="grounded"></param>
-        /// <returns></returns>
         public Vector3 UpdateSuspention(RaycastHit raycastHit, Transform dummyWheel, bool grounded)
         {
             this.grounded = grounded;
@@ -67,7 +56,6 @@ namespace TLab.VehiclePhysics
                 gizmoColor = Color.blue;
                 susCps = 0f;
             }
-
             return dummyWheel.localPosition - amountOfReduction;
         }
     }

@@ -41,6 +41,6 @@ namespace TLab.VehiclePhysics
         [SerializeField] private MultiLUT m_torqueCurve;
 
         [Space(10)]
-        [SerializeField] private float m_shiftChangeIntervals;
+        [SerializeField, Min(0)] private float m_shiftChangeIntervals;
     }
 }

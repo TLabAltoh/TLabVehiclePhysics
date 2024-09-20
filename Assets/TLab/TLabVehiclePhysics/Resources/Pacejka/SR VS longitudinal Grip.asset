@@ -19,10 +19,14 @@ MonoBehaviour:
   - index: 20
     color: {r: 0, g: 0.91210127, b: 1, a: 1}
     pacejka: {fileID: 11400000, guid: 9e7fd3fdba9672e488cce1f6005a99ae, type: 2}
+  table:
+  - index: 0
+    color: {r: 1, g: 0, b: 0, a: 1}
+    pacejka: {fileID: 11400000, guid: a332aa2537986dc4ea66be24d80fd0ef, type: 2}
+  - index: 20
+    color: {r: 0, g: 0.91210127, b: 1, a: 1}
+    pacejka: {fileID: 11400000, guid: 9e7fd3fdba9672e488cce1f6005a99ae, type: 2}
   graphSettings:
-    xrange: 100
-    yrange: 1
-    num: 20
-    div: 5
-    xAccuracy: 1
-    yAccuracy: 1
+    range: {x: 100, y: 1}
+    param: {x: 20, y: 5}
+    accuracy: {x: 1, y: 1}

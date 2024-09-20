@@ -49,6 +49,7 @@ namespace TLab.VehiclePhysics
         private float m_actualHorizontal;
         private float m_smoothYRot;
 
+        private float m_fieldOfView;
         private Vector3 m_velocity;
         private Vector3 m_prevVelocity;
         private Vector3 m_cameraShake;
@@ -82,21 +83,14 @@ namespace TLab.VehiclePhysics
             switch (m_cameraMode)
             {
                 case Mode.FirstPerson:
-                    // update camera position
-#if true
                     m_cameraShake.x = Mathf.Lerp(m_cameraShake.x, VelocityDelta.x, m_shakeX.lerp);
                     m_cameraShake.y = Mathf.Lerp(m_cameraShake.y, VelocityDelta.y, m_shakeY.lerp);
                     m_cameraShake.x = Mathf.Clamp(m_cameraShake.x, m_shakeX.min, m_shakeX.max);
                     m_cameraShake.y = Mathf.Clamp(m_cameraShake.y, m_shakeY.min, m_shakeY.max);
                     m_camera.transform.position = transform.TransformPoint(m_cameraOffset - m_cameraShake);
-#else
-                m_camera.transform.position = transform.TransformPoint(m_cameraOffset);
-#endif
-                    // ç°ÇÃÇ∆Ç±ÇÎÇ±ÇÍÇ™å¿äE!
-                    var fieldOfViewBase = 60.0f;
-                    m_camera.fieldOfView = fieldOfViewBase + m_velocity.z;
 
-                    // update camera rotation
+                    m_camera.fieldOfView = m_fieldOfView + m_velocity.z;
+
                     m_actualVertical = Mathf.Lerp(m_actualVertical, m_maxVertical * m_yInput, 0.1f);
                     m_actualHorizontal = Mathf.Lerp(m_actualHorizontal, m_maxHorizontal * m_xInput, 0.1f);
                     var quaternion = transform.rotation;
@@ -134,10 +128,8 @@ namespace TLab.VehiclePhysics
                 switch (m_vehicle.CurrentPilot)
                 {
                     case Vehicle.Pilot.None:
-                        //
                         break;
                     case Vehicle.Pilot.AI:
-                        //
                         break;
                     case Vehicle.Pilot.Player:
                         PilotTrackable();
@@ -154,7 +146,8 @@ namespace TLab.VehiclePhysics
                 name = "Camera Looker",
                 hideFlags = HideFlags.HideInHierarchy
             }.transform;
-            m_cameraOffset = this.transform.InverseTransformPoint(m_camera.transform.position);
+            m_fieldOfView = m_camera.fieldOfView;
+            m_cameraOffset = transform.InverseTransformPoint(m_camera.transform.position);
 
             StartCoroutine(UpdateCamera());
         }
