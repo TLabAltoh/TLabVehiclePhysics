@@ -1,7 +1,6 @@
 # TLabVehiclePhysics
 Open Source WheelCollider for Unity. This project implements a pacejka based tire logic. 
 
-## Support
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/tlabaltoh)
 
 ## Screenshot
