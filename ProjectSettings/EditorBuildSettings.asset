@@ -11,10 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TIME_ATTACK.unity
     guid: ada72c5c8e2011945b97591bf47d6b14
-  - enabled: 0
+  - enabled: 1
     path: Assets/TLab/Unity-SDF-UI-Toolkit/Samples/SDF-UI-Toolkit-Sample/SDFUI Sample.unity
     guid: d612834affcd4bd449b53e7bbfbbce14
-  - enabled: 0
+  - enabled: 1
     path: Assets/TLab/Unity-SDF-UI-Toolkit/Test/BUILD_TEST.unity
     guid: 7f2691d94bd4d7f459dc3e80fc14f3c3
   m_configObjects: {}

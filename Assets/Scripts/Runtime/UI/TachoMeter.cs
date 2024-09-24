@@ -9,7 +9,7 @@ namespace TLab
     {
         [SerializeField] private Engine m_engine;
 
-        [SerializeField] private SDFRing m_tacho;
+        [SerializeField] private SDFArc m_tacho;
 
         [SerializeField] private TextMeshProUGUI m_gear;
 
@@ -31,15 +31,8 @@ namespace TLab
 
         private void Update()
         {
-            const float LIMMIT = 0.8f;
-
-            const float OFFSET = 0.7f;
-
-            var fillAmount = Mathf.Clamp(m_engine.engineRpm / m_engine.maxEngineRpm, 0, LIMMIT);
-
-            m_tacho.fillAmount = fillAmount;
-
-            m_tacho.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -(fillAmount * Mathf.PI - (Mathf.PI * OFFSET)) * Mathf.Rad2Deg));
+            const float LIMMIT = 0.75f;
+            m_tacho.fillAmount = Mathf.Max(m_engine.engineRpm / m_engine.maxEngineRpm, 0) * LIMMIT;
         }
     }
 }
