@@ -50,14 +50,14 @@ namespace TLab.VehiclePhysics.Input
                     }
                     GetSwitchCameraEvent();
                     break;
-                case InputManager.InputMode.MOUSE:
+                case InputManager.InputMode.Mouse:
                     GetSwitchCameraEvent();
                     break;
-                case InputManager.InputMode.KEYBORAD:
+                case InputManager.InputMode.Keyborad:
                     m_playerCamera.SetInputFromKeyBorad(m_xInputAxis.AxisValue, m_yInputAxis.AxisValue);
                     GetSwitchCameraEvent();
                     break;
-                case InputManager.InputMode.UI_BUTTON:
+                case InputManager.InputMode.UIButton:
                     break;
             }
         }
@@ -68,11 +68,11 @@ namespace TLab.VehiclePhysics.Input
             {
                 case InputManager.InputMode.G29:
                     break;
-                case InputManager.InputMode.MOUSE:
+                case InputManager.InputMode.Mouse:
                     break;
-                case InputManager.InputMode.KEYBORAD:
+                case InputManager.InputMode.Keyborad:
                     break;
-                case InputManager.InputMode.UI_BUTTON:
+                case InputManager.InputMode.UIButton:
                     break;
             }
         }

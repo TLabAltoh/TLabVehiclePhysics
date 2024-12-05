@@ -8,9 +8,9 @@ namespace TLab.UI
 {
     public enum PointerEvent
     {
-        ON_POINTER_ENTER,
-        ON_POINTER_EXIT,
-        ON_POINTER_CLICK
+        Enter,
+        Exit,
+        Click,
     }
 
     [System.Serializable]
@@ -36,13 +36,13 @@ namespace TLab.UI
         {
             switch (pointerEvent)
             {
-                case PointerEvent.ON_POINTER_CLICK:
+                case PointerEvent.Click:
                     m_animator.Play("button_on_pointer_click");
                     break;
-                case PointerEvent.ON_POINTER_ENTER:
+                case PointerEvent.Enter:
                     m_animator.Play("button_on_pointer_enter");
                     break;
-                case PointerEvent.ON_POINTER_EXIT:
+                case PointerEvent.Exit:
                     m_animator.Play("button_on_pointer_exit");
                     break;
             }
@@ -72,17 +72,17 @@ namespace TLab.UI
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            m_onPoitnerClick.Play(in m_animator, this, PointerEvent.ON_POINTER_CLICK);
+            m_onPoitnerClick.Play(in m_animator, this, PointerEvent.Click);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            m_onPointerEnter.Play(in m_animator, this, PointerEvent.ON_POINTER_ENTER);
+            m_onPointerEnter.Play(in m_animator, this, PointerEvent.Enter);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            m_onPointerExit.Play(in m_animator, this, PointerEvent.ON_POINTER_EXIT);
+            m_onPointerExit.Play(in m_animator, this, PointerEvent.Exit);
         }
 
 #if UNITY_EDITOR

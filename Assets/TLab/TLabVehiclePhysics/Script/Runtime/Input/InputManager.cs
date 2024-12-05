@@ -7,9 +7,9 @@ namespace TLab.VehiclePhysics.Input
         public enum InputMode
         {
             G29,
-            MOUSE,
-            KEYBORAD,
-            UI_BUTTON
+            Mouse,
+            Keyborad,
+            UIButton,
         };
 
         [SerializeField] private Vehicle m_vehicle;
@@ -169,11 +169,11 @@ namespace TLab.VehiclePhysics.Input
                         m_gearDownPressed = false;
                     }
                     break;
-                case InputMode.KEYBORAD:
+                case InputMode.Keyborad:
                     GetVirtualInputAxis();
                     GetShiftChangeEvent();
                     break;
-                case InputMode.MOUSE:
+                case InputMode.Mouse:
                     var mousePos = UnityEngine.Input.mousePosition;
                     m_accelInput = Mathf.Clamp01((mousePos.y - Screen.height * 0.5f) / (Screen.height * 0.5f));
                     m_brakeInput = Mathf.Clamp01(-(mousePos.y - Screen.height * 0.5f) / (Screen.height * 0.5f));
@@ -181,7 +181,7 @@ namespace TLab.VehiclePhysics.Input
                     m_clutchInput = m_virtualClutch.AxisValue;
                     GetShiftChangeEvent();
                     break;
-                case InputMode.UI_BUTTON:
+                case InputMode.UIButton:
                     GetVirtualInputAxis();
                     break;
             }
@@ -210,13 +210,13 @@ namespace TLab.VehiclePhysics.Input
                     Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
                     UIButtonSetActive(false);
                     break;
-                case InputMode.MOUSE:
+                case InputMode.Mouse:
                     UIButtonSetActive(false);
                     break;
-                case InputMode.KEYBORAD:
+                case InputMode.Keyborad:
                     UIButtonSetActive(false);
                     break;
-                case InputMode.UI_BUTTON:
+                case InputMode.UIButton:
                     UIButtonSetActive(true);
                     break;
             }
@@ -290,11 +290,11 @@ namespace TLab.VehiclePhysics.Input
                 case InputMode.G29:
                     Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
                     break;
-                case InputMode.KEYBORAD:
+                case InputMode.Keyborad:
                     break;
-                case InputMode.MOUSE:
+                case InputMode.Mouse:
                     break;
-                case InputMode.UI_BUTTON:
+                case InputMode.UIButton:
                     break;
             }
         }

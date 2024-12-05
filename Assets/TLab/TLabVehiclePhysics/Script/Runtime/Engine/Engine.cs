@@ -9,9 +9,9 @@ namespace TLab.VehiclePhysics
     {
         public enum Drive
         {
-            REVERSE,
-            NEUTRAL,
-            DRIVE
+            Reverse,
+            Neutral,
+            Drive
         };
 
         public enum State
@@ -39,7 +39,7 @@ namespace TLab.VehiclePhysics
         private int m_gearIndex = 2;
         private float m_shiftChangeIntervals = 0f;
 
-        private Drive m_drive = Drive.NEUTRAL;
+        private Drive m_drive = Drive.Neutral;
         private State m_state = State.OFF;
 
         private float m_maxEngineRpm;
@@ -145,16 +145,16 @@ namespace TLab.VehiclePhysics
 
         private void SetDrive(int dir)
         {
-            m_drive = (Drive)Mathf.Clamp((int)(m_drive + dir), (int)Drive.REVERSE, (int)Drive.DRIVE);
+            m_drive = (Drive)Mathf.Clamp((int)(m_drive + dir), (int)Drive.Reverse, (int)Drive.Drive);
             switch (m_drive)
             {
-                case Drive.NEUTRAL:
+                case Drive.Neutral:
                     m_gearIndex = 1;
                     break;
-                case Drive.DRIVE:
+                case Drive.Drive:
                     m_gearIndex = 2;
                     break;
-                case Drive.REVERSE:
+                case Drive.Reverse:
                     m_gearIndex = 0;
                     break;
             }
@@ -225,11 +225,11 @@ namespace TLab.VehiclePhysics
             {
                 case State.ON:
                     m_gearIndex = GEAR_INDEX_ONE;
-                    m_drive = Drive.DRIVE;
+                    m_drive = Drive.Drive;
                     break;
                 case State.OFF:
                     m_gearIndex = GEAR_INDEX_NEUTRAL;
-                    m_drive = Drive.NEUTRAL;
+                    m_drive = Drive.Neutral;
                     break;
             }
             m_gearInfo = m_engineInfo.gearInfos[m_gearIndex];
