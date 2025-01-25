@@ -59,14 +59,16 @@ Shader "TLab/UI/Blur"
 
                 fixed4 col = fixed4(0, 0, 0, 0);
 
+                int j;
+
                 [unroll]
-                for (int j = samplingCount - 1; j > 0; j--)
+                for (j = samplingCount - 1; j > 0; j--)
                 {
                     col += tex2D(_MainTex, i.uv - (_Offsets.xy * j)) * _Weights[j];
                 }
 
                 [unroll]
-                for (int j = 0; j < samplingCount; j++)
+                for (j = 0; j < samplingCount; j++)
                 {
                     col += tex2D(_MainTex, i.uv + (_Offsets.xy * j)) * _Weights[j];
                 }
