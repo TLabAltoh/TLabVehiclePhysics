@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7e51392332b47c46940b318d24fad8d, type: 3}
   m_Name: SDUISettings
   m_EditorClassIdentifier: 
+  _projectType: 1
   _defaultAA: 1
   _useOutline: 0
   _outlineWidth: 1
@@ -21,3 +22,4 @@ MonoBehaviour:
   _useShadow: 0
   _shadowColor: {r: 0, g: 0, b: 0, a: 0.25}
   _shadowOffset: {x: 0, y: 4}
+  _useHDR: 0
