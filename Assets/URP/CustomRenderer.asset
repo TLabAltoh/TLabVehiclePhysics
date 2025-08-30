@@ -17,8 +17,8 @@ MonoBehaviour:
       type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: 1086924732252811746}
-  m_RendererFeatureMap: e2f183034988150f
+  - {fileID: 2771997141792565630}
+  m_RendererFeatureMap: 7ea9f1bab61c7826
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_CopyDepthMode: 1
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &1086924732252811746
+--- !u!114 &2771997141792565630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,11 +70,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 538829264e890824b8361529708f5bdb, type: 3}
-  m_Name: BlurRendererFeature
+  m_Script: {fileID: 11500000, guid: 93fa008b748235b4fa5e48428952bb3d, type: 3}
+  m_Name: LiquidGlassRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_shader: {fileID: 4800000, guid: a378c3723c7b1aa4483e4d40c10e59e8, type: 3}
-  m_offset: 2
-  m_blur: 200
-  m_renderPassEvent: 550
