@@ -74,3 +74,4 @@ MonoBehaviour:
   m_Name: LiquidGlassRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
+  m_renderPassEvent: 1000
