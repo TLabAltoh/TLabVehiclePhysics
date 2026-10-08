@@ -53,7 +53,7 @@ git clone https://github.com/TLabAltoh/TLabVehiclePhysics.git
 
 cd TLabVehiclePhysics
 
-git submodule upadte --init
+git submodule update --init
 ```
 
 ### How to play
